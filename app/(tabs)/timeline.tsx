@@ -15,7 +15,9 @@ const eventData = [
 	{
 		id: "1",
 		date: "2025-05-21",
-		city: "New York",
+		time: "10:15",
+		eventName: "Birthday Party",
+		address: "40 East Grand Avenue, River North, Chicago, IL 60611, United States",
 		weather: "Sunny",
 		icon: "https://cdn-icons-png.flaticon.com/512/869/869869.png", // Example icon URL
 		highTemp: "25°C",
@@ -24,7 +26,9 @@ const eventData = [
 	{
 		id: "2",
 		date: "2025-05-22",
-		city: "Los Angeles",
+		time: "14:30",
+		eventName: "Conference",
+		address: "40 East Grand Avenue, River North, Chicago, IL 60611, United States",
 		weather: "Cloudy",
 		icon: "https://cdn-icons-png.flaticon.com/512/414/414825.png",
 		highTemp: "22°C",
@@ -33,7 +37,9 @@ const eventData = [
 	{
 		id: "3",
 		date: "2025-05-23",
-		city: "Chicago",
+		time: "11:45",
+		eventName: "Wedding",
+		address: "40 East Grand Avenue, River North, Chicago, IL 60611, United States",
 		weather: "Rainy",
 		icon: "https://cdn-icons-png.flaticon.com/512/1163/1163624.png",
 		highTemp: "18°C",
@@ -42,7 +48,9 @@ const eventData = [
 	{
 		id: "4",
 		date: "2025-05-24",
-		city: "Houston",
+		time: "09:00",
+		eventName: "Business Meeting",
+		address: "4150 East Mississippi Avenue, Denver, CO 80246, United States",
 		weather: "Stormy",
 		icon: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png",
 		highTemp: "28°C",
@@ -51,7 +59,9 @@ const eventData = [
 	{
 		id: "5",
 		date: "2025-05-25",
-		city: "Miami",
+		time: "15:15",
+		eventName: "Beach Day",
+		address: "4150 East Mississippi Avenue, Denver, CO 80246, United States",
 		weather: "Sunny",
 		icon: "https://cdn-icons-png.flaticon.com/512/869/869869.png",
 		highTemp: "30°C",
@@ -60,16 +70,31 @@ const eventData = [
 ];
 
 const renderCard = ({ item }) => (
-  <View style={styles.card}>
-    <Text style={styles.date}>{item.date}</Text>
-    <Text style={styles.city}>{item.city}</Text>
-    <View style={styles.weatherRow}>
-      <Image source={{ uri: item.icon }} style={styles.icon} />
-      <Text style={styles.weather}>{item.weather}</Text>
+  <View style={styles.eventRow}>
+    {/* Left Side: Event Time */}
+    <View style={styles.leftColumn}>
+      <Text style={styles.eventTime}>{item.time}</Text>
+      <View style={styles.verticalLine} />
     </View>
-    <Text style={styles.temperature}>
-      High: {item.highTemp} | Low: {item.lowTemp}
-    </Text>
+
+    {/* Right Side: Event Details */}
+    <View style={styles.card}>
+      <Text style={styles.eventName}>{item.eventName}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flex: 2 }}>
+          <Text style={styles.city}>{item.address}</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <View style={styles.weatherRow}>
+            <Image source={{ uri: item.icon }} style={styles.icon} />
+            <Text style={styles.weather}>{item.weather}</Text>
+          </View>
+          <Text style={styles.temperature}>
+            {item.highTemp}
+          </Text>
+        </View>
+      </View>
+    </View>
   </View>
 );
 
@@ -124,44 +149,61 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
   },
-	card: {
-		backgroundColor: "#fff",
-		borderRadius: 8,
-		padding: 16,
-		marginBottom: 16,
-    margin: 16,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-		elevation: 2,
-	},  
-	date: {
-		fontSize: 16,
-		fontWeight: "bold",
-		marginBottom: 8,
-	},
-	city: {
-		fontSize: 14,
-		color: "#555",
-		marginBottom: 8,
-	},
-	weatherRow: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginBottom: 8,
-	},
-	icon: {
-		width: 32,
-		height: 32,
-		marginRight: 8,
-	},
-	weather: {
-		fontSize: 14,
-		color: "#333",
-	},
-	temperature: {
-		fontSize: 14,
-		color: "#777",
-	},  
+  eventRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 16,
+  },
+  leftColumn: {
+    width: "30%",
+    alignItems: "center",
+  },
+  eventTime: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 8,
+  },
+  verticalLine: {
+    width: 2,
+    height: 100,
+    backgroundColor: "#ffd33d",
+  },
+  card: {
+    width: "65%",
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  eventName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  city: {
+    fontSize: 12,
+    color: "#999",
+  },
+  weatherRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  icon: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+  },
+  weather: {
+    fontSize: 12,
+    color: "#333",
+  },
+  temperature: {
+    fontSize: 14,
+    color: "#777",
+  },
 });
