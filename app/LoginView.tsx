@@ -18,8 +18,25 @@ export default function LoginView() {
       setError('Password must be at least 6 characters long');
       return;
     }
-    setError('');
-    navigation.navigate('index');
+    
+    fetch('http://localhost:3133/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          setError('Invalid email or password');
+        } else if (data.token) {
+          navigation.navigate('(tabs)');
+        }
+      })
+      .catch(() => {
+        setError('An error occurred. Please try again.');
+      });
   };
 
   return (
