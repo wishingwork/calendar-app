@@ -25,11 +25,30 @@ export default function SignupView() {
       return;
     }
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError('Password must be at least 8 characters and include a number');
       return;
     }
-    setError('');
-    navigation.navigate('index');
+
+    
+    fetch('http://localhost:3133/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ first_name: firstName, last_name: lastName, email, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          setError('Invalid email or password');
+        } else {
+          navigation.navigate('(tabs)');
+        }
+      })
+      .catch((error) => {
+        setError('An server error occurred. Please try again.');
+        return;
+      });    
   };
 
   return (
@@ -71,6 +90,7 @@ export default function SignupView() {
       <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
+      {error.includes('server') && <Text style={styles.error}>{error}</Text>}
 
         <Link href={"/LoginView"}>
           <Text style={styles.link}>Already have an account? Log In</Text>
