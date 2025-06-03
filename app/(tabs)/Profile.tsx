@@ -75,36 +75,44 @@ export default function ProfileView() {
       newErrors.email = 'Invalid email format or contains SQL keywords.';
       valid = false;
     }
-    if (showPasswordInputs) {
-      if (!currentPassword || !confirmPassword) {
-        newErrors.password = 'Please fill out both password fields.';
-        valid = false;
-      } else if (currentPassword !== confirmPassword) {
-        newErrors.password = 'Passwords do not match.';
-        valid = false;
-      } else if (currentPassword.length < 6) {
-        newErrors.password = 'Password must be at least 6 characters.';
-        valid = false;
-      } else if (sqlInjectionRegex.test(currentPassword)) {
-        newErrors.password = 'Password contains SQL keywords.';
-        valid = false;
-      }
-    }
+
     setErrors(newErrors);
     return valid;
   };
+  const validatePassword = () => {
+    let valid = true;
+    let newErrors: { [key: string]: string } = {};
+    if (!currentPassword || !confirmPassword) {
+      newErrors.password = 'Please fill out both password fields.';
+      valid = false;
+    } else if (currentPassword !== confirmPassword) {
+      newErrors.password = 'Passwords do not match.';
+      valid = false;
+    } else if (currentPassword.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters.';
+      valid = false;
+    } else if (sqlInjectionRegex.test(currentPassword)) {
+      newErrors.password = 'Password contains SQL keywords.';
+      valid = false;
+    }
+    
+    setErrors(newErrors);
+    return valid;    
+  }
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const userToken = await loadData('userToken');
+
     if (!validate()) return;
     setSaving(true);
     fetch('http://localhost:3133/auth/me', {
       method: 'PUT',
       headers: {
+        'Authorization': `Bearer ${userToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         ...user,
-        password: showPasswordInputs ? currentPassword : undefined,
       }),
     })
       .then((response) => response.json())
@@ -114,6 +122,35 @@ export default function ProfileView() {
           Alert.alert('Error', data.error);
         } else {
           Alert.alert('Success', 'Profile updated successfully!');
+        }
+      })
+      .catch(() => {
+        setSaving(false);
+        Alert.alert('Error', 'An error occurred. Please try again.');
+      });
+  };
+
+  const handlePasswordUpdate = async () => {
+    const userToken = await loadData('userToken');
+    if (!validatePassword()) return;
+    fetch('http://localhost:3133/auth/me/password', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        new_password: showPasswordInputs ? currentPassword : undefined,
+        confirm_password: showPasswordInputs ? confirmPassword : undefined,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSaving(false);
+        if (data.error) {
+          Alert.alert('Error', data.error);
+        } else {
+          Alert.alert('Success', 'Password updated successfully!');
           setShowPasswordInputs(false);
           setCurrentPassword('');
           setConfirmPassword('');
@@ -123,7 +160,7 @@ export default function ProfileView() {
         setSaving(false);
         Alert.alert('Error', 'An error occurred. Please try again.');
       });
-  };
+  };  
 
   const handleLogout = async () => {
     setModalVisible(false);
@@ -252,7 +289,7 @@ export default function ProfileView() {
               style={styles.saveButton}
               onPress={() => {
                 setShowPasswordInputs(true);
-                handleSave();
+                handlePasswordUpdate();
               }}
               disabled={saving}
             >
