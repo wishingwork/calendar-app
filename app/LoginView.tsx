@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, useWindowDimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
@@ -72,8 +72,19 @@ export default function LoginView() {
       });
   };
 
+  const { width } = useWindowDimensions();
+
   return (
     <View style={styles.container}>
+      <Image
+        source={require('../assets/images/logo.png')}
+        style={{
+          width: width * 0.25,
+          height: width * 0.25,
+          resizeMode: 'contain',
+          marginBottom: 16,
+        }}
+      />
       <Text style={styles.logo}>Weather Calendar</Text>
       <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
         <Text style={styles.featureText}>

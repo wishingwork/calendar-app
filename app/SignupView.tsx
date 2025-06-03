@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, useWindowDimensions, Image  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from "expo-router";
 
@@ -50,9 +50,19 @@ export default function SignupView() {
         return;
       });    
   };
+  const { width } = useWindowDimensions();
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require('../assets/images/logo.png')}
+        style={{
+          width: width * 0.25,
+          height: width * 0.25,
+          resizeMode: 'contain',
+          marginBottom: 16,
+        }}
+      />      
       <Text style={styles.logo}>Weather Calendar</Text>
       <TextInput
         style={styles.input}
