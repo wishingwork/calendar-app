@@ -53,6 +53,7 @@ export default function SignupView() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.logo}>Weather Calendar</Text>
       <TextInput
         style={styles.input}
         placeholder="First Name"
@@ -107,6 +108,11 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f5f5f5',
   },
+  logo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 24,
+  },  
   input: {
     width: '100%',
     padding: 12,
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   button: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#005FA0',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',

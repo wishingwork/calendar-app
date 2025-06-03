@@ -8,24 +8,26 @@ function TabLayoutInner() {
 
   return <Tabs
     screenOptions={{
-        tabBarActiveTintColor: "#ffd33d",
+        tabBarActiveTintColor: "#0077CC",
+        tabBarInactiveTintColor: "#aaa",
         headerStyle: {
-            backgroundColor: "#25292e",
+            backgroundColor: "rgb(250 248 244 / var(--tw-bg-opacity, 1))",
         },
         headerShadowVisible : false,
-        headerTintColor: "#fff",
+        headerTintColor: "#0077CC",
         tabBarStyle: {
-            backgroundColor: "#25292e",
+            backgroundColor: "rgb(250 248 244 / var(--tw-bg-opacity, 1))",
         }
     }}
   >
     <Tabs.Screen 
         name="index" 
         options={{ 
-            headerTitle: "Calendar app", 
+            headerTitle: "Calendar",
+            tabBarLabel: "Calendar",
             tabBarIcon: ({focused, color}) => (
                 <Ionicons 
-                    name={ focused ? "home-sharp" : "home-outline"} 
+                    name={ focused ? "calendar-sharp" : "calendar-outline"} 
                     color={color}
                     size={24} 
                 />
@@ -36,6 +38,7 @@ function TabLayoutInner() {
         name="add-event" 
         options={{ 
             headerTitle: "Add Event",
+            tabBarLabel: "Add Event",
             tabBarIcon: ({focused, color}) => (
                 <Ionicons 
                     name={ focused ? "add-circle-outline" : "add-circle-outline" } 
@@ -49,6 +52,7 @@ function TabLayoutInner() {
         name="timeline" 
         options={{ 
             headerTitle: "Timeline",
+            tabBarLabel: "Timeline",
             tabBarIcon: ({focused, color}) => (
                 <Ionicons 
                     name={ focused ? "list-sharp" : "list-outline"} 
@@ -64,9 +68,16 @@ function TabLayoutInner() {
           title: 'Profile',
           headerRight: () => (
             <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginRight: 15 }}>
-              <Ionicons name="information-circle-outline" size={24} color="#fff" />
+              <Ionicons name="information-circle-outline" size={24} color="#0077CC" />
             </TouchableOpacity>
           ),
+          tabBarIcon: ({focused, color}) => (
+              <Ionicons 
+                  name={ focused ? "person-circle" : "person-circle-outline"} 
+                  color={color}
+                  size={24} 
+              />
+          ),             
         }}
       />    
   </Tabs>;
