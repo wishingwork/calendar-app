@@ -66,7 +66,9 @@ export default function LoginView() {
         }
       })
       .catch(() => {
-        setError('An error occurred. Please try again.');
+        console.log(69);
+        setError('An server error occurred. Please try again.');
+        return
       });
   };
 
@@ -119,6 +121,7 @@ export default function LoginView() {
       <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
+      {error.includes('server') && <Text style={styles.error}>{error}</Text>}
 
       <Link href={"/SignupView"}>
         <Text style={styles.link}>Don't have an account? Sign Up</Text>
