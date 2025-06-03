@@ -3,6 +3,9 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, Pressable, 
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useModal } from './ModalContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import * as SecureStore from 'expo-secure-store';
 
 interface User {
   first_name: string;
@@ -18,8 +21,29 @@ const initialUser: User = {
   password: '',
 };
 
+async function loadData(key: string) {
+  const isAvailable = await SecureStore.isAvailableAsync();
+  if (!isAvailable) {
+    // alert("SecureStore is not available on this platform");
+    return localStorage.getItem(key);
+  }
+  return await SecureStore.getItemAsync(key);
+}
+
+async function deleteData(key: string) {
+  const isAvailable = await SecureStore.isAvailableAsync();
+  if (!isAvailable) {
+    localStorage.removeItem(key);
+    return
+  }
+  await SecureStore.deleteItemAsync(key);
+}
+
+
+
 export default function ProfileView() {
-  const [user, setUser] = useState<User>(initialUser);
+  const profile = useSelector((state: RootState) => state.profile.profile);
+  const [user, setUser] = useState<User>(profile || initialUser);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPasswordInputs, setShowPasswordInputs] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -29,7 +53,6 @@ export default function ProfileView() {
   const navigation = useNavigation();
   const [saving, setSaving] = useState(false);
   const { modalVisible , setModalVisible } = useModal();
-
 
   // Validation regex
   const nameRegex = /^[a-zA-Z-]+$/;
@@ -102,11 +125,28 @@ export default function ProfileView() {
       });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setModalVisible(false);
     // Use expo-router for navigation
     // @ts-ignore
-    navigation.navigate('/LoginView');
+    const userToken = await loadData('userToken');
+    fetch('http://localhost:3133/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        await deleteData('userToken');
+        return response.json()
+      })
+      .catch((error) => {
+        setError('An server error occurred. Please try again.');
+        return;
+      });  
+
+    navigation.navigate('LoginView');
   };
 
   return (

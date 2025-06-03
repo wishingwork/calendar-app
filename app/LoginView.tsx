@@ -2,12 +2,26 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from "expo-router";
+import * as SecureStore from 'expo-secure-store';
+import { useDispatch } from 'react-redux';
+import { setProfile } from './profileSlice';
+
+async function saveData(key: string, value: string) {
+  const isAvailable = await SecureStore.isAvailableAsync();
+  if (!isAvailable) {
+    localStorage.setItem(key, value);
+    return;
+  }
+  await SecureStore.setItemAsync(key, value);
+}
+
 
 export default function LoginView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const validateAndLogin = () => {
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
@@ -27,10 +41,27 @@ export default function LoginView() {
       body: JSON.stringify({ email, password }),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         if (data.error) {
           setError('Invalid email or password');
         } else if (data.token) {
+          await saveData('userToken', data.token);
+          fetch('http://localhost:3133/auth/me', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${data.token}`,
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => response.json())
+            .then((profile) => {
+                if (profile) {
+                  dispatch(setProfile(profile));
+                }
+            })
+            .catch(() => {
+              // Optionally handle profile fetch error
+            });
           navigation.navigate('(tabs)');
         }
       })
