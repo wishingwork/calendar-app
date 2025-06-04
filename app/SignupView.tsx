@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, useWindowDimensions, Image  } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from "expo-router";
 import { saveData } from '../utils/storage';  
@@ -65,60 +65,69 @@ export default function SignupView() {
   const { width } = useWindowDimensions();
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../assets/images/logo.png')}
-        style={{
-          width: width * 0.25,
-          height: width * 0.25,
-          resizeMode: 'contain',
-          marginBottom: 16,
-        }}
-      />      
-      <Text style={styles.logo}>Weather Calendar</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      {error.includes('First name') && <Text style={styles.error}>{error}</Text>}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Adjust if needed
+    >
+      <ScrollView contentContainerStyle={styles.inner}>
+        <View style={styles.container}>
+          <Image
+            source={require('../assets/images/logo.png')}
+            style={{
+              width: width * 0.25,
+              height: width * 0.25,
+              resizeMode: 'contain',
+              marginBottom: 16,
+              alignSelf: 'center',    
+            }}
+          />      
+          <Text style={styles.logo}>Weather Calendar</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="First Name"
+            value={firstName}
+            onChangeText={setFirstName}
+          />
+          {error.includes('First name') && <Text style={styles.error}>{error}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      {error.includes('Last name') && <Text style={styles.error}>{error}</Text>}
+          <TextInput
+            style={styles.input}
+            placeholder="Last Name"
+            value={lastName}
+            onChangeText={setLastName}
+          />
+          {error.includes('Last name') && <Text style={styles.error}>{error}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      {error.includes('email') && <Text style={styles.error}>{error}</Text>}
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+          {error.includes('email') && <Text style={styles.error}>{error}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      {error.includes('Password') && <Text style={styles.error}>{error}</Text>}
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          {error.includes('Password') && <Text style={styles.error}>{error}</Text>}
 
-      <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-      {error.includes('server') && <Text style={styles.error}>{error}</Text>}
+          <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+          {error.includes('server') && <Text style={styles.error}>{error}</Text>}
 
-        <Link href={"/LoginView"}>
-          <Text style={styles.link}>Already have an account? Log In</Text>
-        </Link>
-    </View>
+            <Link style={styles.link} href={"/LoginView"}>
+              <Text>Already have an account? Log In</Text>
+            </Link>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -126,14 +135,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     padding: 16,
     backgroundColor: '#f5f5f5',
   },
+  inner: {
+     flex: 1,
+  },    
   logo: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 24,
+    marginBottom: 24,    
+    textAlign: 'center',    
   },  
   input: {
     width: '100%',
@@ -161,10 +173,12 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     fontSize: 14,
     marginTop: 12,
+    textAlign: 'center',    
   },
   error: {
     color: 'red',
     fontSize: 12,
     marginBottom: 8,
+    textAlign: 'center',    
   },
 });

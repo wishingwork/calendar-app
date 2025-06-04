@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, useWindowDimensions, Image } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from "expo-router";
 import { useDispatch } from 'react-redux';
@@ -23,7 +23,6 @@ export default function LoginView() {
       setError('Password must be at least 6 characters long');
       return;
     }
-    
     fetch('http://localhost:3133/auth/login', {
       method: 'POST',
       headers: {
@@ -31,7 +30,8 @@ export default function LoginView() {
       },
       body: JSON.stringify({ email, password }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json()})
       .then(async (data) => {
         if (data.error) {
           setError('Invalid email or password');
@@ -58,8 +58,7 @@ export default function LoginView() {
           navigation.navigate('(tabs)');
         }
       })
-      .catch(() => {
-        console.log(69);
+      .catch((error) => {
         setError('An server error occurred. Please try again.');
         return
       });
@@ -68,69 +67,78 @@ export default function LoginView() {
   const { width } = useWindowDimensions();
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../assets/images/logo.png')}
-        style={{
-          width: width * 0.25,
-          height: width * 0.25,
-          resizeMode: 'contain',
-          marginBottom: 16,
-        }}
-      />
-      <Text style={styles.logo}>Weather Calendar</Text>
-      <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
-        <Text style={styles.featureText}>
-          🌤️ Calendar View
-        </Text>
-        <Text style={styles.featureDescription}>
-          See your 10-day trip timeline with daily weather
-        </Text>
-      </View>
-      <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}>
-        <Text style={styles.featureText}>
-          🗺️ Trip Timeline
-        </Text>
-        <Text style={styles.featureDescription}>
-          Visualize city transitions and weather information
-        </Text>
-      </View>
-      <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}>
-        <Text style={styles.featureText}>
-          ✈️ Travel Planning
-        </Text>
-        <Text style={styles.featureDescription}>
-          Add events with transportation and location details
-        </Text>
-      </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Adjust if needed
+    >
+      <ScrollView contentContainerStyle={styles.inner}>
+        <View style={styles.container}>
+          <Image
+            source={require('../assets/images/logo.png')}
+            style={{
+              width: width * 0.25,
+              height: width * 0.25,
+              resizeMode: 'contain',
+              marginBottom: 16,
+              alignSelf: 'center',    
+            }}
+          />
+          <Text style={styles.logo}>Weather Calendar</Text>
+          <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
+            <Text style={styles.featureText}>
+              🌤️ Calendar View
+            </Text>
+            <Text style={styles.featureDescription}>
+              See your 10-day trip timeline with daily weather
+            </Text>
+          </View>
+          <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}>
+            <Text style={styles.featureText}>
+              🗺️ Trip Timeline
+            </Text>
+            <Text style={styles.featureDescription}>
+              Visualize city transitions and weather information
+            </Text>
+          </View>
+          <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}>
+            <Text style={styles.featureText}>
+              ✈️ Travel Planning
+            </Text>
+            <Text style={styles.featureDescription}>
+              Add events with transportation and location details
+            </Text>
+          </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      {error.includes('email') && <Text style={styles.error}>{error}</Text>}
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+          {error.includes('email') && <Text style={styles.error}>{error}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      {error.includes('Password') && <Text style={styles.error}>{error}</Text>}
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          {error.includes('Password') && <Text style={styles.error}>{error}</Text>}
 
-      <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
-        <Text style={styles.buttonText}>Sign In</Text>
-      </TouchableOpacity>
-      {error.includes('server') && <Text style={styles.error}>{error}</Text>}
+          <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
+            <Text style={styles.buttonText}>Sign In</Text>
+          </TouchableOpacity>
+          {error.includes('server') && <Text style={styles.error}>{error}</Text>}
 
-      <Link href={"/SignupView"}>
-        <Text style={styles.link}>Don't have an account? Sign Up</Text>
-      </Link>
-    </View>
+          <Link style={styles.link} href={"/SignupView"}>
+            <Text>Don't have an account? Sign Up</Text>
+          </Link>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -138,14 +146,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     padding: 16,
     backgroundColor: '#f5f5f5',
   },
+  inner: {
+    flex: 1,
+  },  
   logo: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 24,
+    textAlign: 'center',
   },
   featureBlock: {
     width: '100%',
@@ -192,6 +203,7 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     fontSize: 14,
     marginTop: 12,
+    textAlign: 'center', 
   },
   error: {
     color: 'red',
