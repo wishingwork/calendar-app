@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { saveData } from '../utils/storage';  
 import { useDispatch } from 'react-redux';
 import { setProfile } from './profileSlice';
@@ -122,9 +122,7 @@ export default function SignupView() {
           </TouchableOpacity>
           {error.includes('server') && <Text style={styles.error}>{error}</Text>}
 
-            <Link style={styles.link} href={"/LoginView"}>
-              <Text>Already have an account? Log In</Text>
-            </Link>
+          <Text style={styles.link} onPress={() => router.push('/LoginView')}>Already have an account? Log In</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
