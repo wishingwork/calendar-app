@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import { setProfile } from './profileSlice';
 import { saveData } from '../utils/storage';
 
-
 export default function LoginView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +22,7 @@ export default function LoginView() {
       setError('Password must be at least 6 characters long');
       return;
     }
-    fetch('http://localhost:3133/auth/login', {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,7 +36,7 @@ export default function LoginView() {
           setError('Invalid email or password');
         } else if (data.token) {
           await saveData('userToken', data.token);
-          fetch('http://localhost:3133/auth/me', {
+          fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${data.token}`,

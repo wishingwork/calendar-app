@@ -107,7 +107,7 @@ export default function ProfileView() {
 
     if (!validate()) return;
     setSaving(true);
-    fetch('http://localhost:3133/auth/me', {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${userToken}`,
@@ -135,7 +135,7 @@ export default function ProfileView() {
   const handlePasswordUpdate = async () => {
     const userToken = await loadData('userToken');
     if (!validatePassword()) return;
-    fetch('http://localhost:3133/auth/me/password', {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me/password`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${userToken}`,
@@ -169,7 +169,7 @@ export default function ProfileView() {
     // Use expo-router for navigation
     // @ts-ignore
     const userToken = await loadData('userToken');
-    fetch('http://localhost:3133/auth/logout', {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/logout`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${userToken}`,

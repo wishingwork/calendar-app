@@ -35,7 +35,7 @@ export default function SignupView() {
     }
 
     
-    fetch('http://localhost:3133/auth/register', {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
