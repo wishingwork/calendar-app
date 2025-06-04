@@ -2,18 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, useWindowDimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from "expo-router";
-import * as SecureStore from 'expo-secure-store';
 import { useDispatch } from 'react-redux';
 import { setProfile } from './profileSlice';
-
-async function saveData(key: string, value: string) {
-  const isAvailable = await SecureStore.isAvailableAsync();
-  if (!isAvailable) {
-    localStorage.setItem(key, value);
-    return;
-  }
-  await SecureStore.setItemAsync(key, value);
-}
+import { saveData } from '../utils/storage';
 
 
 export default function LoginView() {
@@ -62,6 +53,8 @@ export default function LoginView() {
             .catch(() => {
               // Optionally handle profile fetch error
             });
+          setEmail('');
+          setPassword('');          
           navigation.navigate('(tabs)');
         }
       })

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, useWindowDimensions, Image  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from "expo-router";
+import { saveData } from '../utils/storage';  
+import { useDispatch } from 'react-redux';
+import { setProfile } from './profileSlice';
 
 export default function SignupView() {
   const [firstName, setFirstName] = useState('');
@@ -10,6 +13,8 @@ export default function SignupView() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
 
   const validateAndSignup = () => {
     if (!firstName.match(/^[a-zA-Z-]+$/)) {
@@ -38,10 +43,17 @@ export default function SignupView() {
       body: JSON.stringify({ first_name: firstName, last_name: lastName, email, password }),
     })
       .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
+      .then(async (data) => {
+        if (data.errors) {
           setError('Invalid email or password');
         } else {
+          await saveData('userToken', data.token);
+          dispatch(setProfile({first_name:data.first_name, last_name:data.last_name, email:data.email}));                   
+          setFirstName('');
+          setLastName('');
+          setEmail('');
+          setPassword('');
+          setError('');
           navigation.navigate('(tabs)');
         }
       })

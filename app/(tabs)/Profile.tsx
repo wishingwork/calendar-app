@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, Pressable, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useModal } from './ModalContext';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import * as SecureStore from 'expo-secure-store';
+import { clearProfile } from '../profileSlice';
 
 interface User {
   first_name: string;
@@ -51,9 +52,10 @@ export default function ProfileView() {
   const [profileExpanded, setProfileExpanded] = useState(true);
   const [passwordExpanded, setPasswordExpanded] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const [saving, setSaving] = useState(false);
   const { modalVisible , setModalVisible } = useModal();
-
   // Validation regex
   const nameRegex = /^[a-zA-Z-]+$/;
   const lastNameRegex = /^[a-zA-Z]+$/;
@@ -176,15 +178,21 @@ export default function ProfileView() {
     })
       .then(async (response) => {
         await deleteData('userToken');
+        dispatch(clearProfile());
         return response.json()
       })
       .catch((error) => {
-        setError('An server error occurred. Please try again.');
+        setErrors({server: 'An server error occurred. Please try again.'});
         return;
       });  
 
     navigation.navigate('LoginView');
   };
+  useEffect(() => {
+    if (profile) {
+      setUser(profile);
+    }
+  }, [profile]);
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
