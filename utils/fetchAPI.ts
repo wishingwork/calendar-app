@@ -1,31 +1,52 @@
 import { saveData } from './storage';
 
+async function doFetch({
+  url,
+  method = 'GET',
+  headers = {},
+  body,
+}: {
+  url: string;
+  method?: string;
+  headers?: Record<string, string>;
+  body?: any;
+}) {
+  const options: RequestInit = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
+  };
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+  const response = await fetch(url, options);
+  const data = await response.json();
+  if (data.error || data.errors) {
+    throw new Error(data.error || data.errors || 'A server error occurred');
+  }
+  return data;
+}
+
 export async function loginAndFetchProfile(email: string, password: string, apiServerIp: string) {
   const loginUrl = `http://${apiServerIp}:3133/auth/login`;
   const profileUrl = `http://${apiServerIp}:3133/auth/me`;
-
-  const response = await fetch(loginUrl, {
+  const loginData = await doFetch({
+    url: loginUrl,
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
+    body: { email, password },
   });
-  const data = await response.json();
-  if (data.error || !data.token) {
+  if (!loginData.token) {
     throw new Error('Invalid email or password');
   }
-  await saveData('userToken', data.token);
-
-  const profileResponse = await fetch(profileUrl, {
+  await saveData('userToken', loginData.token);
+  const profile = await doFetch({
+    url: profileUrl,
     method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${data.token}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Authorization': `Bearer ${loginData.token}` },
   });
-  const profile = await profileResponse.json();
-  return { token: data.token, profile };
+  return { token: loginData.token, profile };
 }
 
 export async function signupAndFetchProfile(
@@ -38,33 +59,29 @@ export async function signupAndFetchProfile(
   setProfile: any
 ) {
   const signupUrl = `http://${apiServerIp}:3133/auth/register`;
-  const response = await fetch(signupUrl, {
+  const data = await doFetch({
+    url: signupUrl,
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ first_name: firstName, last_name: lastName, email, password }),
+    body: { first_name: firstName, last_name: lastName, email, password },
   });
-  const data = await response.json();
-  if (data.errors || !data.token) {
+  if (!data.token) {
     throw new Error(data.error || 'Invalid email or password');
   }
   await saveData('userToken', data.token);
-  dispatch(setProfile({ first_name: data.first_name, last_name: data.last_name, email: data.email }));
+  if (dispatch && setProfile) {
+    dispatch(setProfile({ first_name: data.first_name, last_name: data.last_name, email: data.email }));
+  }
   return data;
 }
 
 export async function updateProfile(user: any, userToken: string, apiServerIp: string) {
   const url = `http://${apiServerIp}:3133/auth/me`;
-  const response = await fetch(url, {
+  return doFetch({
+    url,
     method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${userToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(user),
+    headers: { 'Authorization': `Bearer ${userToken}` },
+    body: user,
   });
-  return response.json();
 }
 
 export async function updatePassword(
@@ -74,28 +91,22 @@ export async function updatePassword(
   apiServerIp: string
 ) {
   const url = `http://${apiServerIp}:3133/auth/me/password`;
-  const response = await fetch(url, {
+  return doFetch({
+    url,
     method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${userToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+    headers: { 'Authorization': `Bearer ${userToken}` },
+    body: {
       new_password: currentPassword,
       confirm_password: confirmPassword,
-    }),
+    },
   });
-  return response.json();
 }
 
 export async function logout(userToken: string, apiServerIp: string) {
   const url = `http://${apiServerIp}:3133/auth/logout`;
-  const response = await fetch(url, {
+  return doFetch({
+    url,
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${userToken}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Authorization': `Bearer ${userToken}` },
   });
-  return response.json();
 }
