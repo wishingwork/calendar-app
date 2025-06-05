@@ -18,3 +18,4 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
 export function useModal() {
   return useContext(ModalContext);
 }
+export default ModalContext;

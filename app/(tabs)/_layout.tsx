@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from 'react-native';
-import { ModalProvider, useModal } from './ModalContext';
+import { ModalProvider, useModal } from '../ModalContext';
 
 function TabLayoutInner() {
   const { setModalVisible } = useModal();

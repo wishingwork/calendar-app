@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, Pressable, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { useModal } from './ModalContext';
+import { useModal } from '../ModalContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import * as SecureStore from 'expo-secure-store';
