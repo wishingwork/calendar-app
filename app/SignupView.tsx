@@ -16,51 +16,64 @@ export default function SignupView() {
   const dispatch = useDispatch();
 
 
-  const validateAndSignup = () => {
+  const validateAndSignup = async () => {
+
     if (!firstName.match(/^[a-zA-Z-]+$/)) {
-      setError('First name can only contain letters and hyphens');
+      setError('Invalid first or last name');
       return;
     }
     if (!lastName.match(/^[a-zA-Z]+$/)) {
-      setError('Last name can only contain letters');
+      setError('Invalid first or last name');
       return;
     }
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setError('Invalid email format');
       return;
     }
-    if (password.length < 6) {
-      setError('Password must be at least 8 characters and include a number');
+    // Stronger password validation
+    if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+      setError('Invalid password format. Must be at least 8 characters long and include a number and a special character.');
       return;
     }
-
-    
-    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ first_name: firstName, last_name: lastName, email, password }),
-    })
-      .then((response) => response.json())
-      .then(async (data) => {
-        if (data.errors) {
-          setError('Invalid email or password');
+    if (!process.env.EXPO_PUBLIC_API_SERVER_IP) {
+      setError('Server misconfiguration. Please contact support.');
+      return;
+    }
+    // Warn if not HTTPS
+    // if (!`https://${process.env.EXPO_PUBLIC_API_SERVER_IP}`.startsWith('https://')) {
+    //   setError('Insecure connection. Please use HTTPS.');
+    //   return;
+    // }
+    try {
+      const response = await fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ first_name: firstName, last_name: lastName, email, password }),
+      });
+      const data = await response.json();
+      if (data.errors || !data.token) {
+        if(data.error) {
+          setError(data.error);
         } else {
-          await saveData('userToken', data.token);
-          dispatch(setProfile({first_name:data.first_name, last_name:data.last_name, email:data.email}));                   
-          setFirstName('');
-          setLastName('');
-          setEmail('');
-          setPassword('');
-          setError('');
-          navigation.navigate('(tabs)');
+          setError('Invalid email or password');
         }
-      })
-      .catch((error) => {
-        setError('An server error occurred. Please try again.');
-        return;
-      });    
+      } else {
+        await saveData('userToken', data.token);
+        dispatch(setProfile({first_name:data.first_name, last_name:data.last_name, email:data.email}));
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPassword('');
+        setError('');
+        navigation.navigate('(tabs)');
+      }
+    } catch (error) {
+      setError('A server error occurred. Please try again.');
+    } finally {      
+      setPassword('');
+    }
   };
   const { width } = useWindowDimensions();
 
@@ -89,7 +102,6 @@ export default function SignupView() {
             value={firstName}
             onChangeText={setFirstName}
           />
-          {error.includes('First name') && <Text style={styles.error}>{error}</Text>}
 
           <TextInput
             style={styles.input}
@@ -97,7 +109,6 @@ export default function SignupView() {
             value={lastName}
             onChangeText={setLastName}
           />
-          {error.includes('Last name') && <Text style={styles.error}>{error}</Text>}
 
           <TextInput
             style={styles.input}
@@ -106,7 +117,6 @@ export default function SignupView() {
             onChangeText={setEmail}
             keyboardType="email-address"
           />
-          {error.includes('email') && <Text style={styles.error}>{error}</Text>}
 
           <TextInput
             style={styles.input}
@@ -115,7 +125,7 @@ export default function SignupView() {
             onChangeText={setPassword}
             secureTextEntry
           />
-          {error.includes('Password') && <Text style={styles.error}>{error}</Text>}
+          {(error.includes('Invalid') || error.includes('already')) && <Text style={styles.error}>{error}</Text>}
 
           <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
             <Text style={styles.buttonText}>Sign Up</Text>

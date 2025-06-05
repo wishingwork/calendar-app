@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import * as SecureStore from 'expo-secure-store';
 import { clearProfile } from '../profileSlice';
+import { router } from "expo-router";
 
 interface User {
   first_name: string;
@@ -81,6 +82,7 @@ export default function ProfileView() {
     setErrors(newErrors);
     return valid;
   };
+  // Stronger password validation
   const validatePassword = () => {
     let valid = true;
     let newErrors: { [key: string]: string } = {};
@@ -90,16 +92,12 @@ export default function ProfileView() {
     } else if (currentPassword !== confirmPassword) {
       newErrors.password = 'Passwords do not match.';
       valid = false;
-    } else if (currentPassword.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
-      valid = false;
-    } else if (sqlInjectionRegex.test(currentPassword)) {
-      newErrors.password = 'Password contains SQL keywords.';
+    } else if (currentPassword.length < 8 || !/[0-9]/.test(currentPassword) || !/[!@#$%^&*]/.test(currentPassword)) {
+      newErrors.password = 'Password must be at least 8 characters, include a number and a special character.';
       valid = false;
     }
-    
     setErrors(newErrors);
-    return valid;    
+    return valid;
   }
 
   const handleSave = async () => {
@@ -135,6 +133,15 @@ export default function ProfileView() {
   const handlePasswordUpdate = async () => {
     const userToken = await loadData('userToken');
     if (!validatePassword()) return;
+    if (!process.env.EXPO_PUBLIC_API_SERVER_IP) {
+      setErrors({ password: 'Server misconfiguration. Please contact support.' });
+      return;
+    }
+    // if (!`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}`.startsWith('https://')) {
+    //   setErrors({ password: 'Insecure connection. Please use HTTPS.' });
+    //   return;
+    // }
+    setSaving(true);
     fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me/password`, {
       method: 'PUT',
       headers: {
@@ -142,25 +149,26 @@ export default function ProfileView() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        new_password: showPasswordInputs ? currentPassword : undefined,
-        confirm_password: showPasswordInputs ? confirmPassword : undefined,
+        new_password: currentPassword,
+        confirm_password: confirmPassword,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         setSaving(false);
         if (data.error) {
-          Alert.alert('Error', data.error);
+          setErrors({ password: 'Password update failed. Please try again.' });
         } else {
-          Alert.alert('Success', 'Password updated successfully!');
           setShowPasswordInputs(false);
           setCurrentPassword('');
           setConfirmPassword('');
+          setErrors({});
+          Alert.alert('Success', 'Password updated successfully!');
         }
       })
       .catch(() => {
         setSaving(false);
-        Alert.alert('Error', 'An error occurred. Please try again.');
+        setErrors({ password: 'A server error occurred. Please try again.' });
       });
   };  
 
@@ -186,7 +194,8 @@ export default function ProfileView() {
         return;
       });  
 
-    navigation.navigate('LoginView');
+    // navigation.navigate('LoginView');
+    router.push('/LoginView');
   };
   useEffect(() => {
     if (profile) {

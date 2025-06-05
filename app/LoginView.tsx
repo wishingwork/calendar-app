@@ -13,54 +13,62 @@ export default function LoginView() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const validateAndLogin = () => {
+  const validateAndLogin = async () => {
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setError('Invalid email format');
+      setError('Invalid email or password');
       return;
     }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    // Stronger password validation
+    if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+      setError('Invalid email or password');
       return;
     }
-    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    })
-      .then((response) => {
-        return response.json()})
-      .then(async (data) => {
-        if (data.error) {
-          setError('Invalid email or password');
-        } else if (data.token) {
-          await saveData('userToken', data.token);
-          fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${data.token}`,
-              'Content-Type': 'application/json',
-            },
-          })
-            .then((response) => response.json())
-            .then((profile) => {
-                if (profile) {
-                  dispatch(setProfile(profile));
-                }
-            })
-            .catch(() => {
-              // Optionally handle profile fetch error
-            });
-          setEmail('');
-          setPassword('');          
-          navigation.navigate('(tabs)');
-        }
-      })
-      .catch((error) => {
-        setError('An server error occurred. Please try again.');
-        return
+    if (!process.env.EXPO_PUBLIC_API_SERVER_IP) {
+      setError('Server misconfiguration. Please contact support.');
+      return;
+    }
+    // Warn if not HTTPS
+    // if (!`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}`.startsWith('https://')) {
+    //   setError('Insecure connection. Please use HTTPS.');
+    //   return;
+    // }
+    try {
+      const response = await fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
+      const data = await response.json();
+      if (data.error || !data.token) {
+        setError('Invalid email or password');
+      } else {
+        await saveData('userToken', data.token);
+        // Clear password from state
+        setPassword('');
+        setEmail('');
+        fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${data.token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => response.json())
+          .then((profile) => {
+            if (profile) {
+              dispatch(setProfile(profile));
+            }
+          })
+          .catch(() => {});
+        navigation.navigate('(tabs)');
+      }
+    } catch (error) {
+      setError('A server error occurred. Please try again.');
+    } finally {
+      setPassword('');
+    }
   };
 
   const { width } = useWindowDimensions();
@@ -116,8 +124,6 @@ export default function LoginView() {
             onChangeText={setEmail}
             keyboardType="email-address"
           />
-          {error.includes('email') && <Text style={styles.error}>{error}</Text>}
-
           <TextInput
             style={styles.input}
             placeholder="Password"
@@ -125,14 +131,15 @@ export default function LoginView() {
             onChangeText={setPassword}
             secureTextEntry
           />
-          {error.includes('Password') && <Text style={styles.error}>{error}</Text>}
+          {error.includes('email') && <Text style={styles.error}>{error}</Text>}
 
           <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
             <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
-          {error.includes('server') && <Text style={styles.error}>{error}</Text>}
+          {(error.includes('server') || error.includes('Server')) && <Text style={styles.error}>{error}</Text>}
 
           <Text style={styles.link} onPress={() => router.push('SignupView')}>Don't have an account? Sign Up</Text>
+
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
