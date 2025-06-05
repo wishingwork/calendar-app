@@ -8,6 +8,7 @@ import { RootState } from '../store';
 import * as SecureStore from 'expo-secure-store';
 import { clearProfile } from '../profileSlice';
 import { router } from "expo-router";
+import { updateProfile, updatePassword, logout } from '../../utils/fetchAPI';
 
 interface User {
   first_name: string;
@@ -102,20 +103,9 @@ export default function ProfileView() {
 
   const handleSave = async () => {
     const userToken = await loadData('userToken');
-
     if (!validate()) return;
     setSaving(true);
-    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${userToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...user,
-      }),
-    })
-      .then((response) => response.json())
+    updateProfile(user, userToken, process.env.EXPO_PUBLIC_API_SERVER_IP)
       .then((data) => {
         setSaving(false);
         if (data.error) {
@@ -137,23 +127,8 @@ export default function ProfileView() {
       setErrors({ password: 'Server misconfiguration. Please contact support.' });
       return;
     }
-    // if (!`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}`.startsWith('https://')) {
-    //   setErrors({ password: 'Insecure connection. Please use HTTPS.' });
-    //   return;
-    // }
     setSaving(true);
-    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me/password`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${userToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        new_password: currentPassword,
-        confirm_password: confirmPassword,
-      }),
-    })
-      .then((response) => response.json())
+    updatePassword(currentPassword, confirmPassword, userToken, process.env.EXPO_PUBLIC_API_SERVER_IP)
       .then((data) => {
         setSaving(false);
         if (data.error) {
@@ -174,27 +149,16 @@ export default function ProfileView() {
 
   const handleLogout = async () => {
     setModalVisible(false);
-    // Use expo-router for navigation
-    // @ts-ignore
     const userToken = await loadData('userToken');
-    fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/logout`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${userToken}`,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(async (response) => {
+    logout(userToken, process.env.EXPO_PUBLIC_API_SERVER_IP)
+      .then(async () => {
         await deleteData('userToken');
         dispatch(clearProfile());
-        return response.json()
       })
-      .catch((error) => {
+      .catch(() => {
         setErrors({server: 'An server error occurred. Please try again.'});
         return;
-      });  
-
-    // navigation.navigate('LoginView');
+      });
     router.push('/LoginView');
   };
   useEffect(() => {

@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { useDispatch } from 'react-redux';
 import { setProfile } from './profileSlice';
 import { saveData } from '../utils/storage';
+import { loginAndFetchProfile } from '../utils/fetchAPI';
 
 export default function LoginView() {
   const [email, setEmail] = useState('');
@@ -27,45 +28,16 @@ export default function LoginView() {
       setError('Server misconfiguration. Please contact support.');
       return;
     }
-    // Warn if not HTTPS
-    // if (!`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}`.startsWith('https://')) {
-    //   setError('Insecure connection. Please use HTTPS.');
-    //   return;
-    // }
     try {
-      const response = await fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (data.error || !data.token) {
-        setError('Invalid email or password');
-      } else {
-        await saveData('userToken', data.token);
-        // Clear password from state
-        setPassword('');
-        setEmail('');
-        fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/me`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${data.token}`,
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((response) => response.json())
-          .then((profile) => {
-            if (profile) {
-              dispatch(setProfile(profile));
-            }
-          })
-          .catch(() => {});
-        navigation.navigate('(tabs)');
+      const { profile } = await loginAndFetchProfile(email, password, process.env.EXPO_PUBLIC_API_SERVER_IP);
+      if (profile) {
+        dispatch(setProfile(profile));
       }
-    } catch (error) {
-      setError('A server error occurred. Please try again.');
+      setEmail('');
+      setPassword('');
+      navigation.navigate('(tabs)');
+    } catch (error: any) {
+      setError(error.message || 'A server error occurred. Please try again.');
     } finally {
       setPassword('');
     }

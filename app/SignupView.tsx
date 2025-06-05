@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { saveData } from '../utils/storage';  
 import { useDispatch } from 'react-redux';
 import { setProfile } from './profileSlice';
+import { signupAndFetchProfile } from '../utils/fetchAPI';
 
 export default function SignupView() {
   const [firstName, setFirstName] = useState('');
@@ -45,33 +46,24 @@ export default function SignupView() {
     //   return;
     // }
     try {
-      const response = await fetch(`http://${process.env.EXPO_PUBLIC_API_SERVER_IP}:3133/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ first_name: firstName, last_name: lastName, email, password }),
-      });
-      const data = await response.json();
-      if (data.errors || !data.token) {
-        if(data.error) {
-          setError(data.error);
-        } else {
-          setError('Invalid email or password');
-        }
-      } else {
-        await saveData('userToken', data.token);
-        dispatch(setProfile({first_name:data.first_name, last_name:data.last_name, email:data.email}));
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setPassword('');
-        setError('');
-        navigation.navigate('(tabs)');
-      }
-    } catch (error) {
-      setError('A server error occurred. Please try again.');
-    } finally {      
+      await signupAndFetchProfile(
+        firstName,
+        lastName,
+        email,
+        password,
+        process.env.EXPO_PUBLIC_API_SERVER_IP,
+        dispatch,
+        setProfile
+      );
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPassword('');
+      setError('');
+      navigation.navigate('(tabs)');
+    } catch (error: any) {
+      setError(error.message || 'A server error occurred. Please try again.');
+    } finally {
       setPassword('');
     }
   };
