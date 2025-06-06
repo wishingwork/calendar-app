@@ -32,7 +32,7 @@ async function doFetch({
 export async function loginAndFetchProfile(email: string, password: string, apiServerIp: string) {
   const loginUrl = `http://${apiServerIp}:3133/auth/login`;
   const profileUrl = `http://${apiServerIp}:3133/auth/me`;
-  const loginData = await doFetch({
+  const { data: loginData  } = await doFetch({
     url: loginUrl,
     method: 'POST',
     body: { email, password },
@@ -41,12 +41,12 @@ export async function loginAndFetchProfile(email: string, password: string, apiS
     throw new Error('Invalid email or password');
   }
   await saveData('userToken', loginData.token);
-  const profile = await doFetch({
+  const { data } = await doFetch({
     url: profileUrl,
     method: 'GET',
     headers: { 'Authorization': `Bearer ${loginData.token}` },
   });
-  return { token: loginData.token, profile };
+  return { profile: data.profile };
 }
 
 export async function signupAndFetchProfile(
@@ -59,13 +59,13 @@ export async function signupAndFetchProfile(
   setProfile: any
 ) {
   const signupUrl = `http://${apiServerIp}:3133/auth/register`;
-  const data = await doFetch({
+  const {message, data} = await doFetch({
     url: signupUrl,
     method: 'POST',
     body: { first_name: firstName, last_name: lastName, email, password },
   });
-  if (!data.token) {
-    throw new Error(data.error || 'Invalid email or password');
+  if (!data) {
+    throw new Error(message || 'Invalid email or password');
   }
   await saveData('userToken', data.token);
   if (dispatch && setProfile) {
