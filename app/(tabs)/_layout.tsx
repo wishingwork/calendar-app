@@ -63,9 +63,10 @@ function TabLayoutInner() {
         }} 
     />    
       <Tabs.Screen
-        name="Profile"
+        name="ProfileView"
         options={{
           title: 'Profile',
+          tabBarLabel: "Profile",
           headerRight: () => (
             <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginRight: 15 }}>
               <Ionicons name="information-circle-outline" size={24} color="#0077CC" />

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { router } from "expo-router";
-import { saveData } from '../utils/storage';  
 import { useDispatch } from 'react-redux';
-import { setProfile } from './profileSlice';
-import { signupAndFetchProfile } from '../utils/fetchAPI';
+import { setProfile } from '../profileSlice';
+import { signupAndFetchProfile } from '../../utils/fetchAPI';
+import styles from './styles';
 
 export default function SignupView() {
   const [firstName, setFirstName] = useState('');
@@ -13,12 +12,10 @@ export default function SignupView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigation = useNavigation();
   const dispatch = useDispatch();
-
+  const { width } = useWindowDimensions();
 
   const validateAndSignup = async () => {
-
     if (!firstName.match(/^[a-zA-Z-]+$/)) {
       setError('Invalid first or last name');
       return;
@@ -31,7 +28,6 @@ export default function SignupView() {
       setError('Invalid email format');
       return;
     }
-    // Stronger password validation
     if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
       setError('Invalid password format. Must be at least 8 characters long and include a number and a special character.');
       return;
@@ -40,11 +36,6 @@ export default function SignupView() {
       setError('Server misconfiguration. Please contact support.');
       return;
     }
-    // Warn if not HTTPS
-    // if (!`https://${process.env.EXPO_PUBLIC_API_SERVER_IP}`.startsWith('https://')) {
-    //   setError('Insecure connection. Please use HTTPS.');
-    //   return;
-    // }
     try {
       await signupAndFetchProfile(
         firstName,
@@ -60,33 +51,32 @@ export default function SignupView() {
       setEmail('');
       setPassword('');
       setError('');
-      navigation.navigate('(tabs)');
+      router.push('/(tabs)');
     } catch (error: any) {
       setError(error.message || 'A server error occurred. Please try again.');
     } finally {
       setPassword('');
     }
   };
-  const { width } = useWindowDimensions();
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Adjust if needed
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView contentContainerStyle={styles.inner}>
         <View style={styles.container}>
           <Image
-            source={require('../assets/images/logo.png')}
+            source={require('../../assets/images/logo.png')}
             style={{
               width: width * 0.25,
               height: width * 0.25,
               resizeMode: 'contain',
               marginBottom: 16,
-              alignSelf: 'center',    
+              alignSelf: 'center',
             }}
-          />      
+          />
           <Text style={styles.logo}>Weather Calendar</Text>
           <TextInput
             style={styles.input}
@@ -94,14 +84,12 @@ export default function SignupView() {
             value={firstName}
             onChangeText={setFirstName}
           />
-
           <TextInput
             style={styles.input}
             placeholder="Last Name"
             value={lastName}
             onChangeText={setLastName}
           />
-
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -109,7 +97,6 @@ export default function SignupView() {
             onChangeText={setEmail}
             keyboardType="email-address"
           />
-
           <TextInput
             style={styles.input}
             placeholder="Password"
@@ -118,67 +105,13 @@ export default function SignupView() {
             secureTextEntry
           />
           {(error.includes('Invalid') || error.includes('already')) && <Text style={styles.error}>{error}</Text>}
-
           <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
           {error.includes('server') && <Text style={styles.error}>{error}</Text>}
-
           <Text style={styles.link} onPress={() => router.push('/LoginView')}>Already have an account? Log In</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  inner: {
-     flex: 1,
-  },    
-  logo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,    
-    textAlign: 'center',    
-  },  
-  input: {
-    width: '100%',
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    marginBottom: 12,
-    backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: '#005FA0',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 12,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  link: {
-    color: '#007BFF',
-    fontSize: 14,
-    marginTop: 12,
-    textAlign: 'center',    
-  },
-  error: {
-    color: 'red',
-    fontSize: 12,
-    marginBottom: 8,
-    textAlign: 'center',    
-  },
-});
