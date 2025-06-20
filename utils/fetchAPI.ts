@@ -46,7 +46,7 @@ export async function loginAndFetchProfile(email: string, password: string, apiS
     method: 'GET',
     headers: { 'Authorization': `Bearer ${loginData.token}` },
   });
-  return { profile: data.profile };
+  return { profile: data.profile, token: loginData.token };
 }
 
 export async function signupAndFetchProfile(
@@ -69,7 +69,7 @@ export async function signupAndFetchProfile(
   }
   await saveData('userToken', data.token);
   if (dispatch && setProfile) {
-    dispatch(setProfile({ first_name: data.first_name, last_name: data.last_name, email: data.email }));
+    dispatch(setProfile({ first_name: data.first_name, last_name: data.last_name, email: data.email, is_activated: data.is_activated }));
   }
   return data;
 }
@@ -108,5 +108,22 @@ export async function logout(userToken: string, apiServerIp: string) {
     url,
     method: 'POST',
     headers: { 'Authorization': `Bearer ${userToken}` },
+  });
+}
+
+export async function verifyEmailCode(code: string, userToken: string, apiServerIp: string) {
+  return doFetch({
+    url: `http://${apiServerIp}:3133/auth/verifystatus?code=${code}`,
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${userToken}` },
+  });
+}
+
+export async function resendVerificationEmail(email: string, userToken: string, apiServerIp: string) {
+  return doFetch({
+    url: `http://${apiServerIp}:3133/auth/verifyemail`,
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${userToken}` },
+    body: { email },
   });
 }

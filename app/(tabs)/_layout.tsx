@@ -2,9 +2,38 @@ import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from 'react-native';
 import { ModalProvider, useModal } from '../ModalContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { loadData } from '../../utils/storage';
+import { router } from "expo-router";
+
+import React, { useEffect, useState } from "react";
 
 function TabLayoutInner() {
   const { setModalVisible } = useModal();
+  const [token, setToken] = useState<string>('');
+  const profile = useSelector((state: RootState) => state.profile.profile) as {is_activated: boolean} | null;
+
+  useEffect(() => {
+    loadData('userToken').then(userTokenRaw => {
+      setToken(userTokenRaw || '');
+    });
+  }, []);
+
+  useEffect(() => {
+    // console.log(24, token, profile);
+    // if(!profile) {
+    //   router.push('/LoginView');
+    //   return;
+    // }
+    if (profile && profile.is_activated === false && token) {
+      router.push({ pathname:'/EmailVerify', params: { token } });
+    }
+  }, [profile, token]);
+
+  if (profile && profile.is_activated === false) {
+    return null;
+  }
 
   return <Tabs
     screenOptions={{

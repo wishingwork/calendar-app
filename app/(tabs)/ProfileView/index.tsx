@@ -9,6 +9,7 @@ import { clearProfile } from '../../profileSlice';
 import { router } from "expo-router";
 import { updateProfile, updatePassword, logout } from '../../../utils/fetchAPI';
 import styles from './styles';
+import { loadData, deleteData } from '../../../utils/storage';
 
 interface User {
   first_name: string;
@@ -24,22 +25,6 @@ const initialUser: User = {
   password: '',
 };
 
-async function loadData(key: string) {
-  const isAvailable = await SecureStore.isAvailableAsync();
-  if (!isAvailable) {
-    return localStorage.getItem(key);
-  }
-  return await SecureStore.getItemAsync(key);
-}
-
-async function deleteData(key: string) {
-  const isAvailable = await SecureStore.isAvailableAsync();
-  if (!isAvailable) {
-    localStorage.removeItem(key);
-    return;
-  }
-  await SecureStore.deleteItemAsync(key);
-}
 
 export default function ProfileView() {
   const profile = useSelector((state: RootState) => state.profile.profile);

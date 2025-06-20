@@ -27,13 +27,19 @@ export default function LoginView() {
       return;
     }
     try {
-      const { profile } = await loginAndFetchProfile(email, password, process.env.EXPO_PUBLIC_API_SERVER_IP);
+      const { profile, token } = await loginAndFetchProfile(email, password, process.env.EXPO_PUBLIC_API_SERVER_IP);
       if (profile) {
         dispatch(setProfile(profile));
+        // Check isActive and route accordingly
+        if (profile.is_activated === false) {
+          router.push({ pathname:'/EmailVerify', params: { token } });
+          return;
+        }
+        router.push('/(tabs)');
       }
       setEmail('');
       setPassword('');
-      router.push('/(tabs)');
+      setError('');
     } catch (error: any) {
       setError(error.message || 'A server error occurred. Please try again.');
     } finally {

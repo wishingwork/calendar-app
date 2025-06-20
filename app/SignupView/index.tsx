@@ -37,7 +37,7 @@ export default function SignupView() {
       return;
     }
     try {
-      await signupAndFetchProfile(
+      const data = await signupAndFetchProfile(
         firstName,
         lastName,
         email,
@@ -51,6 +51,11 @@ export default function SignupView() {
       setEmail('');
       setPassword('');
       setError('');
+      // Check isActive and route accordingly
+      if (data.is_activated === false) {
+        router.push({ pathname:'/EmailVerify', params: { token: data.token } });
+        return;
+      }
       router.push('/(tabs)');
     } catch (error: any) {
       setError(error.message || 'A server error occurred. Please try again.');
