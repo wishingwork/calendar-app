@@ -66,15 +66,15 @@ export default function LoginView() {
             }}
           />
           <Text style={styles.logo}>Weather Calendar</Text>
-          <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}> {/* TODO: move borderColor to styles if needed */}
+          <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
             <Text style={styles.featureText}>🌤️ Calendar View</Text>
             <Text style={styles.featureDescription}>See your 10-day trip timeline with daily weather</Text>
           </View>
-          <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}> {/* TODO: move borderColor to styles if needed */}
+          <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}>
             <Text style={styles.featureText}>🗺️ Trip Timeline</Text>
             <Text style={styles.featureDescription}>Visualize city transitions and weather information</Text>
           </View>
-          <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}> {/* TODO: move borderColor to styles if needed */}
+          <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}>
             <Text style={styles.featureText}>✈️ Travel Planning</Text>
             <Text style={styles.featureDescription}>Add events with transportation and location details</Text>
           </View>
@@ -97,7 +97,7 @@ export default function LoginView() {
             <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
           {(error.includes('server') || error.includes('Server')) && <Text style={styles.error}>{error}</Text>}
-          <Text style={styles.link} onPress={() => router.push('/SignupView')}>Don&apos;t have an account? Sign Up</Text>
+          <Text style={styles.link} onPress={() => router.push('/SignupView')}>Don't have an account? Sign Up</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

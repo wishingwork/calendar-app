@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   },
   link: {
     ...typography.link,
+    marginTop: 12, 
   },
   error: {
     ...typography.error,

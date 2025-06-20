@@ -138,6 +138,7 @@ export default function EmailVerify () {
           {resendLoading ? 'Resending...' : 'Resend Verification Email'}
         </Text>
         </TouchableOpacity>
+        <Text style={styles.link} onPress={() => router.push('/LoginView')}>Back to Log In view</Text>
       </View>
     </View>
     </View>
