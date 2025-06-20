@@ -40,13 +40,19 @@ function TabLayoutInner() {
         tabBarActiveTintColor: "#0077CC",
         tabBarInactiveTintColor: "#aaa",
         headerStyle: {
-            backgroundColor: "rgb(250 248 244 / var(--tw-bg-opacity, 1))",
+            backgroundColor: "#FAF8F4",
+            elevation: 0, // Android - removes shadow
+            shadowOpacity: 0, // iOS - just in case
+            borderBottomWidth: 0, // removes border            
         },
         headerShadowVisible : false,
         headerTintColor: "#0077CC",
         tabBarStyle: {
-            backgroundColor: "rgb(250 248 244 / var(--tw-bg-opacity, 1))",
-        }
+          backgroundColor: "#FAF8F4",
+          borderTopWidth: 0, // removes top border
+          elevation: 0, // Android - removes tab bar shadow
+          shadowOpacity: 0, // iOS - shadow transparency
+        },        
     }}
   >
     <Tabs.Screen 
