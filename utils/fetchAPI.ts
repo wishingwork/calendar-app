@@ -127,3 +127,17 @@ export async function resendVerificationEmail(email: string, userToken: string, 
     body: { email },
   });
 }
+
+export async function createEvent(
+  event: { title: string; event_datetime: string; address: string; travel_mode: number },
+  token: string
+) {
+  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `http://${apiServerIp}:3133/events`;
+  return doFetch({
+    url,
+    method: "POST",
+    headers: { 'Authorization': `Bearer ${token}` },
+    body: event,
+  });
+}
