@@ -1,75 +1,28 @@
-import { View, Text, FlatList, Image } from "react-native";
+import { View, Text, FlatList, Image, RefreshControl } from "react-native";
 import { StyleSheet } from "react-native";
+import { useEffect, useCallback, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store";
+import { setEvents } from "../eventsSlice";
+import { fetchEvents } from "../../utils/fetchAPI";
+import { loadData } from '../../utils/storage';
+import {WEATHER_CONDITIONS} from "../../constants/weather";
 
-const calendarData = [
-  { id: "1", weekday: "Monday", month: "Jan", day: "01", year: "2023" },
-  { id: "2", weekday: "Tuesday", month: "Jan", day: "02", year: "2023" },
-  { id: "3", weekday: "Wednesday", month: "Jan", day: "03", year: "2023" },
-  { id: "4", weekday: "Thursday", month: "Jan", day: "04", year: "2023" },
-  { id: "5", weekday: "Friday", month: "Jan", day: "05", year: "2023" },
-  { id: "6", weekday: "Saturday", month: "Jan", day: "06", year: "2023" },
-  { id: "7", weekday: "Sunday", month: "Jan", day: "07", year: "2023" },
-];
+type EventItem = {
+  id: string;
+  time: string;
+  title: string;
+  location?: { address?: string };
+  weather?: string;
+  temperature?: number | string;
+};
 
-const eventData = [
-	{
-		id: "1",
-		date: "2025-05-21",
-		time: "10:15",
-		eventName: "Birthday Party",
-		address: "40 East Grand Avenue, River North, Chicago, IL 60611, United States",
-		weather: "Sunny",
-		icon: "https://cdn-icons-png.flaticon.com/512/869/869869.png", // Example icon URL
-		highTemp: "25°C",
-		lowTemp: "15°C",
-	},
-	{
-		id: "2",
-		date: "2025-05-22",
-		time: "14:30",
-		eventName: "Conference",
-		address: "40 East Grand Avenue, River North, Chicago, IL 60611, United States",
-		weather: "Cloudy",
-		icon: "https://cdn-icons-png.flaticon.com/512/414/414825.png",
-		highTemp: "22°C",
-		lowTemp: "16°C",
-	},
-	{
-		id: "3",
-		date: "2025-05-23",
-		time: "11:45",
-		eventName: "Wedding",
-		address: "40 East Grand Avenue, River North, Chicago, IL 60611, United States",
-		weather: "Rainy",
-		icon: "https://cdn-icons-png.flaticon.com/512/1163/1163624.png",
-		highTemp: "18°C",
-		lowTemp: "10°C",
-	},
-	{
-		id: "4",
-		date: "2025-05-24",
-		time: "09:00",
-		eventName: "Business Meeting",
-		address: "4150 East Mississippi Avenue, Denver, CO 80246, United States",
-		weather: "Stormy",
-		icon: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png",
-		highTemp: "28°C",
-		lowTemp: "20°C",
-	},
-	{
-		id: "5",
-		date: "2025-05-25",
-		time: "15:15",
-		eventName: "Beach Day",
-		address: "4150 East Mississippi Avenue, Denver, CO 80246, United States",
-		weather: "Sunny",
-		icon: "https://cdn-icons-png.flaticon.com/512/869/869869.png",
-		highTemp: "30°C",
-		lowTemp: "24°C",
-	},
-];
-
-const renderCard = ({ item }) => (
+const renderCard = ({ item }: { item: EventItem }) => {
+  type WeatherKey = keyof typeof WEATHER_CONDITIONS;
+  const weatherKey = item.weather as WeatherKey;
+  const iconSource = WEATHER_CONDITIONS[weatherKey]?.icon;  
+  const weatherLabel = WEATHER_CONDITIONS[weatherKey]?.label
+  return (
   <View style={styles.eventRow}>
     {/* Left Side: Event Time */}
     <View style={styles.leftColumn}>
@@ -79,55 +32,88 @@ const renderCard = ({ item }) => (
 
     {/* Right Side: Event Details */}
     <View style={styles.card}>
-      <Text style={styles.eventName}>{item.eventName}</Text>
+      <Text style={styles.eventName}>{item.title}</Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 2 }}>
-          <Text style={styles.city}>{item.address}</Text>
+          <Text style={styles.city}>{item.location?.address}</Text>
         </View>
         <View style={{ flex: 1 }}>
-          <View style={styles.weatherRow}>
-            <Image source={{ uri: item.icon }} style={styles.icon} />
-            <Text style={styles.weather}>{item.weather}</Text>
-          </View>
+            <View style={styles.weatherRow}>
+            {/* Weather icon and text, if available */}
+            {item.weather && (
+              <>
+              {(() => {
+
+                if (iconSource) {
+                return <Image source={iconSource} style={styles.icon} />;
+                }
+                return null;
+              })()}
+              <Text style={styles.weather}>
+                {weatherLabel ?? item.weather}
+              </Text>
+              </>
+            )}
+            </View>
           <Text style={styles.temperature}>
-            {item.highTemp}
+            {item.temperature ? `${item.temperature}°C` : ""}
           </Text>
         </View>
       </View>
     </View>
   </View>
-);
+)};
 
-const renderCalendarCard = ({ item }: { item: typeof calendarData[0] }) => {
+const renderCalendarCard = ({ item }) => {
   return (
     <>
       <View style={styles.bar}>
         <Text style={styles.dateText}>
-          {`${item.weekday}, ${item.month} ${item.day}, ${item.year}`}
+          {item.date}
         </Text>
       </View>
       <FlatList
-        data={eventData}
+        data={item.events}
         renderItem={renderCard}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(ev) => ev.id}
         contentContainerStyle={styles.container}
       />          
     </>
   );
 };
 
-
-
 export default function Timeline() {
+  const dispatch = useDispatch();
+  const eventsData = useSelector((state: RootState) => state.events.events);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchAndSetEvents = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const token = await loadData('userToken');
+      if (!token) return;
+      const data = await fetchEvents(token);
+      dispatch(setEvents(data));
+    } catch (e) {
+      // handle error if needed
+    } finally {
+      setRefreshing(false);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchAndSetEvents();
+  }, [fetchAndSetEvents]);
+
   return (
-    <>
-      <FlatList
-        data={calendarData}
-        renderItem={renderCalendarCard}
-        keyExtractor={(item) => item.id}
-        // contentContainerStyle={styles.container}
-      />    
-    </>
+    <FlatList
+      data={eventsData}
+      renderItem={renderCalendarCard}
+      keyExtractor={(item) => item.date}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={fetchAndSetEvents} />
+      }
+    />
   );
 }
 

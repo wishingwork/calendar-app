@@ -16,6 +16,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { createEvent } from "../../utils/fetchAPI"; // import the helper
 import { loadData, deleteData } from '../../utils/storage';
 import { colors } from '../../styles/colors';
+import { useDispatch } from "react-redux";
+import { setEvents } from "../eventsSlice";
+import { fetchEvents } from "../../utils/fetchAPI";
 
 const travelModeOptions = [
   { label: "Car", value: 0 },
@@ -34,6 +37,7 @@ export default function AddEvent() {
   const [travelMode, setTravelMode] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const dispatch = useDispatch();
 
   const validateInput = (input: string) => {
     const forbiddenPatterns = /(;|--|DROP|SELECT|INSERT|DELETE|UPDATE|CREATE|ALTER|EXEC|UNION)/i;
@@ -63,6 +67,9 @@ export default function AddEvent() {
         address,
         travel_mode: travelMode,
       }, token);
+      // Refetch events and update redux
+      const events = await fetchEvents(token);
+      dispatch(setEvents(events));
       Alert.alert("Event Saved", `Event "${title}" has been saved successfully!`);
       setTitle("");
       setAddress("");

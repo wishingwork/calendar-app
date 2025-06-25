@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import profileReducer from './profileSlice';
+import eventsReducer from './eventsSlice';
 
 const store = configureStore({
   reducer: {
     profile: profileReducer,
+    events: eventsReducer,
   },
 });
 

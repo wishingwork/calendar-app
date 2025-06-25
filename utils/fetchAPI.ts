@@ -143,3 +143,13 @@ export async function createEvent(
     body: { ...event, event_datetime: utcEventDatetime },
   });
 }
+
+export async function fetchEvents(token: string) {
+  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `http://${apiServerIp}:3133/events`;
+  return doFetch({
+    url,
+    method: "GET",
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+}
