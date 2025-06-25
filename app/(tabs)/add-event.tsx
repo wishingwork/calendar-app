@@ -29,6 +29,7 @@ export default function AddEvent() {
   const [title, setTitle] = useState("");
   const [eventDate, setEventDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTravelModePicker, setShowTravelModePicker] = useState(false);
   const [address, setAddress] = useState("");
   const [travelMode, setTravelMode] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -161,7 +162,7 @@ export default function AddEvent() {
             borderColor: "#ccc",
           }}
         >
-          <Text style={{ fontSize: 16, color: "#333" }}>Close</Text>
+          <Text style={{ fontSize: 16, color: "#333" }}>Finish</Text>
         </TouchableOpacity>
           </View>
         )
@@ -176,15 +177,46 @@ export default function AddEvent() {
       />
 
       <Text style={styles.label}>Travel Mode</Text>
-      <Picker
-        selectedValue={travelMode}
-        onValueChange={(itemValue) => setTravelMode(Number(itemValue))}
-        style={styles.picker}
+      <TouchableOpacity
+        style={!showTravelModePicker && styles.dateButton}
+        onPress={() => setShowTravelModePicker(!showTravelModePicker)}
       >
-        {travelModeOptions.map((opt) => (
-          <Picker.Item key={opt.value} label={opt.label} value={opt.value} />
-        ))}
-      </Picker>
+        {!showTravelModePicker && (
+        <Text style={styles.dateText}>
+          {travelModeOptions[travelMode].label}
+        </Text>
+        )}
+      </TouchableOpacity>    
+      {showTravelModePicker && (    
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
+            <Picker
+              selectedValue={travelMode}
+              onValueChange={(itemValue) => setTravelMode(Number(itemValue))}
+              style={[
+              styles.picker,
+              Platform.OS === "ios" ? { height: undefined } : {},
+              ]}
+            >
+              {travelModeOptions.map((opt) => (
+              <Picker.Item key={opt.value} label={opt.label} value={opt.value} />
+              ))}
+            </Picker>
+            <TouchableOpacity
+              onPress={() => setShowTravelModePicker(false)}
+              style={{
+                marginLeft: 8,
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                backgroundColor: "#eee",
+                borderRadius: 6,
+                borderWidth: 1,
+                borderColor: "#ccc",
+              }}
+            >
+            <Text style={{ fontSize: 16, color: "#333" }}>Finish</Text>
+            </TouchableOpacity>      
+          </View>  
+      )}
       {errors.required && <Text style={styles.error}>{errors.required}</Text>}
 
       <View style={styles.buttonRow}>
@@ -229,8 +261,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
-    marginBottom: 16,
     backgroundColor: "#fff",
+    width: "80%",
+    height: 40, // Match the close button height (approx 40px)
+    justifyContent: "center",
   },
   buttonRow: {
     flexDirection: "row",
