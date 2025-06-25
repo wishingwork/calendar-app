@@ -86,44 +86,84 @@ export default function AddEvent() {
 
       <Text style={styles.label}>Event Date and Time</Text>
       <TouchableOpacity
-        style={styles.dateButton}
-        onPress={() => setShowDatePicker(true)}
+        style={!showDatePicker && styles.dateButton}
+        onPress={() => setShowDatePicker(!showDatePicker)}
       >
+        {!showDatePicker && (
         <Text style={styles.dateText}>
           {eventDate.toLocaleDateString()} {eventDate.toLocaleTimeString()}
         </Text>
+        )}
       </TouchableOpacity>
       {showDatePicker && (
         Platform.OS === "web" ? (
-          <input
-        type="datetime-local"
-        value={eventDate.toISOString().slice(0, 16)}
-        onChange={e => {
-          setShowDatePicker(false);
-          const newDate = new Date(e.target.value);
-          if (!isNaN(newDate.getTime())) setEventDate(newDate);
-        }}
-        style={{
-          padding: 12,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 8,
-          marginBottom: 16,
-          backgroundColor: "#fff",
-          fontSize: 16,
-        }}
-        autoFocus
-          />
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
+        <input
+          type="datetime-local"
+          value={
+            (() => {
+          const local = new Date(eventDate.getTime() - eventDate.getTimezoneOffset() * 60000);
+          return local.toISOString().slice(0, 16);
+            })()
+          }
+          onChange={e => {
+            const localValue = e.target.value;
+            const [datePart, timePart] = localValue.split("T");
+            const [year, month, day] = datePart.split("-").map(Number);
+            const [hour, minute] = timePart.split(":").map(Number);
+            const localDate = new Date(year, month - 1, day, hour, minute);
+            setEventDate(localDate);
+          }}
+          style={{
+            padding: 12,
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 8,
+            backgroundColor: "#fff",
+            fontSize: 16,
+            marginRight: 8,
+          }}
+          autoFocus
+        />
+        <TouchableOpacity
+          onPress={() => setShowDatePicker(false)}
+          style={{
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+            backgroundColor: "#eee",
+            borderRadius: 6,
+            borderWidth: 1,
+            borderColor: "#ccc",
+          }}
+        >
+          <Text style={{ fontSize: 16, color: "#333" }}>Close</Text>
+        </TouchableOpacity>
+          </View>
         ) : (
-          <DateTimePicker
-        value={eventDate}
-        mode="datetime"
-        display="default"
-        onChange={(event, selectedDate) => {
-          setShowDatePicker(false);
-          if (selectedDate) setEventDate(selectedDate);
-        }}
-          />
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
+        <DateTimePicker
+          value={eventDate}
+          mode="datetime"
+          display="default"
+          onChange={(event, selectedDate) => {
+            if (selectedDate) setEventDate(selectedDate);
+          }}
+        />
+        <TouchableOpacity
+          onPress={() => setShowDatePicker(false)}
+          style={{
+            marginLeft: 8,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+            backgroundColor: "#eee",
+            borderRadius: 6,
+            borderWidth: 1,
+            borderColor: "#ccc",
+          }}
+        >
+          <Text style={{ fontSize: 16, color: "#333" }}>Close</Text>
+        </TouchableOpacity>
+          </View>
         )
       )}
 

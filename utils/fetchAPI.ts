@@ -134,10 +134,12 @@ export async function createEvent(
 ) {
   const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
   const url = `http://${apiServerIp}:3133/events`;
+  // Ensure event_datetime is in UTC ISO format
+  const utcEventDatetime = new Date(event.event_datetime).toISOString();
   return doFetch({
     url,
     method: "POST",
     headers: { 'Authorization': `Bearer ${token}` },
-    body: event,
+    body: { ...event, event_datetime: utcEventDatetime },
   });
 }
