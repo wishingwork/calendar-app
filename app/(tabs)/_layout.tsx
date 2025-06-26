@@ -70,9 +70,9 @@ function TabLayoutInner() {
         }} 
     />
     <Tabs.Screen 
-        name="add-event" 
+        name="AddEventView" 
         options={{ 
-            headerTitle: "Add Event",
+            title: "Add Event",
             tabBarLabel: "Add Event",
             tabBarIcon: ({focused, color}) => (
                 <Ionicons 

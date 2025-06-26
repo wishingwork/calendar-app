@@ -10,11 +10,13 @@ import {WEATHER_CONDITIONS} from "../../constants/weather";
 
 type EventItem = {
   id: string;
-  time: string;
+  time: string; // e.g. "09:00 - 10:00"
   title: string;
   location?: { address?: string };
   weather?: string;
   temperature?: number | string;
+  start_datetime?: string;
+  end_datetime?: string;
 };
 
 const renderCard = ({ item }: { item: EventItem }) => {
@@ -26,7 +28,12 @@ const renderCard = ({ item }: { item: EventItem }) => {
   <View style={styles.eventRow}>
     {/* Left Side: Event Time */}
     <View style={styles.leftColumn}>
-      <Text style={styles.eventTime}>{item.time}</Text>
+      <Text style={styles.eventTime}>
+        {/* Show time window if available */}
+        {item.start_datetime && item.end_datetime
+          ? `${item.start_datetime.slice(11, 16)} - ${item.end_datetime.slice(11, 16)}`
+          : item.time}
+      </Text>
       <View style={styles.verticalLine} />
     </View>
 
@@ -85,7 +92,18 @@ const renderCalendarCard = ({ item }) => {
 export default function Timeline() {
   const dispatch = useDispatch();
   const eventsData = useSelector((state: RootState) => state.events.events);
+  // Select the time window from Redux (adjust the selector as per your state shape)
+  const timeWindow = useSelector((state: RootState) => state.calendar?.timeWindow); // e.g., { start: string, end: string }
+
   const [refreshing, setRefreshing] = useState(false);
+
+  // Filter eventsData based on the time window
+  const filteredEventsData = timeWindow
+    ? eventsData.filter((item) => {
+        // item.date is assumed to be in 'YYYY-MM-DD' format
+        return item.date >= timeWindow.start && item.date <= timeWindow.end;
+      })
+    : eventsData;
 
   const fetchAndSetEvents = useCallback(async () => {
     setRefreshing(true);
@@ -107,7 +125,7 @@ export default function Timeline() {
 
   return (
     <FlatList
-      data={eventsData}
+      data={filteredEventsData}
       renderItem={renderCalendarCard}
       keyExtractor={(item) => item.date}
       refreshControl={
