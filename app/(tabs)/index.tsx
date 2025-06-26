@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { Calendar } from "react-native-big-calendar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
+import { setEvents } from "../eventsSlice";
+import { fetchEvents } from "../../utils/fetchAPI";
+import { loadData } from '../../utils/storage';
 
 export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
 
   // Get events from Redux
   const eventsData = useSelector((state: RootState) => state.events.events);
@@ -46,6 +51,24 @@ export default function Home() {
           ev.start.toISOString().slice(0, 10) === selected
       )
     : events;
+
+  const fetchAndSetEvents = useCallback(async () => {
+	setRefreshing(true);
+	try {
+	  const token = await loadData('userToken');
+	  if (!token) return;
+	  const data = await fetchEvents(token);
+	  dispatch(setEvents(data));
+	} catch (e) {
+	  // handle error if needed
+	} finally {
+	  setRefreshing(false);
+	}
+  }, [dispatch]);
+
+  useEffect(() => {
+	fetchAndSetEvents();
+  }, [fetchAndSetEvents]);
 
   return (
     <View style={{ flex: 1 }}>
