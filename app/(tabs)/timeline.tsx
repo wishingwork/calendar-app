@@ -7,7 +7,7 @@ import { setEvents } from "../eventsSlice";
 import { fetchEvents } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
 import {WEATHER_CONDITIONS} from "../../constants/weather";
-
+import { useNavigation } from "@react-navigation/native";
 type EventItem = {
   id: string;
   time: string; // e.g. "09:00 - 10:00"
@@ -19,7 +19,7 @@ type EventItem = {
   end_datetime?: string;
 };
 
-const renderCard = ({ item }: { item: EventItem }) => {
+const renderCard = ({ item, navigation }: { item: EventItem; navigation: any }) => {
   type WeatherKey = keyof typeof WEATHER_CONDITIONS;
   const weatherKey = item.weather as WeatherKey;
   const iconSource = WEATHER_CONDITIONS[weatherKey]?.icon;  
@@ -38,7 +38,12 @@ const renderCard = ({ item }: { item: EventItem }) => {
     </View>
 
     {/* Right Side: Event Details */}
-    <View style={styles.card}>
+    <View
+      style={styles.card}
+      onTouchEnd={() => {
+        navigation.navigate('EventDetailView', { event: item });
+      }}
+    >
       <Text style={styles.eventName}>{item.title}</Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 2 }}>
@@ -71,7 +76,8 @@ const renderCard = ({ item }: { item: EventItem }) => {
   </View>
 )};
 
-const renderCalendarCard = ({ item }) => {
+// Update renderCalendarCard to pass navigation to renderCard
+const renderCalendarCard = ({ item, navigation }) => {
   return (
     <>
       <View style={styles.bar}>
@@ -81,7 +87,7 @@ const renderCalendarCard = ({ item }) => {
       </View>
       <FlatList
         data={item.events}
-        renderItem={renderCard}
+        renderItem={({ item }) => renderCard({ item, navigation })}
         keyExtractor={(ev) => ev.id}
         contentContainerStyle={styles.container}
       />          
@@ -91,6 +97,7 @@ const renderCalendarCard = ({ item }) => {
 
 export default function Timeline() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const eventsData = useSelector((state: RootState) => state.events.events);
   // Select the time window from Redux (adjust the selector as per your state shape)
   const timeWindow = useSelector((state: RootState) => state.calendar?.timeWindow); // e.g., { start: string, end: string }
@@ -126,7 +133,7 @@ export default function Timeline() {
   return (
     <FlatList
       data={filteredEventsData}
-      renderItem={renderCalendarCard}
+      renderItem={({ item }) => renderCalendarCard({ item, navigation })}
       keyExtractor={(item) => item.date}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={fetchAndSetEvents} />

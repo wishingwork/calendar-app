@@ -15,6 +15,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" options={{headerShown: true }} />
+        <Stack.Screen name="EventDetailView" options={{ headerShown: true }} />
       </Stack>
     </ReduxProvider>
   );

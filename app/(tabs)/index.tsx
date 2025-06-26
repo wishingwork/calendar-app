@@ -6,11 +6,13 @@ import { RootState } from "../store";
 import { setEvents } from "../eventsSlice";
 import { fetchEvents } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
+import { useNavigation } from "@react-navigation/native";
 
 export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
 
   // Get events from Redux
   const eventsData = useSelector((state: RootState) => state.events.events);
@@ -76,7 +78,7 @@ export default function Home() {
         events={events}
         height={400}
         mode="week"
-        onPressEvent={(event) => setSelected(event.start.toISOString().slice(0, 10))}
+        onPressEvent={(event) => navigation.navigate("EventDetailView", { event })}
         // renderEvent={renderEvent}
         // swipeEnabled={true}
       />
