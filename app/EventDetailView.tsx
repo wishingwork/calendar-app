@@ -43,6 +43,7 @@ export default function EventDetailView() {
       },
       headerShadowVisible: false,
       headerTintColor: "#0077CC",
+      title: "Event Detail",
     });
   }, [navigation]);
 

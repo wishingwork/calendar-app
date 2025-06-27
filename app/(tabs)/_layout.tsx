@@ -70,20 +70,6 @@ function TabLayoutInner() {
         }} 
     />
     <Tabs.Screen 
-        name="AddEventView" 
-        options={{ 
-            title: "Add Event",
-            tabBarLabel: "Add Event",
-            tabBarIcon: ({focused, color}) => (
-                <Ionicons 
-                    name={ focused ? "add-circle-outline" : "add-circle-outline" } 
-                    color={color}
-                    size={24} 
-                />
-            ),            
-        }} 
-    />
-    <Tabs.Screen 
         name="timeline" 
         options={{ 
             headerTitle: "Timeline",

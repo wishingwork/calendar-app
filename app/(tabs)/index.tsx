@@ -18,17 +18,26 @@ export default function Home() {
   const [calendarMode, setCalendarMode] = useState<"day" | "week" | "month">("week");
   const [modeModalVisible, setModeModalVisible] = useState(false);
 
-  // Set header right button for mode switch
+  // Set header right button for Add Event and mode switch
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
         headerRight: () => (
-          <TouchableOpacity onPress={() => setModeModalVisible(true)} style={{ marginRight: 16 }}>
-            <Ionicons name="options-outline" size={24} color="#0077CC" />
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("AddEventView")}
+              style={{ marginRight: 12 }}
+              accessibilityLabel="Add Event"
+            >
+              <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModeModalVisible(true)} style={{ marginRight: 4 }}>
+              <Ionicons name="options-outline" size={24} color="#0077CC" />
+            </TouchableOpacity>
+          </View>
         ),
       });
-    }, [navigation])
+    }, [navigation, setModeModalVisible])
   );
 
   // Get events from Redux

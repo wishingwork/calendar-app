@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, RefreshControl } from "react-native";
+import { View, Text, FlatList, Image, RefreshControl, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import { useEffect, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,7 +7,9 @@ import { setEvents } from "../eventsSlice";
 import { fetchEvents } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
 import {WEATHER_CONDITIONS} from "../../constants/weather";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+
 type EventItem = {
   id: string;
   time: string; // e.g. "09:00 - 10:00"
@@ -129,6 +131,23 @@ export default function Timeline() {
   useEffect(() => {
     fetchAndSetEvents();
   }, [fetchAndSetEvents]);
+
+  // Set header right button for Add Event
+  useFocusEffect(
+    useCallback(() => {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddEventView")}
+            style={{ marginRight: 16 }}
+            accessibilityLabel="Add Event"
+          >
+            <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
+          </TouchableOpacity>
+        ),
+      });
+    }, [navigation])
+  );
 
   return (
     <FlatList

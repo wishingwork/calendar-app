@@ -13,13 +13,14 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { createEvent } from "../../../utils/fetchAPI"; // import the helper
-import { loadData, deleteData } from '../../../utils/storage';
-import { colors } from '../../../styles/colors';
+import { createEvent, fetchEvents } from "../../utils/fetchAPI"; // import the helper
+import { loadData, deleteData } from '../../utils/storage';
+import { colors } from '../../styles/colors';
 import { useDispatch } from "react-redux";
-import { setEvents } from "../../eventsSlice";
-import { fetchEvents } from "../../../utils/fetchAPI";
+import { setEvents } from "../eventsSlice";
+// import { fetchEvents } from "../../utils/fetchAPI";
 import DatetimePicker from "./DatetimePicker"; // <-- import the new component
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const travelModeOptions = [
   { label: "Car", value: 0 },
@@ -44,6 +45,7 @@ export default function AddEventView() {
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const validateInput = (input: string) => {
     const forbiddenPatterns = /(;|--|DROP|SELECT|INSERT|DELETE|UPDATE|CREATE|ALTER|EXEC|UNION)/i;
@@ -96,6 +98,13 @@ export default function AddEventView() {
       setLoading(false);
     }
   };
+
+  // Set navigation title to "Add Event"
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Add Event",
+    });
+  }, [navigation]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -174,7 +183,6 @@ export default function AddEventView() {
 
       <View style={styles.buttonRow}>
         <Button title={loading ? "Saving..." : "Save Event"} onPress={handleSaveEvent} color="#007BFF" disabled={loading} />
-        <Button title="Cancel" onPress={() => Alert.alert("Cancelled")} color="#6c757d" />
       </View>
     </ScrollView>
   );
@@ -183,7 +191,7 @@ export default function AddEventView() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "rgb(250 248 244 / var(--tw-bg-opacity, 1))"    
   },
   label: {
     fontSize: 16,
