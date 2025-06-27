@@ -9,6 +9,7 @@ import { loadData } from '../../utils/storage';
 import {WEATHER_CONDITIONS} from "../../constants/weather";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from 'expo-router';
 
 type EventItem = {
   id: string;
@@ -21,7 +22,7 @@ type EventItem = {
   end_datetime?: string;
 };
 
-const renderCard = ({ item, navigation }: { item: EventItem; navigation: any }) => {
+const renderCard = ({ item }: { item: EventItem }) => {
   type WeatherKey = keyof typeof WEATHER_CONDITIONS;
   const weatherKey = item.weather as WeatherKey;
   const iconSource = WEATHER_CONDITIONS[weatherKey]?.icon;  
@@ -43,7 +44,7 @@ const renderCard = ({ item, navigation }: { item: EventItem; navigation: any }) 
     <View
       style={styles.card}
       onTouchEnd={() => {
-        navigation.navigate('EventDetailView', { event: item });
+        router.push(`/EventDetailView/${item.id}`);
       }}
     >
       <Text style={styles.eventName}>{item.title}</Text>
@@ -79,7 +80,7 @@ const renderCard = ({ item, navigation }: { item: EventItem; navigation: any }) 
 )};
 
 // Update renderCalendarCard to pass navigation to renderCard
-const renderCalendarCard = ({ item, navigation }) => {
+const renderCalendarCard = ({ item }) => {
   return (
     <>
       <View style={styles.bar}>
@@ -89,7 +90,7 @@ const renderCalendarCard = ({ item, navigation }) => {
       </View>
       <FlatList
         data={item.events}
-        renderItem={({ item }) => renderCard({ item, navigation })}
+        renderItem={({ item }) => renderCard({ item })}
         keyExtractor={(ev) => ev.id}
         contentContainerStyle={styles.container}
       />          
@@ -152,7 +153,7 @@ export default function Timeline() {
   return (
     <FlatList
       data={filteredEventsData}
-      renderItem={({ item }) => renderCalendarCard({ item, navigation })}
+      renderItem={({ item }) => renderCalendarCard({ item })}
       keyExtractor={(item) => item.date}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={fetchAndSetEvents} />

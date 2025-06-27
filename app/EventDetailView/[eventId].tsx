@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Modal, TouchableOpacity, Alert } from "react-native";
-import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useDispatch } from "react-redux";
-import { setEvents } from "./eventsSlice";
-import { fetchEvents, deleteEvent as deleteEventAPI } from "../utils/fetchAPI";
-import { loadData } from '../utils/storage';
+import { setEvents } from "../eventsSlice";
+import { fetchEvents, deleteEvent as deleteEventAPI, fetchEventById } from "../../utils/fetchAPI";
+import { loadData } from '../../utils/storage';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,18 +24,30 @@ function formatEventTime(dt: string, tz?: string) {
 
 export default function EventDetailView() {
   const navigation = useNavigation();
-  const route = useRoute();
   const dispatch = useDispatch();
-  const { event } = route.params as { event: any };
+  const route = useRoute();
+  const eventId = route.params?.eventId;
+
+  const [event, setEvent] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const tz = event.timezone || dayjs.tz.guess();
-  const start = formatEventTime(event.start_datetime, tz);
-  const end = formatEventTime(event.end_datetime, tz);
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const token = await loadData('userToken');
+        // fetchEventById returns the event detail object
+        const eventData = await fetchEventById(eventId, token);
+        setEvent(eventData);
+      } catch (err) {
+        Alert.alert("Error", "Failed to load event.");
+        navigation.goBack();
+      }
+    };
+    if (eventId) fetchEvent();
+  }, [eventId]);
 
-  // Set custom header style and delete icon
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerStyle: {
         backgroundColor: "#FAF8F4",
@@ -46,6 +58,7 @@ export default function EventDetailView() {
       headerShadowVisible: false,
       headerTintColor: "#0077CC",
       title: "Event Detail",
+      headerShown: true, 
       headerRight: () => (
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
@@ -56,7 +69,7 @@ export default function EventDetailView() {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, setModalVisible]);
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -74,6 +87,18 @@ export default function EventDetailView() {
       setDeleting(false);
     }
   };
+
+  if (!event) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading event...</Text>
+      </View>
+    );
+  }
+
+  const tz = event.timezone || dayjs.tz.guess();
+  const start = formatEventTime(event.start_datetime, tz);
+  const end = formatEventTime(event.end_datetime, tz);
 
   return (
     <View style={styles.container}>

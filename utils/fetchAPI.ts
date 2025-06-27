@@ -165,3 +165,13 @@ export async function fetchEvents(token: string) {
   });
 }
 
+export async function fetchEventById(id: string, token: string) {
+  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `http://${apiServerIp}:3133/events/${id}`;
+  return doFetch({
+    url,
+    method: "GET",
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+}
+

@@ -8,6 +8,7 @@ import { fetchEvents } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from 'expo-router';
 
 export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -160,7 +161,7 @@ export default function Home() {
         events={events}
         height={400}
         mode={calendarMode}
-        onPressEvent={(event) => navigation.navigate("EventDetailView", { event })}
+        onPressEvent={(event) => router.push(`/EventDetailView/${event.id}`)}
       />
     </View>
   );
