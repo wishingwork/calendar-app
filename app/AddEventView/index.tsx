@@ -99,13 +99,6 @@ export default function AddEventView() {
     }
   };
 
-  // Set navigation title to "Add Event"
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: "Add Event",
-    });
-  }, [navigation]);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.label}>Event Title *</Text>
