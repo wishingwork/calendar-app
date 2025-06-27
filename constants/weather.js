@@ -1,19 +1,19 @@
 export const WEATHER_CONDITIONS = {
   Sunny: {
     label: "Sunny",
-    icon: "https://cdn-icons-png.flaticon.com/512/869/869869.png",
+    icon: require("../assets/images/weather-sunny.png"),
   },
   Cloudy: {
     label: "Cloudy",
-    icon: "https://cdn-icons-png.flaticon.com/512/414/414825.png",
+    icon: require("../assets/images/weather-cloudy.png"),
   },
   Rainy: {
     label: "Rainy",
-    icon: "https://cdn-icons-png.flaticon.com/512/1163/1163624.png",
+    icon: require("../assets/images/weather-rainy.png"),
   },
   Stormy: {
     label: "Stormy",
-    icon: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png",
+    icon: require("../assets/images/weather-stormy.png"),
   },
   // Add more weather types as needed
 };
