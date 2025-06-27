@@ -5,22 +5,18 @@ import {
   TextInput,
   Button,
   StyleSheet,
-  Switch,
   TouchableOpacity,
   ScrollView,
   Alert,
   Platform,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { createEvent, fetchEvents } from "../../utils/fetchAPI"; // import the helper
-import { loadData, deleteData } from '../../utils/storage';
+import { loadData } from '../../utils/storage';
 import { colors } from '../../styles/colors';
 import { useDispatch } from "react-redux";
 import { setEvents } from "../eventsSlice";
-// import { fetchEvents } from "../../utils/fetchAPI";
 import DatetimePicker from "./DatetimePicker"; // <-- import the new component
-import { useNavigation, useRoute } from "@react-navigation/native";
 
 const travelModeOptions = [
   { label: "Car", value: 0 },
@@ -33,7 +29,6 @@ const travelModeOptions = [
 export default function AddEventView() {
   const [title, setTitle] = useState("");
   const [eventDate, setEventDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTravelModePicker, setShowTravelModePicker] = useState(false);
   const [address, setAddress] = useState("");
   const [travelMode, setTravelMode] = useState(0);
@@ -41,11 +36,8 @@ export default function AddEventView() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
-  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const validateInput = (input: string) => {
     const forbiddenPatterns = /(;|--|DROP|SELECT|INSERT|DELETE|UPDATE|CREATE|ALTER|EXEC|UNION)/i;
@@ -54,12 +46,10 @@ export default function AddEventView() {
 
   const handleSaveEvent = async () => {
     if (!validateInput(title) || !validateInput(address)) {
-      // Alert.alert("Invalid Input", "Please avoid using special SQL keywords or symbols.");
       setErrors({ password: "Please avoid using special SQL keywords or symbols." });
       return;
     }
     if (!title || !address) {
-      // Alert.alert("Missing Fields", "Please fill in all required fields.");
       setErrors({ required: "Please fill in all required fields." });
       return;
     }
@@ -69,7 +59,6 @@ export default function AddEventView() {
     }
     setLoading(true);
     try {
-      // const token = await localStorage.getItem("token");
       const userTokenRaw = await loadData('userToken');
       const token = userTokenRaw || '';
       if (!token) throw new Error("Not authenticated");

@@ -21,11 +21,6 @@ function TabLayoutInner() {
   }, []);
 
   useEffect(() => {
-    // console.log(24, token, profile);
-    // if(!profile) {
-    //   router.push('/LoginView');
-    //   return;
-    // }
     if (profile && profile.is_activated === false && token) {
       router.push({ pathname:'/EmailVerify', params: { token } });
     }

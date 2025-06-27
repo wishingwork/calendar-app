@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useModal } from '../../ModalContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
-import * as SecureStore from 'expo-secure-store';
 import { clearProfile } from '../../profileSlice';
 import { router } from "expo-router";
 import { updateProfile, updatePassword, logout } from '../../../utils/fetchAPI';

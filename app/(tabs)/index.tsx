@@ -1,5 +1,5 @@
-import { useEffect, useCallback, useState, useRef } from "react";
-import { View, Text, StyleSheet, FlatList, Image, PanResponder, Modal, TouchableOpacity } from "react-native";
+import { useEffect, useCallback, useState } from "react";
+import { View, Text, StyleSheet, Image, Modal, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
@@ -161,35 +161,7 @@ export default function Home() {
         height={400}
         mode={calendarMode}
         onPressEvent={(event) => navigation.navigate("EventDetailView", { event })}
-        // renderEvent={renderEvent}
-        // swipeEnabled={true}
       />
-
-      {/* <FlatList
-        data={filteredEvents}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.date}>
-              {item.start ? item.start.toISOString().slice(0, 10) : ""}
-            </Text>
-            <Text style={styles.city}>{item.city}</Text>
-            <View style={styles.weatherRow}>
-              {item.icon && (
-                <Image source={{ uri: item.icon }} style={styles.icon} />
-              )}
-              <Text style={styles.weather}>{item.weather}</Text>
-            </View>
-            <Text style={styles.temperature}>
-              {item.start && item.end
-                ? `Time: ${item.start.toISOString().slice(11, 16)} - ${item.end.toISOString().slice(11, 16)}`
-                : ""}
-            </Text>
-          </View>
-        )}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.container}
-        style={{ flex: 1 }}
-      /> */}
     </View>
   );
 }
