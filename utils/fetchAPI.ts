@@ -144,6 +144,17 @@ export async function createEvent(
   });
 }
 
+// Delete event by id
+export async function deleteEvent(id: string, token: string) {
+  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `http://${apiServerIp}:3133/events/${id}`;
+  return doFetch({
+    url,
+    method: "DELETE",
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+}
+
 export async function fetchEvents(token: string) {
   const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
   const url = `http://${apiServerIp}:3133/events`;
@@ -153,3 +164,4 @@ export async function fetchEvents(token: string) {
     headers: { 'Authorization': `Bearer ${token}` },
   });
 }
+
