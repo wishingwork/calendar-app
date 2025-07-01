@@ -65,7 +65,7 @@ function TabLayoutInner() {
         }} 
     />
     <Tabs.Screen 
-        name="timeline" 
+        name="TimelineView" 
         options={{ 
             headerTitle: "Timeline",
             tabBarLabel: "Timeline",

@@ -2,11 +2,11 @@ import { View, Text, FlatList, Image, RefreshControl, TouchableOpacity } from "r
 import { StyleSheet } from "react-native";
 import { useEffect, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../Redux/store";
-import { setEvents } from "../../Redux/features/eventsSlice";
-import { fetchEvents } from "../../utils/fetchAPI";
-import { loadData } from '../../utils/storage';
-import {WEATHER_CONDITIONS} from "../../constants/weather";
+import { RootState } from "../../../Redux/store";
+import { setEvents } from "../../../Redux/features/eventsSlice";
+import { fetchEvents } from "../../../utils/fetchAPI";
+import { loadData } from '../../../utils/storage';
+import {WEATHER_CONDITIONS} from "../../../constants/weather";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from 'expo-router';
@@ -98,7 +98,7 @@ const renderCalendarCard = ({ item }) => {
   );
 };
 
-export default function Timeline() {
+export default function TimelineView() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const eventsData = useSelector((state: RootState) => state.events.events);
