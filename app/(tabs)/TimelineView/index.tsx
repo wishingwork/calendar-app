@@ -135,21 +135,21 @@ export default function TimelineView() {
   }, [fetchAndSetEvents]);
 
   // Set header right button for Add Event
-  useFocusEffect(
-    useCallback(() => {
-      navigation.setOptions({
-        headerRight: () => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AddEventView")}
-            style={{ marginRight: 16 }}
-            accessibilityLabel="Add Event"
-          >
-            <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
-          </TouchableOpacity>
-        ),
-      });
-    }, [navigation])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     navigation.setOptions({
+  //       headerRight: () => (
+  //         <TouchableOpacity
+  //           onPress={() => navigation.navigate("AddEventView")}
+  //           style={{ marginRight: 16 }}
+  //           accessibilityLabel="Add Event"
+  //         >
+  //           <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
+  //         </TouchableOpacity>
+  //       ),
+  //     });
+  //   }, [navigation])
+  // );
 
   return (
     <FlatList

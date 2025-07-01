@@ -10,6 +10,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from 'expo-router';
 import styles from './styles';
+import { useModal } from '../../ModalContext';
 
 export default function CalendarView() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export default function CalendarView() {
   // Calendar mode state and modal state
   const [calendarMode, setCalendarMode] = useState<"day" | "week" | "month">("week");
   const [modeModalVisible, setModeModalVisible] = useState(false);
+  const { modalVisible , setModalVisible } = useModal();
 
   // Set header right button for Add Event and mode switch
   useFocusEffect(
@@ -104,10 +106,10 @@ export default function CalendarView() {
     <View style={{ flex: 1 }}>
       {/* Calendar Mode Modal */}
       <Modal
-        visible={modeModalVisible}
+        visible={!!modalVisible}
         transparent
         animationType="fade"
-        onRequestClose={() => setModeModalVisible(false)}
+        onRequestClose={() => setModalVisible(false)}
       >
         <TouchableOpacity
           style={{
@@ -117,7 +119,7 @@ export default function CalendarView() {
             alignItems: "center",
           }}
           activeOpacity={1}
-          onPressOut={() => setModeModalVisible(false)}
+          onPressOut={() => setModalVisible(false)}
         >
           <View style={{
             backgroundColor: "#fff",
@@ -142,7 +144,7 @@ export default function CalendarView() {
                 }}
                 onPress={() => {
                   setCalendarMode(mode as "day" | "week" | "month");
-                  setModeModalVisible(false);
+                  setModalVisible(false);
                 }}
               >
                 <Text style={{

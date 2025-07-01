@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { ModalProvider, useModal } from '../ModalContext';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
@@ -55,6 +55,20 @@ function TabLayoutInner() {
         options={{ 
             headerTitle: "Calendar",
             tabBarLabel: "Calendar",
+            headerRight: () => (
+              <View style={{ flexDirection: "row" }}>
+                  <TouchableOpacity
+                    onPress={() => router.push("AddEventView")}
+                    style={{ marginRight: 16 }}
+                    accessibilityLabel="Add Event"
+                  >
+                    <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
+                  </TouchableOpacity>
+                <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginRight: 4 }}>
+                  <Ionicons name="options-outline" size={24} color="#0077CC" />
+                </TouchableOpacity>
+              </View>              
+            ),                 
             tabBarIcon: ({focused, color}) => (
                 <Ionicons 
                     name={ focused ? "calendar-sharp" : "calendar-outline"} 
@@ -69,6 +83,15 @@ function TabLayoutInner() {
         options={{ 
             headerTitle: "Timeline",
             tabBarLabel: "Timeline",
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => router.push("AddEventView")}
+                style={{ marginRight: 16 }}
+                accessibilityLabel="Add Event"
+              >
+                <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
+              </TouchableOpacity>
+            ),            
             tabBarIcon: ({focused, color}) => (
                 <Ionicons 
                     name={ focused ? "list-sharp" : "list-outline"} 
