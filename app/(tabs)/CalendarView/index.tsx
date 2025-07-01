@@ -1,16 +1,17 @@
 import { useEffect, useCallback, useState } from "react";
-import { View, Text, StyleSheet, Image, Modal, TouchableOpacity } from "react-native";
+import { View, Text, Image, Modal, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../Redux/store";
-import { setEvents } from "../../Redux/features/eventsSlice";
-import { fetchEvents } from "../../utils/fetchAPI";
-import { loadData } from '../../utils/storage';
+import { RootState } from "../../../Redux/store";
+import { setEvents } from "../../../Redux/features/eventsSlice";
+import { fetchEvents } from "../../../utils/fetchAPI";
+import { loadData } from '../../../utils/storage';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from 'expo-router';
+import styles from './styles';
 
-export default function Home() {
+export default function CalendarView() {
   const [selected, setSelected] = useState<string | null>(null);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
@@ -166,48 +167,3 @@ export default function Home() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  date: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  city: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 8,
-  },
-  weatherRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  icon: {
-    width: 32,
-    height: 32,
-    marginRight: 8,
-  },
-  weather: {
-    fontSize: 14,
-    color: "#333",
-  },
-  temperature: {
-    fontSize: 14,
-    color: "#777",
-  },
-});

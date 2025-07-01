@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, Modal, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Pressable, Modal, TouchableOpacity, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setEvents } from "../../Redux/features/eventsSlice";
 import { fetchEvents, deleteEvent as deleteEventAPI, fetchEventById } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
+import styles from './styles';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -26,7 +27,7 @@ export default function EventDetailView() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const route = useRoute();
-  const eventId = route.params?.eventId;
+  const eventId: string = (route as any)?.params?.eventId ?? "";
 
   const [event, setEvent] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,17 +36,18 @@ export default function EventDetailView() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const token = await loadData('userToken');
+        const token = await loadData('userToken') ?? '';
+        if (!eventId || !token) throw new Error('Missing eventId or token');
         // fetchEventById returns the event detail object
         const eventData = await fetchEventById(eventId, token);
         setEvent(eventData);
-      } catch (err) {
+      } catch {
         Alert.alert("Error", "Failed to load event.");
         navigation.goBack();
       }
     };
     if (eventId) fetchEvent();
-  }, [eventId]);
+  }, [eventId, navigation]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -74,7 +76,8 @@ export default function EventDetailView() {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      const token = await loadData('userToken');
+      const token = await loadData('userToken') ?? '';
+      if (!event?.id || !token) throw new Error('Missing event id or token');
       await deleteEventAPI(event.id, token);
       // Refresh events in redux
       const events = await fetchEvents(token);
@@ -169,83 +172,3 @@ export default function EventDetailView() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: "rgb(250 248 244 / var(--tw-bg-opacity, 1))"
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginTop: 64,
-    marginBottom: 24,
-    color: "#222",
-    textAlign: "center",
-  },
-  timeRow: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    marginBottom: 4,
-  },
-  timeText: {
-    fontSize: 18,
-    color: "#333",
-    marginRight: 6,
-  },
-  tzText: {
-    fontSize: 13,
-    color: "#888",
-    marginBottom: 2,
-  },
-  label: {
-    marginTop: 18,
-    fontSize: 15,
-    color: "#666",
-    fontWeight: "600",
-  },
-  value: {
-    fontSize: 17,
-    color: "#222",
-    marginTop: 2,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.2)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 24,
-    minWidth: 240,
-    alignItems: "center",
-    elevation: 4,
-  },
-  modalTitle: {
-    fontWeight: "bold",
-    fontSize: 20,
-    marginBottom: 12,
-    color: "#d11a2a",
-  },
-  modalMessage: {
-    fontSize: 16,
-    color: "#333",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  modalButtonRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  modalButton: {
-    flex: 1,
-    paddingVertical: 12,
-    marginHorizontal: 8,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-});

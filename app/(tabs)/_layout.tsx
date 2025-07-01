@@ -51,7 +51,7 @@ function TabLayoutInner() {
     }}
   >
     <Tabs.Screen 
-        name="index" 
+        name="CalendarView" 
         options={{ 
             headerTitle: "Calendar",
             tabBarLabel: "Calendar",

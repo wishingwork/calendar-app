@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   Button,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   Alert,
@@ -13,10 +12,10 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { createEvent, fetchEvents } from "../../utils/fetchAPI"; // import the helper
 import { loadData } from '../../utils/storage';
-import { colors } from '../../styles/colors';
 import { useDispatch } from "react-redux";
 import { setEvents } from "../../Redux/features/eventsSlice";
 import DatetimePicker from "./DatetimePicker"; // <-- import the new component
+import styles from './styles';
 
 const travelModeOptions = [
   { label: "Car", value: 0 },
@@ -169,56 +168,3 @@ export default function AddEventView() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "rgb(250 248 244 / var(--tw-bg-opacity, 1))"    
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    backgroundColor: "#fff",
-  },
-  dateButton: {
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    marginBottom: 16,
-    backgroundColor: "#fff",
-  },
-  dateText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  picker: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    backgroundColor: "#fff",
-    width: "80%",
-    height: 40, // Match the close button height (approx 40px)
-    justifyContent: "center",
-  },
-  buttonRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 16,
-  },
-  error: {
-    color: colors.error,
-    fontSize: 13,
-    marginBottom: 8,
-    alignSelf: 'flex-start',
-    marginLeft: 8,
-  },  
-});
