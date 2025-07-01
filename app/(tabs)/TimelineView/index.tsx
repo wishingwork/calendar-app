@@ -10,6 +10,22 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from 'expo-router';
 import styles from './styles';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+function formatEventTime(dt: string, tz?: string) {
+  if (!dt) return { main: "", tz: "" };
+  const d = tz ? dayjs(dt).tz(tz) : dayjs(dt);
+  const tzOffset = d.format("Z");
+  return {
+    main: d.format("HH:mm"),
+    tz: `(GMT${tzOffset})`,
+  };
+}
 
 type EventItem = {
   id: string;
@@ -20,22 +36,31 @@ type EventItem = {
   temperature?: number | string;
   start_datetime?: string;
   end_datetime?: string;
+  timezone?: string;
 };
 
 const renderCard = ({ item }: { item: EventItem }) => {
   type WeatherKey = keyof typeof WEATHER_CONDITIONS;
   const weatherKey = item.weather as WeatherKey;
   const iconSource = WEATHER_CONDITIONS[weatherKey]?.icon;
-  const weatherLabel = WEATHER_CONDITIONS[weatherKey]?.label
+  const weatherLabel = WEATHER_CONDITIONS[weatherKey]?.label;
+
+  // Timezone logic
+  const tz = item.timezone || dayjs.tz.guess();
+  const start = formatEventTime(item.start_datetime, tz);
+  const end = formatEventTime(item.end_datetime, tz);
+
   return (
     <View style={styles.eventRow}>
       {/* Left Side: Event Time */}
       <View style={styles.leftColumn}>
         <Text style={styles.eventTime}>
-          {/* Show time window if available */}
           {item.start_datetime && item.end_datetime
-            ? `${item.start_datetime.slice(11, 16)} - ${item.end_datetime.slice(11, 16)}`
+            ? `${start.main} - ${end.main}`
             : item.time}
+        </Text>
+        <Text style={[styles.tzText, { fontSize: 10, color: "#888" }]}>
+          {item.start_datetime ? start.tz : ""}
         </Text>
         <View style={styles.verticalLine} />
       </View>
@@ -57,13 +82,7 @@ const renderCard = ({ item }: { item: EventItem }) => {
               {/* Weather icon and text, if available */}
               {item.weather && (
                 <>
-                  {(() => {
-
-                    if (iconSource) {
-                      return <Image source={iconSource} style={styles.icon} />;
-                    }
-                    return null;
-                  })()}
+                  {iconSource ? <Image source={iconSource} style={styles.icon} /> : null}
                   <Text style={styles.weather}>
                     {weatherLabel ?? item.weather}
                   </Text>
@@ -133,23 +152,6 @@ export default function TimelineView() {
   useEffect(() => {
     fetchAndSetEvents();
   }, [fetchAndSetEvents]);
-
-  // Set header right button for Add Event
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     navigation.setOptions({
-  //       headerRight: () => (
-  //         <TouchableOpacity
-  //           onPress={() => navigation.navigate("AddEventView")}
-  //           style={{ marginRight: 16 }}
-  //           accessibilityLabel="Add Event"
-  //         >
-  //           <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
-  //         </TouchableOpacity>
-  //       ),
-  //     });
-  //   }, [navigation])
-  // );
 
   return (
     <FlatList
