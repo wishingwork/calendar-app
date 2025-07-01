@@ -82,13 +82,6 @@ function TabLayoutInner() {
             headerRight: () => (
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
-                  onPress={() => router.push("AddEventView")}
-                  style={{ marginRight: 16 }}
-                  accessibilityLabel="Add Event"
-                >
-                  <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
-                </TouchableOpacity>
-                <TouchableOpacity
                   onPress={() => {
                     setModalContent(
                       <CalendarModeModal
@@ -101,10 +94,17 @@ function TabLayoutInner() {
                     );
                     setModalVisible(true);
                   }}
-                  style={{ marginRight: 4 }}
+                  style={{ marginRight: 16 }}
                 >
                   <Ionicons name="options-outline" size={24} color="#0077CC" />
                 </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => router.push("AddEventView")}
+                  style={{ marginRight: 16 }}
+                  accessibilityLabel="Add Event"
+                >
+                  <Ionicons name="add-circle-outline" size={24} color="#0077CC" />
+                </TouchableOpacity>                
               </View>
             ),
             tabBarIcon: ({focused, color}) => (
@@ -127,7 +127,7 @@ function TabLayoutInner() {
                 style={{ marginRight: 16 }}
                 accessibilityLabel="Add Event"
               >
-                <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
+                <Ionicons name="add-circle-outline" size={24} color="#0077CC" />
               </TouchableOpacity>
             ),            
             tabBarIcon: ({focused, color}) => (
