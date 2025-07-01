@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { LogBox } from "react-native";
-import ReduxProvider from "./ReduxProvider";
+import ReduxProvider from "../Redux/ReduxProvider";
 
 LogBox.ignoreAllLogs(true);
 

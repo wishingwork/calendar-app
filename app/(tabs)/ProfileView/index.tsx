@@ -3,8 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, Modal, Pressable, Alert, Keybo
 import { Ionicons } from '@expo/vector-icons';
 import { useModal } from '../../ModalContext';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store';
-import { clearProfile } from '../../profileSlice';
+import { RootState } from '../../../Redux/store';
+import { clearProfile } from '../../../Redux/features/profileSlice';
 import { router } from "expo-router";
 import { updateProfile, updatePassword, logout } from '../../../utils/fetchAPI';
 import styles from './styles';

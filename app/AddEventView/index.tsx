@@ -15,7 +15,7 @@ import { createEvent, fetchEvents } from "../../utils/fetchAPI"; // import the h
 import { loadData } from '../../utils/storage';
 import { colors } from '../../styles/colors';
 import { useDispatch } from "react-redux";
-import { setEvents } from "../eventsSlice";
+import { setEvents } from "../../Redux/features/eventsSlice";
 import DatetimePicker from "./DatetimePicker"; // <-- import the new component
 
 const travelModeOptions = [

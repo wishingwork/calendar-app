@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from 'react-native';
 import { ModalProvider, useModal } from '../ModalContext';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../../Redux/store';
 import { loadData } from '../../utils/storage';
 import { router } from "expo-router";
 

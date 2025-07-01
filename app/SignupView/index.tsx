@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { router } from "expo-router";
 import { useDispatch } from 'react-redux';
-import { setProfile } from '../profileSlice';
+import { setProfile } from '../../Redux/features/profileSlice';
 import { signupAndFetchProfile } from '../../utils/fetchAPI';
 import styles from './styles';
 

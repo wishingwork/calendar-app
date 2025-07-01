@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import profileReducer from './profileSlice';
-import eventsReducer from './eventsSlice';
+import profileReducer from './features/profileSlice';
+import eventsReducer from './features/eventsSlice';
 
 const store = configureStore({
   reducer: {

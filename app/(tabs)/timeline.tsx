@@ -2,8 +2,8 @@ import { View, Text, FlatList, Image, RefreshControl, TouchableOpacity } from "r
 import { StyleSheet } from "react-native";
 import { useEffect, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../store";
-import { setEvents } from "../eventsSlice";
+import { RootState } from "../../Redux/store";
+import { setEvents } from "../../Redux/features/eventsSlice";
 import { fetchEvents } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
 import {WEATHER_CONDITIONS} from "../../constants/weather";

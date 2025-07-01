@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useDispatch } from "react-redux";
-import { setEvents } from "../eventsSlice";
+import { setEvents } from "../../Redux/features/eventsSlice";
 import { fetchEvents, deleteEvent as deleteEventAPI, fetchEventById } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
 

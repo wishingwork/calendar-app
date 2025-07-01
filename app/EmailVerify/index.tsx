@@ -3,11 +3,11 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Image, useW
 import { common } from '../../styles/common';
 import { typography } from '../../styles/typography';
 import { verifyEmailCode, resendVerificationEmail, updateProfile } from '../../utils/fetchAPI';
-import { RootState } from '../store';
+import { RootState } from '../../Redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from './styles';
 import { router, useLocalSearchParams } from 'expo-router';
-import { setProfile } from '../profileSlice';
+import { setProfile } from '../../Redux/features/profileSlice';
 
 export default function EmailVerify () {
   const { token } = useLocalSearchParams();
