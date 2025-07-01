@@ -97,6 +97,12 @@ function TabLayoutInner() {
           ),             
         }}
       />    
+      <Tabs.Screen
+        name="index"
+        options={{
+          href: null, // Hides the tab from the bottom tab bar
+        }}
+      />      
   </Tabs>;
 }
 export default function TabLayout() {
