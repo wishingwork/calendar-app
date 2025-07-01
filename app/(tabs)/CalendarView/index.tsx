@@ -1,48 +1,23 @@
 import { useEffect, useCallback, useState } from "react";
-import { View, Text, Image, Modal, TouchableOpacity } from "react-native";
+import { View, Text, Image } from "react-native";
 import { Calendar } from "react-native-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../Redux/store";
 import { setEvents } from "../../../Redux/features/eventsSlice";
 import { fetchEvents } from "../../../utils/fetchAPI";
 import { loadData } from '../../../utils/storage';
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { router } from 'expo-router';
+import { useCalendarMode } from '../../CalendarModeContext';
 import styles from './styles';
-import { useModal } from '../../ModalContext';
 
 export default function CalendarView() {
   const [selected, setSelected] = useState<string | null>(null);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
-  // Calendar mode state and modal state
-  const [calendarMode, setCalendarMode] = useState<"day" | "week" | "month">("week");
-  const [modeModalVisible, setModeModalVisible] = useState(false);
-  const { modalVisible , setModalVisible } = useModal();
-
-  // Set header right button for Add Event and mode switch
-  useFocusEffect(
-    useCallback(() => {
-      navigation.setOptions({
-        headerRight: () => (
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("AddEventView")}
-              style={{ marginRight: 12 }}
-              accessibilityLabel="Add Event"
-            >
-              <Ionicons name="add-circle-outline" size={26} color="#0077CC" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setModeModalVisible(true)} style={{ marginRight: 4 }}>
-              <Ionicons name="options-outline" size={24} color="#0077CC" />
-            </TouchableOpacity>
-          </View>
-        ),
-      });
-    }, [navigation, setModeModalVisible])
-  );
+  const route = useRoute();
+  const { calendarMode } = useCalendarMode();
 
   // Get events from Redux
   const eventsData = useSelector((state: RootState) => state.events.events);
@@ -104,62 +79,6 @@ export default function CalendarView() {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Calendar Mode Modal */}
-      <Modal
-        visible={!!modalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0,0,0,0.2)",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
-        >
-          <View style={{
-            backgroundColor: "#fff",
-            borderRadius: 12,
-            padding: 24,
-            minWidth: 220,
-            alignItems: "center",
-            elevation: 4,
-          }}>
-            <Text style={{ fontWeight: "bold", fontSize: 18, marginBottom: 16 }}>Calendar Mode</Text>
-            {["day", "week", "month"].map((mode) => (
-              <TouchableOpacity
-                key={mode}
-                style={{
-                  paddingVertical: 10,
-                  paddingHorizontal: 24,
-                  borderRadius: 6,
-                  backgroundColor: calendarMode === mode ? "#0077CC" : "#F0F0F0",
-                  marginBottom: 10,
-                  width: 120,
-                  alignItems: "center",
-                }}
-                onPress={() => {
-                  setCalendarMode(mode as "day" | "week" | "month");
-                  setModalVisible(false);
-                }}
-              >
-                <Text style={{
-                  color: calendarMode === mode ? "#fff" : "#222",
-                  fontWeight: "600",
-                  fontSize: 16,
-                }}>
-                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </TouchableOpacity>
-      </Modal>
-
       <Calendar
         events={events}
         height={400}

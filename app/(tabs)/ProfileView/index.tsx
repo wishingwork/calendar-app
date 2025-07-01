@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal, Pressable, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useModal } from '../../ModalContext';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ import { router } from "expo-router";
 import { updateProfile, updatePassword, logout } from '../../../utils/fetchAPI';
 import styles from './styles';
 import { loadData, deleteData } from '../../../utils/storage';
+import LogoutModal from '../../Modals/LogoutModal';
 
 interface User {
   first_name: string;
@@ -24,7 +25,6 @@ const initialUser: User = {
   password: '',
 };
 
-
 export default function ProfileView() {
   const profile = useSelector((state: RootState) => state.profile.profile);
   const [user, setUser] = useState<User>(profile || initialUser);
@@ -35,7 +35,7 @@ export default function ProfileView() {
   const [passwordExpanded, setPasswordExpanded] = useState(false);
   const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
-  const { modalVisible , setModalVisible } = useModal();
+  const { setModalVisible, setModalContent } = useModal();
   const nameRegex = /^[a-zA-Z-]+$/;
   const lastNameRegex = /^[a-zA-Z]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -120,21 +120,7 @@ export default function ProfileView() {
         setErrors({ password: 'A server error occurred. Please try again.' });
       });
   };
-  const handleLogout = async () => {
-    setModalVisible(false);
-    const userTokenRaw = await loadData('userToken');
-    const userToken = userTokenRaw || '';
-    logout(userToken, process.env.EXPO_PUBLIC_API_SERVER_IP as string)
-      .then(async () => {
-        await deleteData('userToken');
-        dispatch(clearProfile());
-      })
-      .catch(() => {
-        setErrors({server: 'An server error occurred. Please try again.'});
-        return;
-      });
-    router.push('/LoginView');
-  };
+
   useEffect(() => {
     if (profile) {
       setUser(profile);
@@ -238,20 +224,7 @@ export default function ProfileView() {
             </TouchableOpacity>
           </View>
         )}
-        <Modal
-          visible={!!modalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <Pressable style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-                <Text style={styles.logoutText}>Logout</Text>
-              </TouchableOpacity>
-            </View>
-          </Pressable>
-        </Modal>
+        {/* Remove local Modal, use context modal instead */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
