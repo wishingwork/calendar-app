@@ -16,14 +16,7 @@ import { useDispatch } from "react-redux";
 import { setEvents } from "../../Redux/features/eventsSlice";
 import DatetimePicker from "./DatetimePicker"; // <-- import the new component
 import styles from './styles';
-
-const travelModeOptions = [
-  { label: "Car", value: 0 },
-  { label: "Transit", value: 1 },
-  { label: "Bike", value: 2 },
-  { label: "Walking", value: 3 },
-  { label: "Flight", value: 4 },
-];
+import { travelModeOptions } from "../../constants/travelMode";
 
 export default function AddEventView() {
   const [title, setTitle] = useState("");

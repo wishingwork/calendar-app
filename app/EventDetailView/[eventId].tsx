@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setEvents } from "../../Redux/features/eventsSlice";
 import { fetchEvents, deleteEvent as deleteEventAPI, fetchEventById } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
+import { travelModeOptions } from "../../constants/travelMode";
 import styles from './styles';
 
 dayjs.extend(utc);
@@ -159,7 +160,14 @@ export default function EventDetailView() {
 
       {/* Travel Mode */}
       <Text style={styles.label}>Travel Mode</Text>
-      <Text style={styles.value}>{event.travel_mode || "N/A"}</Text>
+      <Text style={styles.value}>
+        {
+          (() => {
+            const found = travelModeOptions.find(opt => opt.value === parseInt(event.travel_mode, 10));
+            return found ? found.label : "N/A";
+          })()
+        }
+      </Text>
 
       {/* Weather */}
       <Text style={styles.label}>Weather</Text>
