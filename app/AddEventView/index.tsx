@@ -28,6 +28,7 @@ export default function AddEventView() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
+  const [success, setSuccess] = useState(false); // <-- add success state
 
   const dispatch = useDispatch();
 
@@ -73,6 +74,8 @@ export default function AddEventView() {
       setTravelMode(0);
       setStartDatetime(new Date());
       setEndDatetime(new Date());
+      setSuccess(true); // <-- show success
+      setTimeout(() => setSuccess(false), 2000); // <-- revert after 2s
     } catch (err: any) {
       Alert.alert("Error", err.message || "Failed to save event.");
     } finally {
@@ -156,7 +159,19 @@ export default function AddEventView() {
 
 
       <View style={styles.buttonRow}>
-        <Button title={loading ? "Saving..." : "Save Event"} onPress={handleSaveEvent} color="#007BFF" disabled={loading} />
+        <TouchableOpacity
+          onPress={handleSaveEvent}
+          disabled={loading || success}
+          style={[
+            styles.saveButton,
+            success && { backgroundColor: "#007BFF" },
+            loading && { opacity: 0.5 }
+          ]}
+        >
+          <Text style={[styles.saveButtonText, success && { color: "#fff" }]}>
+            {success ? "Saved!" : loading ? "Saving..." : "Save Event"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

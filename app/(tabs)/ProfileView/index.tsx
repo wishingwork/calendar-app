@@ -35,6 +35,8 @@ export default function ProfileView() {
   const [passwordExpanded, setPasswordExpanded] = useState(false);
   const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false); // for profile save
+  const [updateSuccess, setUpdateSuccess] = useState(false); // for password update
   const { setModalVisible, setModalContent } = useModal();
   const nameRegex = /^[a-zA-Z-]+$/;
   const lastNameRegex = /^[a-zA-Z]+$/;
@@ -86,6 +88,8 @@ export default function ProfileView() {
         if (data.error) {
           Alert.alert('Error', data.error);
         } else {
+          setSaveSuccess(true); // show success
+          setTimeout(() => setSaveSuccess(false), 2000); // revert after 2s
           Alert.alert('Success', 'Profile updated successfully!');
         }
       })
@@ -112,6 +116,8 @@ export default function ProfileView() {
           setCurrentPassword('');
           setConfirmPassword('');
           setErrors({});
+          setUpdateSuccess(true); // show success
+          setTimeout(() => setUpdateSuccess(false), 2000); // revert after 2s
           Alert.alert('Success', 'Password updated successfully!');
         }
       })
@@ -178,8 +184,18 @@ export default function ProfileView() {
               />
             </View>
             {errors.email && <Text style={styles.error}>{errors.email}</Text>}
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saving}>
-              <Text style={styles.saveButtonText}>{saving ? 'Saving...' : 'Save'}</Text>
+            <TouchableOpacity
+              style={[
+                styles.saveButton,
+                saveSuccess && { backgroundColor: "#007BFF" },
+                saving && { opacity: 0.4 }
+              ]}
+              onPress={handleSave}
+              disabled={saving || saveSuccess}
+            >
+              <Text style={[styles.saveButtonText, saveSuccess && { color: "#fff" }]}>
+                {saveSuccess ? 'Saved!' : saving ? 'Saving...' : 'Save'}
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -216,11 +232,17 @@ export default function ProfileView() {
               {errors.password && <Text style={styles.error}>{errors.password}</Text>}
             </View>
             <TouchableOpacity
-              style={styles.saveButton}
+              style={[
+                styles.saveButton,
+                updateSuccess && { backgroundColor: "#007BFF" },
+                saving && { opacity: 0.4 }
+              ]}
               onPress={handlePasswordUpdate}
-              disabled={saving}
+              disabled={saving || updateSuccess}
             >
-              <Text style={styles.saveButtonText}>{saving ? 'Updating...' : 'Update'}</Text>
+              <Text style={[styles.saveButtonText, updateSuccess && { color: "#fff" }]}>
+                {updateSuccess ? 'Updated!' : saving ? 'Updating...' : 'Update'}
+              </Text>
             </TouchableOpacity>
           </View>
         )}

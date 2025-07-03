@@ -50,6 +50,20 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 8,
   },
+  saveButton: {
+    backgroundColor: colors.accent,
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 8,
+    marginBottom: 0,
+  },
+  saveButtonText: {
+    color: colors.text,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },  
 });
 
 export default styles;
