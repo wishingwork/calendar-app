@@ -42,12 +42,12 @@ function TabLayoutInner() {
       .then(async () => {
         await deleteData('userToken');
         dispatch(clearProfile());
-        router.push('/LoginView');
       })
       .catch((err) => {
         console.log(49,err);
         // Optionally handle error globally
       });
+      router.push('/LoginView');
   };
 
   if (profile && profile.is_activated === false) {
