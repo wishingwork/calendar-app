@@ -9,7 +9,7 @@ const eventsSlice = createSlice({
   initialState,
   reducers: {
     setEvents: (state, action) => {
-      state.events = action.payload;
+      state.events = action.payload.data;
     },
     clearEvents: (state) => {
       state.events = [];
