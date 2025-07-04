@@ -1,12 +1,11 @@
-import { Tabs } from "expo-router";
+import { Tabs, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View, TouchableOpacity } from 'react-native';
-import { ModalProvider, useModal } from '../ModalContext';
+import { useModal } from '../ModalContext';
 import { CalendarModeProvider, useCalendarMode } from '../CalendarModeContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../Redux/store';
 import { loadData, deleteData } from '../../utils/storage';
-import { router } from "expo-router";
 import { logout as apiLogout } from '../../utils/fetchAPI';
 
 import React, { useEffect, useState } from "react";
@@ -148,7 +147,7 @@ function TabLayoutInner() {
             <TouchableOpacity onPress={() => {
              setModalContent(<LogoutModal onLogout={handleLogout} />);
              setModalVisible(true)
-            }} style={{ marginRight: 15 }}>
+            }} style={{ marginRight: 16 }}>
               <Ionicons name="information-circle-outline" size={24} color="#0077CC" />
             </TouchableOpacity>
           ),
@@ -172,10 +171,8 @@ function TabLayoutInner() {
 
 export default function TabLayout() {
   return (
-    <ModalProvider>
       <CalendarModeProvider>
         <TabLayoutInner />
       </CalendarModeProvider>
-    </ModalProvider>
   );
 }

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, Modal, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { useDispatch } from "react-redux";
-import { setEvents } from "../../Redux/features/eventsSlice";
-import { fetchEvents, deleteEvent as deleteEventAPI, fetchEventById } from "../../utils/fetchAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentEvent } from "../../Redux/features/eventsSlice";
+import { fetchEventById } from "../../utils/fetchAPI";
 import { loadData } from '../../utils/storage';
 import { travelModeOptions } from "../../constants/travelMode";
 import styles from './styles';
+import { RootState } from "../../Redux/store";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -31,66 +31,23 @@ export default function EventDetailView() {
   const eventId: string = (route as any)?.params?.eventId ?? "";
 
   const [event, setEvent] = useState<any>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const token = await loadData('userToken') ?? '';
         if (!eventId || !token) throw new Error('Missing eventId or token');
-        // fetchEventById returns the event detail object
         const eventData = await fetchEventById(eventId, token);
         setEvent(eventData);
+        dispatch(setCurrentEvent(eventData)); // <-- set current event
       } catch {
         Alert.alert("Error", "Failed to load event.");
         navigation.goBack();
       }
     };
     if (eventId) fetchEvent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId, navigation]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerStyle: {
-        backgroundColor: "#FAF8F4",
-        elevation: 0,
-        shadowOpacity: 0,
-        borderBottomWidth: 0,
-      },
-      headerShadowVisible: false,
-      headerTintColor: "#0077CC",
-      title: "Event Detail",
-      headerShown: true, 
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          style={{ marginRight: 16 }}
-          accessibilityLabel="Delete Event"
-        >
-          <Ionicons name="trash-outline" size={26} color="#0077CC" />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation, setModalVisible]);
-
-  const handleDelete = async () => {
-    setDeleting(true);
-    try {
-      const token = await loadData('userToken') ?? '';
-      if (!event?.id || !token) throw new Error('Missing event id or token');
-      await deleteEventAPI(event.id, token);
-      // Refresh events in redux
-      const events = await fetchEvents(token);
-      dispatch(setEvents(events));
-      setModalVisible(false);
-      navigation.goBack();
-    } catch (err: any) {
-      Alert.alert("Error", err.message || "Failed to delete event.");
-    } finally {
-      setDeleting(false);
-    }
-  };
 
   if (!event) {
     return (
@@ -106,38 +63,6 @@ export default function EventDetailView() {
 
   return (
     <View style={styles.container}>
-      {/* Delete Confirmation Modal */}
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <Pressable style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Delete Event</Text>
-            <Text style={styles.modalMessage}>Are you sure you want to delete this event?</Text>
-            <View style={styles.modalButtonRow}>
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: "#d11a2a" }]}
-                onPress={handleDelete}
-                disabled={deleting}
-              >
-                <Text style={{ color: "#fff", fontWeight: "bold" }}>
-                  {deleting ? "Deleting..." : "Confirm"}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: "#ccc" }]}
-                onPress={() => setModalVisible(false)}
-                disabled={deleting}
-              >
-                <Text style={{ color: "#222", fontWeight: "bold" }}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Pressable>
-      </Modal>
 
       {/* Title */}
       <Text style={styles.title}>{event.title}</Text>

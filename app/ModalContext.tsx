@@ -1,5 +1,5 @@
-// app/tabs/ModalContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+// app/ModalContext.tsx
+import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { Modal, View, TouchableOpacity } from 'react-native'
 import { StyleSheet } from 'react-native';
 import { colors } from '../styles/colors';
@@ -15,9 +15,9 @@ const ModalContext = createContext({
 function AppModal() {
   const { modalVisible, setModalVisible, modalContent } = useModal();
 
-  return (
+  return modalVisible && (
     <Modal
-      visible={!!modalVisible}
+      visible={modalVisible && modalContent !== null}
       transparent
       animationType="fade"
       onRequestClose={() => setModalVisible(false)}
@@ -52,8 +52,15 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>(null);
 
+  const value = useMemo(() => ({
+    modalVisible,
+    setModalVisible,
+    modalContent,
+    setModalContent,
+  }), [modalVisible, modalContent]);
+  
   return (
-    <ModalContext.Provider value={{ modalVisible, setModalVisible, setModalContent, modalContent }}>
+    <ModalContext.Provider value={ value }>
       {children}
       <AppModal />
     </ModalContext.Provider>
@@ -64,18 +71,3 @@ export function useModal() {
   return useContext(ModalContext);
 }
 export default ModalContext;
-
-const styles = StyleSheet.create({
-  logoutButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 6,
-    backgroundColor: colors.accent,
-  },  
-  logoutText: {
-    color: colors.text,
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
-
