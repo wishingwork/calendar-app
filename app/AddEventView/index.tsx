@@ -59,7 +59,7 @@ export default function AddEventView() {
         title,
         event_datetime: eventDate.toISOString(),
         address,
-        travel_mode: travelMode,
+        travel_mode: travelMode || 1,
         start_datetime: startDatetime.toISOString(),
         end_datetime: endDatetime.toISOString(),
       };
