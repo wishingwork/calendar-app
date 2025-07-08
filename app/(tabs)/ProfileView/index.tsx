@@ -82,7 +82,7 @@ export default function ProfileView() {
     const userToken = userTokenRaw || '';
     if (!validate()) return;
     setSaving(true);
-    updateProfile(user, userToken, process.env.EXPO_PUBLIC_API_SERVER_IP as string)
+    updateProfile(user, userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
       .then((data) => {
         setSaving(false);
         if (data.error) {
@@ -107,7 +107,7 @@ export default function ProfileView() {
       return;
     }
     setSaving(true);
-    updatePassword(currentPassword, confirmPassword, userToken, process.env.EXPO_PUBLIC_API_SERVER_IP as string)
+    updatePassword(currentPassword, confirmPassword, userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
       .then((data) => {
         setSaving(false);
         if (data.error) {

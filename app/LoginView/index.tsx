@@ -27,7 +27,7 @@ export default function LoginView() {
       return;
     }
     try {
-      const { profile, token } = await loginAndFetchProfile(email, password, process.env.EXPO_PUBLIC_API_SERVER_IP);
+      const { profile, token } = await loginAndFetchProfile(email, password, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP);
       if (profile) {
         dispatch(setProfile(profile));
         // Check isActive and route accordingly

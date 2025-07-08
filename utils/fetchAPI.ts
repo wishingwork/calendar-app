@@ -30,8 +30,8 @@ async function doFetch({
 }
 
 export async function loginAndFetchProfile(email: string, password: string, apiServerIp: string) {
-  const loginUrl = `http://${apiServerIp}:3133/auth/login`;
-  const profileUrl = `http://${apiServerIp}:3133/auth/me`;
+  const loginUrl = `${apiServerIp}/auth/login`;
+  const profileUrl = `${apiServerIp}/auth/me`;
   const { data: loginData  } = await doFetch({
     url: loginUrl,
     method: 'POST',
@@ -58,7 +58,7 @@ export async function signupAndFetchProfile(
   dispatch: any,
   setProfile: any
 ) {
-  const signupUrl = `http://${apiServerIp}:3133/auth/register`;
+  const signupUrl = `${apiServerIp}/auth/register`;
   const {message, data} = await doFetch({
     url: signupUrl,
     method: 'POST',
@@ -75,7 +75,7 @@ export async function signupAndFetchProfile(
 }
 
 export async function updateProfile(user: any, userToken: string, apiServerIp: string) {
-  const url = `http://${apiServerIp}:3133/auth/me`;
+  const url = `${apiServerIp}/auth/me`;
   return doFetch({
     url,
     method: 'PUT',
@@ -90,7 +90,7 @@ export async function updatePassword(
   userToken: string,
   apiServerIp: string
 ) {
-  const url = `http://${apiServerIp}:3133/auth/me/password`;
+  const url = `${apiServerIp}/auth/me/password`;
   return doFetch({
     url,
     method: 'PUT',
@@ -103,7 +103,7 @@ export async function updatePassword(
 }
 
 export async function logout(userToken: string, apiServerIp: string) {
-  const url = `http://${apiServerIp}:3133/auth/logout`;
+  const url = `${apiServerIp}/auth/logout`;
   return doFetch({
     url,
     method: 'POST',
@@ -113,7 +113,7 @@ export async function logout(userToken: string, apiServerIp: string) {
 
 export async function verifyEmailCode(code: string, userToken: string, apiServerIp: string) {
   return doFetch({
-    url: `http://${apiServerIp}:3133/auth/verifystatus?code=${code}`,
+    url: `${apiServerIp}/auth/verifystatus?code=${code}`,
     method: 'GET',
     headers: { 'Authorization': `Bearer ${userToken}` },
   });
@@ -121,7 +121,7 @@ export async function verifyEmailCode(code: string, userToken: string, apiServer
 
 export async function resendVerificationEmail(email: string, userToken: string, apiServerIp: string) {
   return doFetch({
-    url: `http://${apiServerIp}:3133/auth/verifyemail`,
+    url: `${apiServerIp}/auth/verifyemail`,
     method: 'POST',
     headers: { 'Authorization': `Bearer ${userToken}` },
     body: { email },
@@ -132,8 +132,8 @@ export async function createEvent(
   event: { title: string; event_datetime: string; address: string; travel_mode: number },
   token: string
 ) {
-  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
-  const url = `http://${apiServerIp}:3133/events`;
+  const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `${apiServerIp}/events`;
   // Ensure event_datetime is in UTC ISO format
   const utcEventDatetime = new Date(event.event_datetime).toISOString();
   return doFetch({
@@ -146,8 +146,8 @@ export async function createEvent(
 
 // Delete event by id
 export async function deleteEvent(id: string, token: string) {
-  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
-  const url = `http://${apiServerIp}:3133/events/${id}`;
+  const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `${apiServerIp}/events/${id}`;
   return doFetch({
     url,
     method: "DELETE",
@@ -156,8 +156,8 @@ export async function deleteEvent(id: string, token: string) {
 }
 
 export async function fetchEvents(token: string) {
-  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
-  const url = `http://${apiServerIp}:3133/events`;
+  const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `${apiServerIp}/events`;
   return doFetch({
     url,
     method: "GET",
@@ -166,8 +166,8 @@ export async function fetchEvents(token: string) {
 }
 
 export async function fetchEventById(id: string, token: string) {
-  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
-  const url = `http://${apiServerIp}:3133/events/${id}`;
+  const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const url = `${apiServerIp}/events/${id}`;
   const {data} = await doFetch({
     url,
     method: "GET",

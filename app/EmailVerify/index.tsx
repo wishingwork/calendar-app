@@ -12,7 +12,7 @@ import { setProfile } from '../../Redux/features/profileSlice';
 export default function EmailVerify () {
   const { token } = useLocalSearchParams();
   const userToken = Array.isArray(token) ? token[0] : token;
-  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP ?? '';
+  const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP;
   const user = useSelector((state: RootState) => state.profile.profile) as { is_activated: boolean; email: string } | null;
   
   const [code, setCode] = useState('');

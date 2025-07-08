@@ -37,7 +37,7 @@ function TabLayoutInner() {
     setModalVisible(false);
     const userTokenRaw = await loadData('userToken');
     const userToken = userTokenRaw || '';
-    apiLogout(userToken, process.env.EXPO_PUBLIC_API_SERVER_IP as string)
+    apiLogout(userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
       .then(async () => {
         await deleteData('userToken');
         dispatch(clearProfile());

@@ -42,7 +42,7 @@ export default function SignupView() {
         lastName,
         email,
         password,
-        process.env.EXPO_PUBLIC_API_SERVER_IP,
+        process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP,
         dispatch,
         setProfile
       );
