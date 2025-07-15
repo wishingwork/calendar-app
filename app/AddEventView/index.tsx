@@ -23,7 +23,7 @@ export default function AddEventView() {
   const [eventDate, setEventDate] = useState(new Date());
   const [showTravelModePicker, setShowTravelModePicker] = useState(false);
   const [address, setAddress] = useState("");
-  const [travelMode, setTravelMode] = useState(0);
+  const [travelMode, setTravelMode] = useState(1);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [startDatetime, setStartDatetime] = useState(new Date());
@@ -71,7 +71,7 @@ export default function AddEventView() {
       setTitle("");
       setAddress("");
       setEventDate(new Date());
-      setTravelMode(0);
+      setTravelMode(1);
       setStartDatetime(new Date());
       setEndDatetime(new Date());
       setSuccess(true); // <-- show success
@@ -120,7 +120,7 @@ export default function AddEventView() {
       >
         {!showTravelModePicker && (
         <Text style={styles.dateText}>
-          {travelModeOptions[travelMode].label}
+          {travelModeOptions.find(e => e.value === travelMode)?.label}
         </Text>
         )}
       </TouchableOpacity>    
@@ -131,7 +131,8 @@ export default function AddEventView() {
               onValueChange={(itemValue) => setTravelMode(Number(itemValue))}
               style={[
               styles.picker,
-              Platform.OS === "ios" ? { height: undefined } : {},
+              Platform.OS === "ios" && { height: undefined },
+              Platform.OS === "android" && { height: 60 },
               ]}
             >
               {travelModeOptions.map((opt) => (
