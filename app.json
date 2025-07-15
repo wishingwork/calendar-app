@@ -4,15 +4,21 @@
     "slug": "calendar-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "calendarapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.wishingwork.calendarapp"
+      "bundleIdentifier": "com.wishingwork.calendarapp",
+      "icon": {
+        "light": "./assets/images/ios-light.png",
+        "dark": "./assets/images/ios-dark.png",
+        "tinted": "./assets/images/ios-tinted.png"
+      }      
     },
     "android": {
+      "icon": "./assets/images/logo.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -23,7 +29,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/android-chrome-512x512.png"
     },
     "plugins": [
       "expo-router",
