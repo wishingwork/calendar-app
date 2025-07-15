@@ -39,3 +39,6 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+## Google Service Account
+weather-mission-google-service.json
