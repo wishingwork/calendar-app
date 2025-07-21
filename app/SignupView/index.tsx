@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { useDispatch } from 'react-redux';
 import { setProfile } from '../../Redux/features/profileSlice';
 import { signupAndFetchProfile } from '../../utils/fetchAPI';
+import { useTranslation } from 'react-i18next';
 import styles from './styles';
 
 export default function SignupView() {
@@ -14,26 +15,27 @@ export default function SignupView() {
   const [error, setError] = useState('');
   const dispatch = useDispatch();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
 
   const validateAndSignup = async () => {
     if (!firstName.match(/^[a-zA-Z-]+$/)) {
-      setError('Invalid first or last name');
+      setError(t('invalidFirstOrLastName'));
       return;
     }
     if (!lastName.match(/^[a-zA-Z]+$/)) {
-      setError('Invalid first or last name');
+      setError(t('invalidFirstOrLastName'));
       return;
     }
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setError('Invalid email format');
+      setError(t('invalidEmailFormat'));
       return;
     }
     if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
-      setError('Invalid password format. Must be at least 8 characters long and include a number and a special character.');
+      setError(t('invalidPasswordFormat'));
       return;
     }
     if (!process.env.EXPO_PUBLIC_API_SERVER_IP) {
-      setError('Server misconfiguration. Please contact support.');
+      setError(t('serverMisconfiguration'));
       return;
     }
     try {
@@ -82,39 +84,39 @@ export default function SignupView() {
               alignSelf: 'center',
             }}
           />
-          <Text style={styles.logo}>Weather Calendar</Text>
+          <Text style={styles.logo}>{t('appTitle')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="First Name"
+            placeholder={t('firstNameLabel')}
             value={firstName}
             onChangeText={setFirstName}
           />
           <TextInput
             style={styles.input}
-            placeholder="Last Name"
+            placeholder={t('lastNameLabel')}
             value={lastName}
             onChangeText={setLastName}
           />
           <TextInput
             style={styles.input}
-            placeholder="Email"
+            placeholder={t('emailLabel')}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
           />
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder={t('passwordLabel')}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
           {(error.includes('Invalid') || error.includes('already')) && <Text style={styles.error}>{error}</Text>}
           <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+            <Text style={styles.buttonText}>{t('signUpLabel')}</Text>
           </TouchableOpacity>
           {error.includes('server') && <Text style={styles.error}>{error}</Text>}
-          <Text style={styles.link} onPress={() => router.push('/LoginView')}>Already have an account? Log In</Text>
+          <Text style={styles.link} onPress={() => router.push('/LoginView')}>{t('loginLink')}</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

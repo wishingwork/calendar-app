@@ -10,6 +10,7 @@ import { updateProfile, updatePassword, logout } from '../../../utils/fetchAPI';
 import styles from './styles';
 import { loadData, deleteData } from '../../../utils/storage';
 import LogoutModal from '../../Modals/LogoutModal';
+import { useTranslation } from 'react-i18next';
 
 interface User {
   first_name: string;
@@ -38,6 +39,7 @@ export default function ProfileView() {
   const [saveSuccess, setSaveSuccess] = useState(false); // for profile save
   const [updateSuccess, setUpdateSuccess] = useState(false); // for password update
   const { setModalVisible, setModalContent } = useModal();
+  const { t } = useTranslation();
   const nameRegex = /^[a-zA-Z-]+$/;
   const lastNameRegex = /^[a-zA-Z]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -140,7 +142,7 @@ export default function ProfileView() {
           onPress={() => setProfileExpanded((prev) => !prev)}
           activeOpacity={0.8}
         >
-          <Text style={styles.sectionHeaderText}>User Profile</Text>
+          <Text style={styles.sectionHeaderText}>{t('userProfileLabel')}</Text>
           <Ionicons
             name={profileExpanded ? 'chevron-up' : 'chevron-down'}
             size={22}
@@ -151,34 +153,34 @@ export default function ProfileView() {
         {profileExpanded && (
           <View style={styles.sectionContent}>
             <View style={styles.fieldRow}>
-              <Text style={styles.label}>First name:</Text>
+              <Text style={styles.label}>{t('firstNameLabel')}:</Text>
               <TextInput
                 style={styles.input}
                 value={user.first_name}
                 onChangeText={(text) => setUser({ ...user, first_name: text })}
-                placeholder="First Name"
+                placeholder={t('firstNameLabel')}
                 autoCapitalize="words"
               />
             </View>
             {errors.first_name && <Text style={styles.error}>{errors.first_name}</Text>}
             <View style={styles.fieldRow}>
-              <Text style={styles.label}>Last name:</Text>
+              <Text style={styles.label}>{t('lastNameLabel')}:</Text>
               <TextInput
                 style={styles.input}
                 value={user.last_name}
                 onChangeText={(text) => setUser({ ...user, last_name: text })}
-                placeholder="Last Name"
+                placeholder={t('lastNameLabel')}
                 autoCapitalize="words"
               />
             </View>
             {errors.last_name && <Text style={styles.error}>{errors.last_name}</Text>}
             <View style={styles.fieldRow}>
-              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.label}>{t('emailLabel')}:</Text>
               <TextInput
                 style={styles.input}
                 value={user.email}
                 onChangeText={(text) => setUser({ ...user, email: text })}
-                placeholder="Email"
+                placeholder={t('emailLabel')}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
@@ -194,7 +196,7 @@ export default function ProfileView() {
               disabled={saving || saveSuccess}
             >
               <Text style={[styles.saveButtonText, saveSuccess && { color: "#fff" }]}>
-                {saveSuccess ? 'Saved!' : saving ? 'Saving...' : 'Save'}
+                {saveSuccess ? t('savedLabel') : saving ? t('savingLabel') : t('saveLabel')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -204,7 +206,7 @@ export default function ProfileView() {
           onPress={() => setPasswordExpanded((prev) => !prev)}
           activeOpacity={0.8}
         >
-          <Text style={styles.sectionHeaderText}>Setting Password</Text>
+          <Text style={styles.sectionHeaderText}>{t('settingPasswordLabel')}</Text>
           <Ionicons
             name={passwordExpanded ? 'chevron-up' : 'chevron-down'}
             size={22}
@@ -217,14 +219,14 @@ export default function ProfileView() {
             <View style={styles.passwordInputs}>
               <TextInput
                 style={styles.input}
-                placeholder="Current Password"
+                placeholder={t('currentPasswordLabel')}
                 value={currentPassword}
                 onChangeText={setCurrentPassword}
                 secureTextEntry
               />
               <TextInput
                 style={styles.input}
-                placeholder="Confirm Password"
+                placeholder={t('confirmPasswordLabel')}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
@@ -241,7 +243,7 @@ export default function ProfileView() {
               disabled={saving || updateSuccess}
             >
               <Text style={[styles.saveButtonText, updateSuccess && { color: "#fff" }]}>
-                {updateSuccess ? 'Updated!' : saving ? 'Updating...' : 'Update'}
+                {updateSuccess ? t('updatedLabel') : saving ? t('updatingLabel') : t('updateLabel')}
               </Text>
             </TouchableOpacity>
           </View>

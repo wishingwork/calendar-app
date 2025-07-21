@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { useDispatch } from 'react-redux';
 import { setProfile } from '../../Redux/features/profileSlice';
 import { loginAndFetchProfile } from '../../utils/fetchAPI';
+import { useTranslation } from 'react-i18next';
 import styles from './styles';
 
 export default function LoginView() {
@@ -12,18 +13,19 @@ export default function LoginView() {
   const [error, setError] = useState('');
   const dispatch = useDispatch();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
  
   const validateAndLogin = async () => {
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setError('Invalid email or password');
+      setError(t('invalidEmailOrPassword'));
       return;
     }
     if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
-      setError('Invalid email or password');
+      setError(t('invalidEmailOrPassword'));
       return;
     }
     if (!process.env.EXPO_PUBLIC_API_SERVER_IP) {
-      setError('Server misconfiguration. Please contact support.');
+      setError(t('serverMisconfiguration'));
       return;
     }
     try {
@@ -65,39 +67,39 @@ export default function LoginView() {
               alignSelf: 'center',
             }}
           />
-          <Text style={styles.logo}>Weather Calendar</Text>
-          <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
-            <Text style={styles.featureText}>🌤️ Calendar View</Text>
-            <Text style={styles.featureDescription}>See your 10-day trip timeline with daily weather</Text>
-          </View>
-          <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}>
-            <Text style={styles.featureText}>🗺️ Trip Timeline</Text>
-            <Text style={styles.featureDescription}>Visualize city transitions and weather information</Text>
-          </View>
-          <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}>
-            <Text style={styles.featureText}>✈️ Travel Planning</Text>
-            <Text style={styles.featureDescription}>Add events with transportation and location details</Text>
-          </View>
+            <Text style={styles.logo}>{t('appTitle')}</Text>
+            <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
+            <Text style={styles.featureText}>🌤️ {t('calendarViewFeature')}</Text>
+            <Text style={styles.featureDescription}>{t('calendarViewDescription')}</Text>
+            </View>
+            <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}>
+            <Text style={styles.featureText}>🗺️ {t('tripTimelineFeature')}</Text>
+            <Text style={styles.featureDescription}>{t('tripTimelineDescription')}</Text>
+            </View>
+            <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}>
+            <Text style={styles.featureText}>✈️ {t('travelPlanningFeature')}</Text>
+            <Text style={styles.featureDescription}>{t('travelPlanningDescription')}</Text>
+            </View>
           <TextInput
             style={styles.input}
-            placeholder="Email"
+            placeholder={t('emailLabel')}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
           />
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder={t('passwordLabel')}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
           {error.includes('email') && <Text style={styles.error}>{error}</Text>}
           <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
-            <Text style={styles.buttonText}>Sign In</Text>
+            <Text style={styles.buttonText}>{t('signInLabel')}</Text>
           </TouchableOpacity>
           {(error.includes('server') || error.includes('Server')) && <Text style={styles.error}>{error}</Text>}
-          <Text style={styles.link} onPress={() => router.push('/SignupView')}>Don't have an account? Sign Up</Text>
+          <Text style={styles.link} onPress={() => router.push('/SignupView')}>{t('signupLink')}</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

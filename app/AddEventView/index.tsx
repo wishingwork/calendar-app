@@ -17,6 +17,7 @@ import { setEvents } from "../../Redux/features/eventsSlice";
 import DatetimePicker from "./DatetimePicker"; // <-- import the new component
 import styles from './styles';
 import { travelModeOptions } from "../../constants/travelMode";
+import { useTranslation } from 'react-i18next';
 
 export default function AddEventView() {
   const [title, setTitle] = useState("");
@@ -31,6 +32,7 @@ export default function AddEventView() {
   const [success, setSuccess] = useState(false); // <-- add success state
 
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const validateInput = (input: string) => {
     const forbiddenPatterns = /(;|--|DROP|SELECT|INSERT|DELETE|UPDATE|CREATE|ALTER|EXEC|UNION)/i;
@@ -85,35 +87,35 @@ export default function AddEventView() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.label}>Event Title *</Text>
+      <Text style={styles.label}>{t('addEventTitleLabel')}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter event title"
+        placeholder={t('addEventTitlePlaceholder')}
         value={title}
         onChangeText={setTitle}
       />
 
-      <Text style={styles.label}>Start Time *</Text>
+      <Text style={styles.label}>{t('addEventStartTimeLabel')}</Text>
       <DatetimePicker
         value={startDatetime}
         onChange={setStartDatetime}
       />
 
-      <Text style={styles.label}>End Time *</Text>
+      <Text style={styles.label}>{t('addEventEndTimeLabel')}</Text>
       <DatetimePicker
         value={endDatetime}
         onChange={setEndDatetime}
       />
 
-      <Text style={styles.label}>Event City (Address) *</Text>
+      <Text style={styles.label}>{t('addEventAddressLabel')}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter city/address"
+        placeholder={t('addEventAddressPlaceholder')}
         value={address}
         onChangeText={setAddress}
       />
 
-      <Text style={styles.label}>Travel Mode</Text>
+      <Text style={styles.label}>{t('addEventTravelModeLabel')}</Text>
       <TouchableOpacity
         style={!showTravelModePicker && styles.dateButton}
         onPress={() => setShowTravelModePicker(!showTravelModePicker)}
@@ -151,13 +153,12 @@ export default function AddEventView() {
                 borderColor: "#ccc",
               }}
             >
-            <Text style={{ fontSize: 16, color: "#333" }}>Finish</Text>
+            <Text style={{ fontSize: 16, color: "#333" }}>{t('addEventTravelModeFinish')}</Text>
             </TouchableOpacity>      
           </View>  
       )}
-      {errors.required && <Text style={styles.error}>{errors.required}</Text>}
-
-
+      {errors.required && <Text style={styles.error}>{t('addEventRequiredError')}</Text>}
+      {errors.password && <Text style={styles.error}>{t('addEventSqlError')}</Text>}
 
       <View style={styles.buttonRow}>
         <TouchableOpacity
@@ -170,7 +171,7 @@ export default function AddEventView() {
           ]}
         >
           <Text style={[styles.saveButtonText, success && { color: "#fff" }]}>
-            {success ? "Saved!" : loading ? "Saving..." : "Save Event"}
+            {success ? t('addEventSavedLabel') : loading ? t('addEventSavingLabel') : t('addEventSaveButton')}
           </Text>
         </TouchableOpacity>
       </View>

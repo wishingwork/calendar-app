@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import CalendarModeModal from '../Modals/CalendarModeModal';
 import LogoutModal from '../Modals/LogoutModal';
 import { clearProfile } from '../../Redux/features/profileSlice';
+import { useTranslation } from 'react-i18next';
 
 function TabLayoutInner() {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ function TabLayoutInner() {
   const { calendarMode, setCalendarMode } = useCalendarMode();
   const [token, setToken] = useState<string>('');
   const profile = useSelector((state: RootState) => state.profile.profile) as {is_activated: boolean} | null;
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadData('userToken').then(userTokenRaw => {
@@ -59,25 +61,25 @@ function TabLayoutInner() {
         tabBarInactiveTintColor: "#aaa",
         headerStyle: {
             backgroundColor: "#FAF8F4",
-            elevation: 0, // Android - removes shadow
-            shadowOpacity: 0, // iOS - just in case
-            borderBottomWidth: 0, // removes border            
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,            
         },
         headerShadowVisible : false,
         headerTintColor: "#0077CC",
         tabBarStyle: {
           backgroundColor: "#FAF8F4",
-          borderTopWidth: 0, // removes top border
-          elevation: 0, // Android - removes tab bar shadow
-          shadowOpacity: 0, // iOS - shadow transparency
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
         },        
     }}
   >
     <Tabs.Screen 
         name="CalendarView" 
         options={{ 
-            headerTitle: "Calendar",
-            tabBarLabel: "Calendar",
+            headerTitle: t('calendarTabTitle'),
+            tabBarLabel: t('calendarTabTitle'),
             headerRight: () => (
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
@@ -118,8 +120,8 @@ function TabLayoutInner() {
     <Tabs.Screen 
         name="TimelineView" 
         options={{ 
-            headerTitle: "Timeline",
-            tabBarLabel: "Timeline",
+            headerTitle: t('timelineTabTitle'),
+            tabBarLabel: t('timelineTabTitle'),
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => router.push("AddEventView")}
@@ -141,8 +143,8 @@ function TabLayoutInner() {
       <Tabs.Screen
         name="ProfileView"
         options={{
-          title: 'Profile',
-          tabBarLabel: "Profile",
+          title: t('profileTabTitle'),
+          tabBarLabel: t('profileTabTitle'),
           headerRight: () => (
             <TouchableOpacity onPress={() => {
              setModalContent(<LogoutModal onLogout={handleLogout} />);
@@ -163,7 +165,7 @@ function TabLayoutInner() {
       <Tabs.Screen
         name="index"
         options={{
-          href: null, // Hides the tab from the bottom tab bar
+          href: null,
         }}
       />      
   </Tabs>;

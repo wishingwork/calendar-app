@@ -11,6 +11,7 @@ import { loadData } from '../../utils/storage';
 import { travelModeOptions } from "../../constants/travelMode";
 import styles from './styles';
 import { RootState } from "../../Redux/store";
+import { useTranslation } from 'react-i18next';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -31,6 +32,7 @@ export default function EventDetailView() {
   const eventId: string = (route as any)?.params?.eventId ?? "";
 
   const [event, setEvent] = useState<any>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -68,36 +70,36 @@ export default function EventDetailView() {
       <Text style={styles.title}>{event.title}</Text>
 
       {/* Time Window */}
-      <Text style={styles.label}>Start</Text>
+      <Text style={styles.label}>{t('startLabel')}</Text>
       <View style={styles.timeRow}>
         <Text style={styles.timeText}>{start.main}</Text>
         <Text style={styles.tzText}>{start.tz}</Text>
       </View>
-      <Text style={styles.label}>End</Text>
+      <Text style={styles.label}>{t('endLabel')}</Text>
       <View style={styles.timeRow}>
         <Text style={styles.timeText}>{end.main}</Text>
         <Text style={styles.tzText}>{end.tz}</Text>
       </View>
 
       {/* Address */}
-      <Text style={styles.label}>Address</Text>
+      <Text style={styles.label}>{t('addressLabel')}</Text>
       <Text style={styles.value}>{event.location?.address || event.address}</Text>
 
       {/* Travel Mode */}
-      <Text style={styles.label}>Travel Mode</Text>
+      <Text style={styles.label}>{t('travelModeLabel')}</Text>
       <Text style={styles.value}>
         {
           (() => {
             const found = travelModeOptions.find(opt => opt.value === parseInt(event.travel_mode, 10));
-            return found ? found.label : "N/A";
+            return found ? found.label : t('notAvailableLabel');
           })()
         }
       </Text>
 
       {/* Weather */}
-      <Text style={styles.label}>Weather</Text>
+      <Text style={styles.label}>{t('weatherLabel')}</Text>
       <Text style={styles.value}>
-        {event.weather ? `${event.weather}` : "N/A"}
+        {event.weather ? `${event.weather}` : t('notAvailableLabel')}
         {event.temperature !== undefined && event.temperature !== null
           ? `, ${event.temperature}°${event.temp_unit || "C"}`
           : ""}

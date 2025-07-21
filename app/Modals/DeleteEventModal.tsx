@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import { useTranslation } from 'react-i18next';
 
 interface DeleteEventModalProps {
   visible: boolean;
@@ -14,11 +15,12 @@ export default function DeleteEventModal({
   onCancel,
   deleting,
 }: DeleteEventModalProps) {
+  const { t } = useTranslation();
   return (
     <View style={{ alignItems: "center" }}>
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 8 }}>Delete Event</Text>
+      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 8 }}>{t('deleteEventModalTitle')}</Text>
       <Text style={{ fontSize: 16, marginBottom: 20, textAlign: "center" }}>
-        Are you sure you want to delete this event?
+        {t('deleteEventModalConfirmText')}
       </Text>
       <View style={{ flexDirection: "row", gap: 12 }}>
         <TouchableOpacity
@@ -33,7 +35,7 @@ export default function DeleteEventModal({
           disabled={deleting}
         >
           <Text style={{ color: "#fff", fontWeight: "bold" }}>
-            {deleting ? "Deleting..." : "Confirm"}
+            {deleting ? t('deleteEventModalDeleting') : t('deleteEventModalConfirm')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -46,7 +48,7 @@ export default function DeleteEventModal({
           onPress={onCancel}
           disabled={deleting}
         >
-          <Text style={{ color: "#222", fontWeight: "bold" }}>Cancel</Text>
+          <Text style={{ color: "#222", fontWeight: "bold" }}>{t('deleteEventModalCancel')}</Text>
         </TouchableOpacity>
       </View>
     </View>
