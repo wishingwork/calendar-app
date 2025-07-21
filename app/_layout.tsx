@@ -3,9 +3,13 @@ import { LogBox } from "react-native";
 import ReduxProvider from "../Redux/ReduxProvider";
 import { ModalProvider } from './ModalContext';
 import DeleteEventHeaderButton from './DeleteEventHeaderButton';
+import i18n from '../utils/i18n'; // Must come before App
+import { I18nextProvider } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 LogBox.ignoreAllLogs(true);
 
 function RootLayoutInner() {
+  const { t } = useTranslation();
   return (
     <Stack
       screenOptions={{
@@ -16,7 +20,7 @@ function RootLayoutInner() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" options={{headerShown: true }} />
       <Stack.Screen name="AddEventView" options={{ 
-        title:'Add Event', headerShown: true, 
+        title: t('addEventTitle'), headerShown: true, 
         headerBackButtonDisplayMode: 'minimal',        
         headerStyle: {
           backgroundColor: "#FAF8F4",
@@ -28,7 +32,7 @@ function RootLayoutInner() {
         headerTintColor: "#0077CC",  
       }} />
       <Stack.Screen name="EventDetailView" options={{ 
-        title:'Event Detail', headerShown: true, 
+        title: t('eventDetailTitle'), headerShown: true, 
         headerBackButtonDisplayMode: 'minimal',        
         headerStyle: {
           backgroundColor: "#FAF8F4",
@@ -47,9 +51,11 @@ function RootLayoutInner() {
 export default function RootLayout() {
   return (
     <ReduxProvider>
-      <ModalProvider>
-        <RootLayoutInner />
-      </ModalProvider>
+      <I18nextProvider i18n={i18n}>
+        <ModalProvider>
+          <RootLayoutInner />
+        </ModalProvider>
+      </I18nextProvider>
     </ReduxProvider>
   );
 }
