@@ -1,18 +1,20 @@
+import i18n from '../utils/i18n';
+
 export const WEATHER_CONDITIONS = {
   Sunny: {
-    label: "Sunny",
+    label: i18n.t("weather_sunny"),
     icon: require("../assets/images/weather-sunny.png"),
   },
   Clouds: {
-    label: "Cloudy",
+    label: i18n.t("weather_cloudy"),
     icon: require("../assets/images/weather-rainy.png"),
   },
   Rain: {
-    label: "Rainy",
+    label: i18n.t("weather_rainy"),
     icon: require("../assets/images/weather-cloudy.png"),
   },
   Stormy: {
-    label: "Stormy",
+    label: i18n.t("weather_stormy"),
     icon: require("../assets/images/weather-stormy.png"),
   },
   // Add more weather types as needed

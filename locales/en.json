@@ -10,6 +10,7 @@
     "savingLabel": "Saving...",
     "saveLabel": "Save",
     "settingPasswordLabel": "Setting Password",
+    "currentPasswordLabel": "Current Password",
     "confirmPasswordLabel": "Confirm Password",
     "updatedLabel": "Updated!",
     "updatingLabel": "Updating...",
@@ -67,6 +68,15 @@
     "addEventSqlError": "Please avoid using special SQL keywords or symbols.",
     "addEventSavedLabel": "Saved!",
     "addEventSavingLabel": "Saving...",
-    "addEventSaveButton": "Save Event"
+    "addEventSaveButton": "Save Event",
+    "travelMode_car": "Car",
+    "travelMode_transit": "Transit",
+    "travelMode_bike": "Bike",
+    "travelMode_walking": "Walking",
+    "travelMode_flight": "Flight",
+    "weather_sunny": "Sunny",
+    "weather_cloudy": "Cloudy",
+    "weather_rainy": "Rainy",
+    "weather_stormy": "Stormy"
   // ...other translations...
 }

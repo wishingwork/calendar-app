@@ -10,6 +10,7 @@
   "savingLabel": "儲存中...",
   "saveLabel": "儲存",
   "settingPasswordLabel": "設置密碼",
+"currentPasswordLabel": "目前密碼",
   "confirmPasswordLabel": "確認密碼",
   "updatedLabel": "已更新！",
   "updatingLabel": "更新中...",
@@ -67,5 +68,14 @@
   "addEventSqlError": "請避免使用特殊 SQL 關鍵字或符號。",
   "addEventSavedLabel": "已儲存！",
   "addEventSavingLabel": "儲存中...",
-  "addEventSaveButton": "儲存事件"
+  "addEventSaveButton": "儲存事件",
+  "travelMode_car": "汽車",
+  "travelMode_transit": "大眾運輸",
+  "travelMode_bike": "自行車",
+  "travelMode_walking": "步行",
+  "travelMode_flight": "飛機",
+  "weather_sunny": "晴天",
+  "weather_cloudy": "多雲",
+  "weather_rainy": "雨天",
+  "weather_stormy": "暴風雨"
 }
