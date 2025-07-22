@@ -105,5 +105,6 @@
     "verifyEmailFailed": "驗證失敗，請再試一次。",
     "verifyEmailUserUnavailable": "無法取得用戶資訊。",
     "verifyEmailAlreadySent": "驗證郵件已發送，請檢查您的信箱。",
-    "verifyEmailResendFailed": "重新發送驗證郵件失敗。"
+    "verifyEmailResendFailed": "重新發送驗證郵件失敗。",
+    "addEventFailedLabel": "事件地點無效！"
 }

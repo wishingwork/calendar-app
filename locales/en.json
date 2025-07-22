@@ -71,6 +71,7 @@
     "addEventSavedLabel": "Saved!",
     "addEventSavingLabel": "Saving...",
     "addEventSaveButton": "Save Event",
+    "addEventFailedLabel": "Invalid Event Address!",
     "travelMode_car": "Car",
     "travelMode_transit": "Transit",
     "travelMode_bike": "Bike",

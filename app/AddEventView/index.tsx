@@ -30,6 +30,7 @@ export default function AddEventView() {
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
   const [success, setSuccess] = useState(false); // <-- add success state
+  const [errorState, setErrorState] = useState(false); // <-- add error state
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -65,7 +66,12 @@ export default function AddEventView() {
         start_datetime: startDatetime.toISOString(),
         end_datetime: endDatetime.toISOString(),
       };
-      await createEvent(payload, token);
+      const createEventResponse = await createEvent(payload, token);
+      if(createEventResponse.status === 'error') {
+        setErrorState(true);
+        setTimeout(() => setErrorState(false), 2000);
+        throw new Error(createEventResponse.message);
+      }
       // Refetch events and update redux
       const events = await fetchEvents(token);
       dispatch(setEvents(events));
@@ -167,11 +173,22 @@ export default function AddEventView() {
           style={[
             styles.saveButton,
             success && { backgroundColor: "#007BFF" },
+            errorState && { backgroundColor: "#d11a2a" }, // <-- red on error
             loading && { opacity: 0.5 }
           ]}
         >
-          <Text style={[styles.saveButtonText, success && { color: "#fff" }]}>
-            {success ? t('addEventSavedLabel') : loading ? t('addEventSavingLabel') : t('addEventSaveButton')}
+          <Text style={[
+            styles.saveButtonText,
+            success && { color: "#fff" },
+            errorState && { color: "#fff" }
+          ]}>
+            {errorState
+              ? t('addEventFailedLabel')
+              : success
+                ? t('addEventSavedLabel')
+                : loading
+                  ? t('addEventSavingLabel')
+                  : t('addEventSaveButton')}
           </Text>
         </TouchableOpacity>
       </View>
