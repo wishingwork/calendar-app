@@ -41,15 +41,15 @@ export default function AddEventView() {
 
   const handleSaveEvent = async () => {
     if (!validateInput(title) || !validateInput(address)) {
-      setErrors({ password: "Please avoid using special SQL keywords or symbols." });
+      setErrors({ password: t('addEventSqlError') });
       return;
     }
     if (!title || !address) {
-      setErrors({ required: "Please fill in all required fields." });
+      setErrors({ required: t('addEventRequiredError') });
       return;
     }
     if (!startDatetime || !endDatetime) {
-      Alert.alert("Missing DateTime", "Please select both start and end times.");
+      Alert.alert(t('addEventMissingDateTimeTitle'), t('addEventMissingDateTimeMsg'));
       return;
     }
     setLoading(true);
@@ -69,7 +69,7 @@ export default function AddEventView() {
       // Refetch events and update redux
       const events = await fetchEvents(token);
       dispatch(setEvents(events));
-      Alert.alert("Event Saved", `Event "${title}" has been saved successfully!`);
+      Alert.alert(t('addEventSavedTitle'), t('addEventSavedMsg', { title }));
       setTitle("");
       setAddress("");
       setEventDate(new Date());
@@ -79,7 +79,7 @@ export default function AddEventView() {
       setSuccess(true); // <-- show success
       setTimeout(() => setSuccess(false), 2000); // <-- revert after 2s
     } catch (err: any) {
-      Alert.alert("Error", err.message || "Failed to save event.");
+      Alert.alert(t('addEventErrorTitle'), err.message || t('addEventErrorMsg'));
     } finally {
       setLoading(false);
     }

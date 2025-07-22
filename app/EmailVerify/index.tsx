@@ -31,7 +31,7 @@ export default function EmailVerify () {
     setSuccess('');
     try {
       if (!apiServerIp) {
-        setError('API server IP is not set.');
+        setError(t('serverMisconfiguration'));
         setLoading(false);
         return;
       }
@@ -39,25 +39,25 @@ export default function EmailVerify () {
       if (data.success === true) {
         const { data: profile } = await updateProfile({ is_activated: true }, userToken, apiServerIp);
         dispatch(setProfile(profile));
-        setSuccess('Email verified!');
+        setSuccess(t('verifyEmailSuccess'));
         router.push('/(tabs)');
       } else {
-        setError('Invalid verification code');
+        setError(t('verifyEmailInvalidCode'));
       }
     } catch {
-      setError('Verification failed. Please try again.');
+      setError(t('verifyEmailFailed'));
     } finally {
       setLoading(false);
     }
   };
   const handleResend = async () => {
     if (!apiServerIp) {
-      setError('API server IP is not set.');
+      setError(t('serverMisconfiguration'));
       setResendLoading(false);
       return;
     }
     if (!user) {
-      setError('User information is not available.');
+      setError(t('verifyEmailUserUnavailable'));
       setResendLoading(false);
       return;
     }
@@ -67,12 +67,12 @@ export default function EmailVerify () {
     try {
       const { data } = await resendVerificationEmail(user.email, userToken, apiServerIp);
       if (data.message === "Verification email sent") {
-        setError('Verification email already sent. Please check your inbox.');
+        setError(t('verifyEmailAlreadySent'));
       } else {
-        setError('Failed to resend verification email.');
+        setError(t('verifyEmailResendFailed'));
       }
     } catch {
-      setError('Failed to resend verification email.');
+      setError(t('verifyEmailResendFailed'));
     } finally {
       setResendLoading(false);
     }

@@ -49,15 +49,15 @@ export default function ProfileView() {
     let valid = true;
     let newErrors: { [key: string]: string } = {};
     if (!nameRegex.test(user.first_name) || sqlInjectionRegex.test(user.first_name)) {
-      newErrors.first_name = 'First name can only contain letters and hyphens, and no SQL keywords.';
+      newErrors.first_name = t('profileError_firstName');
       valid = false;
     }
     if (!lastNameRegex.test(user.last_name) || sqlInjectionRegex.test(user.last_name)) {
-      newErrors.last_name = 'Last name can only contain letters, and no SQL keywords.';
+      newErrors.last_name = t('profileError_lastName');
       valid = false;
     }
     if (!emailRegex.test(user.email) || sqlInjectionRegex.test(user.email)) {
-      newErrors.email = 'Invalid email format or contains SQL keywords.';
+      newErrors.email = t('profileError_email');
       valid = false;
     }
     setErrors(newErrors);
@@ -67,13 +67,13 @@ export default function ProfileView() {
     let valid = true;
     let newErrors: { [key: string]: string } = {};
     if (!currentPassword || !confirmPassword) {
-      newErrors.password = 'Please fill out both password fields.';
+      newErrors.password = t('profileError_passwordRequired');
       valid = false;
     } else if (currentPassword !== confirmPassword) {
-      newErrors.password = 'Passwords do not match.';
+      newErrors.password = t('profileError_passwordMismatch');
       valid = false;
     } else if (currentPassword.length < 8 || !/[0-9]/.test(currentPassword) || !/[!@#$%^&*]/.test(currentPassword)) {
-      newErrors.password = 'Password must be at least 8 characters, include a number and a special character.';
+      newErrors.password = t('profileError_passwordFormat');
       valid = false;
     }
     setErrors(newErrors);
@@ -92,12 +92,12 @@ export default function ProfileView() {
         } else {
           setSaveSuccess(true); // show success
           setTimeout(() => setSaveSuccess(false), 2000); // revert after 2s
-          Alert.alert('Success', 'Profile updated successfully!');
+          Alert.alert('Success', t('profileSuccess_update'));
         }
       })
       .catch(() => {
         setSaving(false);
-        Alert.alert('Error', 'An error occurred. Please try again.');
+        Alert.alert('Error', t('profileError_general'));
       });
   };
   const handlePasswordUpdate = async () => {
@@ -105,7 +105,7 @@ export default function ProfileView() {
     const userToken = userTokenRaw || '';
     if (!validatePassword()) return;
     if (!process.env.EXPO_PUBLIC_API_SERVER_IP) {
-      setErrors({ password: 'Server misconfiguration. Please contact support.' });
+      setErrors({ password: t('serverMisconfiguration') });
       return;
     }
     setSaving(true);
@@ -113,19 +113,19 @@ export default function ProfileView() {
       .then((data) => {
         setSaving(false);
         if (data.error) {
-          setErrors({ password: 'Password update failed. Please try again.' });
+          setErrors({ password: t('profileError_passwordUpdate') });
         } else {
           setCurrentPassword('');
           setConfirmPassword('');
           setErrors({});
           setUpdateSuccess(true); // show success
           setTimeout(() => setUpdateSuccess(false), 2000); // revert after 2s
-          Alert.alert('Success', 'Password updated successfully!');
+          Alert.alert('Success', t('profileSuccess_password'));
         }
       })
       .catch(() => {
         setSaving(false);
-        setErrors({ password: 'A server error occurred. Please try again.' });
+        setErrors({ password: t('profileError_server') });
       });
   };
 

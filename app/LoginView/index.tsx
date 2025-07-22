@@ -43,7 +43,7 @@ export default function LoginView() {
       setPassword('');
       setError('');
     } catch (error: any) {
-      setError(error.message || 'A server error occurred. Please try again.');
+      setError(error.message || t('serverGeneralError'));
     } finally {
       setPassword('');
     }
@@ -94,11 +94,10 @@ export default function LoginView() {
             onChangeText={setPassword}
             secureTextEntry
           />
-          {error.includes('email') && <Text style={styles.error}>{error}</Text>}
+          {(error.includes(t('errorCode_email')) || error.includes(t('errorCode_server'))) && <Text style={styles.error}>{error}</Text>}
           <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
             <Text style={styles.buttonText}>{t('signInLabel')}</Text>
           </TouchableOpacity>
-          {(error.includes('server') || error.includes('Server')) && <Text style={styles.error}>{error}</Text>}
           <Text style={styles.link} onPress={() => router.push('/SignupView')}>{t('signupLink')}</Text>
         </View>
       </ScrollView>
