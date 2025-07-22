@@ -6,7 +6,7 @@ import { CalendarModeProvider, useCalendarMode } from '../CalendarModeContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../Redux/store';
 import { loadData, deleteData } from '../../utils/storage';
-import { logout as apiLogout } from '../../utils/fetchAPI';
+import { logout } from '../../utils/fetchAPI';
 
 import React, { useEffect, useState } from "react";
 import CalendarModeModal from '../Modals/CalendarModeModal';
@@ -34,12 +34,21 @@ function TabLayoutInner() {
     }
   }, [profile, token]);
 
+  // Check for userToken and redirect to LoginView if not present
+  useEffect(() => {
+    loadData('userToken').then(token => {
+      if (!token) {
+        router.replace('/LoginView');
+      }
+    });
+  }, []);
+
   // Universal logout handler for modal
   const handleLogout = async () => {
     setModalVisible(false);
     const userTokenRaw = await loadData('userToken');
     const userToken = userTokenRaw || '';
-    apiLogout(userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
+    await logout(userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
       .then(async () => {
         await deleteData('userToken');
         dispatch(clearProfile());
@@ -48,7 +57,7 @@ function TabLayoutInner() {
         console.log(49,err);
         // Optionally handle error globally
       });
-      router.push('/LoginView');
+    router.push('/LoginView');
   };
 
   if (profile && profile.is_activated === false) {

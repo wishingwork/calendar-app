@@ -75,6 +75,16 @@ export async function signupAndFetchProfile(
   return data;
 }
 
+export async function fetchProfile(userToken: string, apiServerIp: string) {
+  const profileUrl = `${apiServerIp}/auth/me`;
+  const  { data }  = await doFetch({
+    url: profileUrl,
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${userToken}` },
+  });
+  return data.profile;
+}
+
 export async function updateProfile(user: any, userToken: string, apiServerIp: string) {
   const url = `${apiServerIp}/auth/me`;
   return doFetch({

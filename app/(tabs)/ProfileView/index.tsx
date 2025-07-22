@@ -11,6 +11,7 @@ import styles from './styles';
 import { loadData, deleteData } from '../../../utils/storage';
 import LogoutModal from '../../Modals/LogoutModal';
 import { useTranslation } from 'react-i18next';
+import { fetchProfile } from '../../../utils/fetchAPI';
 
 interface User {
   first_name: string;
@@ -128,6 +129,21 @@ export default function ProfileView() {
         setErrors({ password: t('profileError_server') });
       });
   };
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const userTokenRaw = await loadData('userToken');
+      const userToken = userTokenRaw || '';
+      if (userToken) {
+        const data = await fetchProfile(userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string);
+        if (data && !data.error) {
+          setUser(data);
+        }
+      }
+    };
+    // Run on mount and when the screen is focused (for navigation)
+    loadProfile();
+  }, []);
 
   useEffect(() => {
     if (profile) {
