@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   icon: {
-    width: 32,
-    height: 32,
+    width: 28,
+    height: 28,
     marginRight: 8,
   },
   weather: {

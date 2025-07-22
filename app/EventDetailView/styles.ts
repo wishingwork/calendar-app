@@ -79,6 +79,11 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     alignItems: 'center',
   },
+  icon: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+  },  
 });
 
 export default styles;

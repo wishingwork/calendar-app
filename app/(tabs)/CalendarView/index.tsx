@@ -1,5 +1,5 @@
-import { useEffect, useCallback, useState } from "react";
-import { View, Text, Image } from "react-native";
+import { useEffect, useCallback, useState, useMemo } from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../Redux/store";
@@ -10,6 +10,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { router } from 'expo-router';
 import { useCalendarMode } from '../../CalendarModeContext';
 import styles from './styles';
+import { WEATHER_CONDITIONS } from "../../../constants/weather";
+import { getTemperatureColor } from '../../../utils/colorUtils';
 
 export default function CalendarView() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export default function CalendarView() {
   // Map Redux events to BigCalendar format
   const events = eventsData.flatMap((group) => {
     return group.events.map((item) => ({
-      title: item.title,
+      title: item.title ,
       start: item.start_datetime ? new Date(item.start_datetime) : new Date(group.date + "T09:00:00"),
       end: item.end_datetime ? new Date(item.end_datetime) : new Date(group.date + "T10:00:00"),
       id: item.id,
@@ -32,24 +34,37 @@ export default function CalendarView() {
       icon: item.icon,
       city: item.location?.city,
       location: item.location,
+      temperature: item.temperature,
       // ...add other fields as needed...
     }))}
   );
 
-  const renderEvent = (event) => (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {event.icon && (
-        <Image source={{ uri: event.icon }} style={{ width: 20, height: 20, marginRight: 4 }} />
-      )}
-      <Text style={{ fontWeight: "bold" }}>{event.city || ""}</Text>
-      <Text style={{ marginLeft: 4 }}>{event.weather || ""}</Text>
-      <Text style={{ marginLeft: 8, color: "#888", fontSize: 12 }}>
-        {event.start && event.end
-          ? `${event.start.toISOString().slice(11, 16)} - ${event.end.toISOString().slice(11, 16)}`
-          : ""}
-      </Text>
-    </View>
-  );
+  const renderEvent = (
+    event,
+    touchableOpacityProps: any,
+  ) => {
+    type WeatherKey = keyof typeof WEATHER_CONDITIONS;
+    const weatherKey = event.weather as WeatherKey;
+    const iconSource = WEATHER_CONDITIONS[weatherKey]?.icon;
+    return (
+      <TouchableOpacity
+        {...touchableOpacityProps}
+        style={[
+          touchableOpacityProps?.style,
+          { backgroundColor: getTemperatureColor(event.temperature) }
+        ]}
+      >
+        <Text style={{ color: '#333' }}>
+          {event.title}
+          {event.weather && (
+            <>
+              {iconSource ? <Image source={iconSource} style={styles.icon} /> : null}
+            </>
+          )}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   // Optionally filter events/cards by selected date
   const filteredEvents = selected
@@ -84,6 +99,7 @@ export default function CalendarView() {
         height={400}
         mode={calendarMode}
         onPressEvent={(event) => router.push(`/EventDetailView/${event.id}`)}
+        renderEvent={renderEvent}
       />
     </View>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, Image } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -12,7 +12,7 @@ import { travelModeOptions } from "../../constants/travelMode";
 import styles from './styles';
 import { RootState } from "../../Redux/store";
 import { useTranslation } from 'react-i18next';
-
+import { WEATHER_CONDITIONS } from "../../constants/weather";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -63,6 +63,11 @@ export default function EventDetailView() {
   const start = formatEventTime(event.start_datetime, tz);
   const end = formatEventTime(event.end_datetime, tz);
 
+  type WeatherKey = keyof typeof WEATHER_CONDITIONS;
+  const weatherKey = event.weather as WeatherKey;
+  const iconSource = WEATHER_CONDITIONS[weatherKey]?.icon;
+  const weatherLabel = WEATHER_CONDITIONS[weatherKey]?.label;
+
   return (
     <View style={styles.container}>
 
@@ -99,7 +104,12 @@ export default function EventDetailView() {
       {/* Weather */}
       <Text style={styles.label}>{t('weatherLabel')}</Text>
       <Text style={styles.value}>
-        {event.weather ? `${event.weather}` : t('notAvailableLabel')}
+        {event.weather ? (
+          <>
+            {iconSource ? <Image source={iconSource} style={styles.icon} /> : null}
+              {weatherLabel ?? event.weather}
+          </>
+        ) : t('notAvailableLabel')}        
         {event.temperature !== undefined && event.temperature !== null
           ? `, ${event.temperature}°${event.temp_unit || "C"}`
           : ""}
