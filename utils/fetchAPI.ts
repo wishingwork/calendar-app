@@ -1,5 +1,6 @@
 import { saveData } from './storage';
-
+import * as Localization from 'expo-localization'; // Optional if using Expo
+const language = Localization.getLocales()[0].languageTag.split('-')[0]; // Get the language code (e.g., 'en', 'zh')
 async function doFetch({
   url,
   method = 'GET',
@@ -62,7 +63,7 @@ export async function signupAndFetchProfile(
   const {message, data} = await doFetch({
     url: signupUrl,
     method: 'POST',
-    body: { first_name: firstName, last_name: lastName, email, password },
+    body: { first_name: firstName, last_name: lastName, email, password, language },
   });
   if (!data) {
     throw new Error(message || 'Invalid email or password');
@@ -124,7 +125,7 @@ export async function resendVerificationEmail(email: string, userToken: string, 
     url: `${apiServerIp}/auth/verifyemail`,
     method: 'POST',
     headers: { 'Authorization': `Bearer ${userToken}` },
-    body: { email },
+    body: { email, language },
   });
 }
 
