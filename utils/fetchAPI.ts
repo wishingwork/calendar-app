@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { saveData } from './storage';
 import * as Localization from 'expo-localization'; // Optional if using Expo
 const language = Localization.getLocales()[0].languageTag.split('-')[0]; // Get the language code (e.g., 'en', 'zh')
@@ -63,14 +64,14 @@ export async function signupAndFetchProfile(
   const {message, data} = await doFetch({
     url: signupUrl,
     method: 'POST',
-    body: { first_name: firstName, last_name: lastName, email, password, language },
+    body: { first_name: firstName, last_name: lastName, email, password, language, device_os: Platform.OS }, // Assuming 'web' for device_os
   });
   if (!data) {
     throw new Error(message || 'Invalid email or password');
   }
   await saveData('userToken', data.token);
   if (dispatch && setProfile) {
-    dispatch(setProfile({ first_name: data.first_name, last_name: data.last_name, email: data.email, is_activated: data.is_activated }));
+    dispatch(setProfile({ first_name: data.first_name, last_name: data.last_name, email: data.email, is_activated: data.is_activated, device_os: data.device_os }));
   }
   return data;
 }
