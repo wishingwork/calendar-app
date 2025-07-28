@@ -85,12 +85,14 @@ export default function LoginView() {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
           placeholder={t('passwordLabel')}
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor="#999"
           secureTextEntry
         />
         {(error.includes(t('errorCode_email')) || error.includes(t('errorCode_server'))) && <Text style={styles.error}>{error}</Text>}

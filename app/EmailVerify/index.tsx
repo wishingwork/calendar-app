@@ -132,7 +132,7 @@ export default function EmailVerify () {
           keyboardType="numeric"
           maxLength={6}
           placeholder={t('verifyEmailPlaceholder')}
-          placeholderTextColor="#bbb" // Placeholder in gray
+          placeholderTextColor="#999"
           />
           {error ? <Text style={[typography.error, { marginBottom: 6 }]}>{error}</Text> : null}
           {success ? <Text style={[typography.link, { marginBottom: 6 }]}>{success}</Text> : null}

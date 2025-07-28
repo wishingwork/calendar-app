@@ -176,6 +176,7 @@ export default function ProfileView() {
                 onChangeText={(text) => setUser({ ...user, first_name: text })}
                 placeholder={t('firstNameLabel')}
                 autoCapitalize="words"
+                placeholderTextColor="#999"
               />
             </View>
             {errors.first_name && <Text style={styles.error}>{errors.first_name}</Text>}
@@ -187,6 +188,7 @@ export default function ProfileView() {
                 onChangeText={(text) => setUser({ ...user, last_name: text })}
                 placeholder={t('lastNameLabel')}
                 autoCapitalize="words"
+                placeholderTextColor="#999"
               />
             </View>
             {errors.last_name && <Text style={styles.error}>{errors.last_name}</Text>}
@@ -199,6 +201,7 @@ export default function ProfileView() {
                 placeholder={t('emailLabel')}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                placeholderTextColor="#999"
               />
             </View>
             {errors.email && <Text style={styles.error}>{errors.email}</Text>}
@@ -239,6 +242,7 @@ export default function ProfileView() {
                 value={currentPassword}
                 onChangeText={setCurrentPassword}
                 secureTextEntry
+                placeholderTextColor="#999"
               />
               <TextInput
                 style={styles.input}
@@ -246,6 +250,7 @@ export default function ProfileView() {
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
+                placeholderTextColor="#999"
               />
               {errors.password && <Text style={styles.error}>{errors.password}</Text>}
             </View>

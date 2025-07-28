@@ -105,6 +105,7 @@ export default function AddEventView() {
           placeholder={t('addEventTitlePlaceholder')}
           value={title}
           onChangeText={setTitle}
+          placeholderTextColor="#999"
         />
 
         <Text style={styles.label}>{t('addEventStartTimeLabel')}</Text>
@@ -125,6 +126,7 @@ export default function AddEventView() {
           placeholder={t('addEventAddressPlaceholder')}
           value={address}
           onChangeText={setAddress}
+          placeholderTextColor="#999"
         />
 
         <Text style={styles.label}>{t('addEventTravelModeLabel')}</Text>

@@ -89,12 +89,14 @@ export default function SignupView() {
             placeholder={t('firstNameLabel')}
             value={firstName}
             onChangeText={setFirstName}
+            placeholderTextColor="#999"
           />
           <TextInput
             style={styles.input}
             placeholder={t('lastNameLabel')}
             value={lastName}
             onChangeText={setLastName}
+            placeholderTextColor="#999"
           />
           <TextInput
             style={styles.input}
@@ -102,6 +104,7 @@ export default function SignupView() {
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
+            placeholderTextColor="#999"
           />
           <TextInput
             style={styles.input}
@@ -109,6 +112,7 @@ export default function SignupView() {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            placeholderTextColor="#999"
           />
           {(error.includes(t('errorCode_invalid')) || error.includes(t('errorCode_server')) ) && <Text style={styles.error}>{error}</Text>}
           <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
