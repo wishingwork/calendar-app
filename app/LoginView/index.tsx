@@ -56,50 +56,48 @@ export default function LoginView() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView contentContainerStyle={styles.inner}>
-        <View style={styles.container}>
-          <Image
-            source={require('../../assets/images/logo.png')}
-            style={{
-              width: width * 0.25,
-              height: width * 0.25,
-              resizeMode: 'contain',
-              marginBottom: 16,
-              alignSelf: 'center',
-            }}
-          />
-            <Text style={styles.logo}>{t('appTitle')}</Text>
-            <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
-            <Text style={styles.featureText}>🌤️ {t('calendarViewFeature')}</Text>
-            <Text style={styles.featureDescription}>{t('calendarViewDescription')}</Text>
-            </View>
-            <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}>
-            <Text style={styles.featureText}>🗺️ {t('tripTimelineFeature')}</Text>
-            <Text style={styles.featureDescription}>{t('tripTimelineDescription')}</Text>
-            </View>
-            <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}>
-            <Text style={styles.featureText}>✈️ {t('travelPlanningFeature')}</Text>
-            <Text style={styles.featureDescription}>{t('travelPlanningDescription')}</Text>
-            </View>
-          <TextInput
-            style={styles.input}
-            placeholder={t('emailLabel')}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder={t('passwordLabel')}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-          {(error.includes(t('errorCode_email')) || error.includes(t('errorCode_server'))) && <Text style={styles.error}>{error}</Text>}
-          <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
-            <Text style={styles.buttonText}>{t('signInLabel')}</Text>
-          </TouchableOpacity>
-          <Text style={styles.link} onPress={() => router.push('/SignupView')}>{t('signupLink')}</Text>
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={{
+            width: width * 0.25,
+            height: width * 0.25,
+            resizeMode: 'contain',
+            marginBottom: 16,
+            alignSelf: 'center',
+          }}
+        />
+        <Text style={styles.logo}>{t('appTitle')}</Text>
+        <View style={[styles.featureBlock, { borderColor: '#FF5733' }]}>
+          <Text style={styles.featureText}>🌤️ {t('calendarViewFeature')}</Text>
+          <Text style={styles.featureDescription}>{t('calendarViewDescription')}</Text>
         </View>
+        <View style={[styles.featureBlock, { borderColor: '#33C1FF' }]}>
+          <Text style={styles.featureText}>🗺️ {t('tripTimelineFeature')}</Text>
+          <Text style={styles.featureDescription}>{t('tripTimelineDescription')}</Text>
+        </View>
+        <View style={[styles.featureBlock, { borderColor: '#33FF57' }]}>
+          <Text style={styles.featureText}>✈️ {t('travelPlanningFeature')}</Text>
+          <Text style={styles.featureDescription}>{t('travelPlanningDescription')}</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder={t('emailLabel')}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder={t('passwordLabel')}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        {(error.includes(t('errorCode_email')) || error.includes(t('errorCode_server'))) && <Text style={styles.error}>{error}</Text>}
+        <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
+          <Text style={styles.buttonText}>{t('signInLabel')}</Text>
+        </TouchableOpacity>
+        <Text style={styles.link} onPress={() => router.push('/SignupView')}>{t('signupLink')}</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );

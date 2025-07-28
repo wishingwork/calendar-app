@@ -8,6 +8,9 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: 'rgb(250 248 244 / var(--tw-bg-opacity, 1))',
   },
+  inner: {
+    padding: 24,
+  },  
   title: {
     fontSize: 28,
     fontWeight: 'bold',

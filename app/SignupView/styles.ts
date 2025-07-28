@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
     ...common.container,
   },
   inner: {
-    flex: 1,
+    padding: 16,
+    paddingTop: 48,
   },
   logo: {
     ...typography.logo,

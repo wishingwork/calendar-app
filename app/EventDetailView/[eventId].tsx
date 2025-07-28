@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert, Image } from "react-native";
+import { View, Text, Alert, Image, ScrollView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -69,7 +69,7 @@ export default function EventDetailView() {
   const weatherLabel = WEATHER_CONDITIONS[weatherKey]?.label;
 
   return (
-    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.inner}>
 
       {/* Title */}
       <Text style={styles.title}>{event.title}</Text>
@@ -114,6 +114,6 @@ export default function EventDetailView() {
           ? `, ${event.temperature}°${event.temp_unit || "C"}`
           : ""}
       </Text>
-    </View>
+      </ScrollView>
   );
 }

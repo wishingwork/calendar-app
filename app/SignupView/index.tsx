@@ -73,7 +73,6 @@ export default function SignupView() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView contentContainerStyle={styles.inner}>
-        <View style={styles.container}>
           <Image
             source={require('../../assets/images/logo.png')}
             style={{
@@ -116,7 +115,6 @@ export default function SignupView() {
             <Text style={styles.buttonText}>{t('signUpLabel')}</Text>
           </TouchableOpacity>
           <Text style={styles.link} onPress={() => router.push('/LoginView')}>{t('loginLink')}</Text>
-        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
