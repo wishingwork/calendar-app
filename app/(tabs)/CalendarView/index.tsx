@@ -100,6 +100,10 @@ export default function CalendarView() {
         mode={calendarMode}
         onPressEvent={(event) => router.push(`/EventDetailView/${event.id}`)}
         renderEvent={renderEvent}
+        dayHeaderHighlightColor="#007BFF" // Highlight the current day's header with blue
+        dayHeaderStyle={{
+          overflow: 'hidden', // Ensure the background color respects the border radius
+        }}        
       />
     </View>
   );
