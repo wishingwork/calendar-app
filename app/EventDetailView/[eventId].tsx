@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert, Image, ScrollView } from "react-native";
+import { View, Text, Alert, Image, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -69,6 +69,11 @@ export default function EventDetailView() {
   const weatherLabel = WEATHER_CONDITIONS[weatherKey]?.label;
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >     
       <ScrollView contentContainerStyle={styles.inner}>
 
       {/* Title */}
@@ -115,5 +120,6 @@ export default function EventDetailView() {
           : ""}
       </Text>
       </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

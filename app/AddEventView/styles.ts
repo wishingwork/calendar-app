@@ -8,6 +8,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: 'rgb(250 248 244 / var(--tw-bg-opacity, 1))',
   },
+  inner: {
+    padding: 16,
+    paddingTop: 48,
+  },  
   label: {
     fontSize: 16,
     fontWeight: 'bold',

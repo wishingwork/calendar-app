@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Image, useWindowDimensions, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { common } from '../../styles/common';
 import { typography } from '../../styles/typography';
 import { verifyEmailCode, resendVerificationEmail, updateProfile } from '../../utils/fetchAPI';
@@ -85,65 +85,69 @@ export default function EmailVerify () {
    }, [user, token]); 
 
   return (
-    <View style={[common.container, { alignItems: 'center', flex: 1 }]}>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-      {/* Logo Section */}
-      <View style={{ alignItems: 'center', marginBottom: 32 }}>
-        <Image
-        source={require('../../assets/images/logo.png')}
-        style={{
-          width: width * 0.22,
-          height: width * 0.22,
-          resizeMode: 'contain',
-          marginBottom: 12,
-          alignSelf: 'center',
-        }}
-        />
-        <Text style={[styles.logo, { fontSize: 22, fontWeight: '700', letterSpacing: 1 }]}>
-        {t('appTitle')}
-        </Text>
-      </View>
-      {/* Form Section */}
-      <View style={{ alignItems: 'center', width: '100%', paddingHorizontal: 20 }}>
-        <Text style={[typography.logo, { marginBottom: 18, fontSize: 24, fontWeight: '700' }]}>
-        {t('verifyEmailTitle')}
-        </Text>
-        <Text style={[typography.subheader, { marginBottom: 10, fontSize: 16 }]}>
-        {t('verifyEmailInstruction')}
-        </Text>
-        <TextInput
-        style={[
-          common.input,
-          {
-            textAlign: 'center',
-            fontSize: 20,
-            fontWeight: '600',
-            letterSpacing: 4,
-            marginBottom: 10,
-            color: '#000', // User's entry in black
-          },
-        ]}
-        value={code}
-        onChangeText={setCode}
-        keyboardType="numeric"
-        maxLength={6}
-        placeholder={t('verifyEmailPlaceholder')}
-        placeholderTextColor="#bbb" // Placeholder in gray
-        />
-        {error ? <Text style={[typography.error, { marginBottom: 6 }]}>{error}</Text> : null}
-        {success ? <Text style={[typography.link, { marginBottom: 6 }]}>{success}</Text> : null}
-        <TouchableOpacity style={common.button} onPress={handleVerify} disabled={loading}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={common.buttonText}>{t('verifyEmailButton')}</Text>}
-        </TouchableOpacity>
-        <TouchableOpacity style={{ marginTop: 12 }} onPress={handleResend} disabled={resendLoading}>
-        <Text style={[typography.link, { fontWeight: '500' }]}>
-          {resendLoading ? t('verifyEmailResending') : t('verifyEmailResend')}
-        </Text>
-        </TouchableOpacity>
-        <Text style={styles.link} onPress={() => router.push('/LoginView')}>{t('backToLogin')}</Text>
-      </View>
-    </View>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >     
+      <ScrollView contentContainerStyle={styles.inner}>
+        {/* Logo Section */}
+        <View style={{ alignItems: 'center', marginBottom: 32 }}>
+          <Image
+          source={require('../../assets/images/logo.png')}
+          style={{
+            width: width * 0.22,
+            height: width * 0.22,
+            resizeMode: 'contain',
+            marginBottom: 12,
+            alignSelf: 'center',
+          }}
+          />
+          <Text style={[styles.logo, { fontSize: 22, fontWeight: '700', letterSpacing: 1 }]}>
+          {t('appTitle')}
+          </Text>
+        </View>
+        {/* Form Section */}
+        <View style={{ alignItems: 'center', width: '100%', paddingHorizontal: 20 }}>
+          <Text style={[typography.logo, { marginBottom: 18, fontSize: 24, fontWeight: '700' }]}>
+          {t('verifyEmailTitle')}
+          </Text>
+          <Text style={[typography.subheader, { marginBottom: 10, fontSize: 16 }]}>
+          {t('verifyEmailInstruction')}
+          </Text>
+          <TextInput
+          style={[
+            common.input,
+            {
+              textAlign: 'center',
+              fontSize: 20,
+              fontWeight: '600',
+              letterSpacing: 4,
+              marginBottom: 10,
+              color: '#000', // User's entry in black
+            },
+          ]}
+          value={code}
+          onChangeText={setCode}
+          keyboardType="numeric"
+          maxLength={6}
+          placeholder={t('verifyEmailPlaceholder')}
+          placeholderTextColor="#bbb" // Placeholder in gray
+          />
+          {error ? <Text style={[typography.error, { marginBottom: 6 }]}>{error}</Text> : null}
+          {success ? <Text style={[typography.link, { marginBottom: 6 }]}>{success}</Text> : null}
+          <TouchableOpacity style={common.button} onPress={handleVerify} disabled={loading}>
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={common.buttonText}>{t('verifyEmailButton')}</Text>}
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginTop: 12 }} onPress={handleResend} disabled={resendLoading}>
+          <Text style={[typography.link, { fontWeight: '500' }]}>
+            {resendLoading ? t('verifyEmailResending') : t('verifyEmailResend')}
+          </Text>
+          </TouchableOpacity>
+          <Text style={styles.link} onPress={() => router.push('/LoginView')}>{t('backToLogin')}</Text>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
