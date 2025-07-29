@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
   inner: {
     padding: 16,
     paddingTop: 48,
+    paddingBottom: 48,
   },
   logo: {
     ...typography.logo,
