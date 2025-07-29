@@ -7,8 +7,10 @@ import i18n from '../utils/i18n'; // Must come before App
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { clearProfile } from '../Redux/features/profileSlice';
-import { saveData, loadData } from '../utils/storage';
+import { clearProfile, setProfile } from '../Redux/features/profileSlice';
+import { setEvents } from '../Redux/features/eventsSlice';
+import { saveData, loadData, deleteData } from '../utils/storage';
+import { fetchProfile, fetchEvents } from '../utils/fetchAPI';
 
 LogBox.ignoreAllLogs(true);
 
@@ -17,10 +19,29 @@ function RootLayoutInner() {
   const router = useRouter();
   const dispatch = useDispatch();
   const appState = useRef(AppState.currentState);
+  const apiServerIp = process.env.EXPO_PUBLIC_API_SERVER_IP || 'localhost';
 
   useEffect(() => {
-    // Check if the app was in the background for more than 24 hours
-    // and clear the profile if so
+    const checkUserSession = async () => {
+      const userToken = await loadData('userToken');
+      if (userToken) {
+        try {
+          const profile = await fetchProfile(userToken, apiServerIp);
+          const events = await fetchEvents(userToken);
+          dispatch(setProfile(profile));
+          dispatch(setEvents(events));
+        } catch (error) {
+          console.error('Failed to fetch user data:', error);
+          await deleteData('userToken');
+          router.replace('/LoginView');
+        }
+      } else {
+        router.replace('/LoginView');
+      }
+    };
+
+    checkUserSession();
+
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (
         appState.current.match(/inactive|background/) &&

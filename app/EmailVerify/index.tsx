@@ -40,7 +40,7 @@ export default function EmailVerify () {
         const { data: profile } = await updateProfile({ is_activated: true }, userToken, apiServerIp);
         dispatch(setProfile(profile));
         setSuccess(t('verifyEmailSuccess'));
-        router.push('/(tabs)');
+        router.replace('/(tabs)');
       } else {
         setError(t('verifyEmailInvalidCode'));
       }
@@ -80,7 +80,7 @@ export default function EmailVerify () {
 
    useEffect(() => {
      if (user && user.is_activated === true && token) {
-       router.push({ pathname:'/(tabs)', params: { token } });
+       router.replace({ pathname:'/(tabs)', params: { token } });
      }
    }, [user, token]); 
 
@@ -144,7 +144,7 @@ export default function EmailVerify () {
             {resendLoading ? t('verifyEmailResending') : t('verifyEmailResend')}
           </Text>
           </TouchableOpacity>
-          <Text style={styles.link} onPress={() => router.push('/LoginView')}>{t('backToLogin')}</Text>
+          <Text style={styles.link} onPress={() => router.replace('/LoginView')}>{t('backToLogin')}</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -55,10 +55,10 @@ export default function SignupView() {
       setError('');
       // Check isActive and route accordingly
       if (data.is_activated === false) {
-        router.push({ pathname:'/EmailVerify', params: { token: data.token } });
+        router.replace({ pathname:'/EmailVerify', params: { token: data.token } });
         return;
       }
-      router.push('/(tabs)');
+      router.replace('/(tabs)');
     } catch (error: any) {
       setError(error.message || t('serverGeneralError'));
     } finally {
@@ -118,7 +118,7 @@ export default function SignupView() {
           <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
             <Text style={styles.buttonText}>{t('signUpLabel')}</Text>
           </TouchableOpacity>
-          <Text style={styles.link} onPress={() => router.push('/LoginView')}>{t('loginLink')}</Text>
+          <Text style={styles.link} onPress={() => router.replace('/LoginView')}>{t('loginLink')}</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );

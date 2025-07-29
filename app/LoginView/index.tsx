@@ -34,10 +34,10 @@ export default function LoginView() {
         dispatch(setProfile(profile));
         // Check isActive and route accordingly
         if (profile.is_activated === false) {
-          router.push({ pathname:'/EmailVerify', params: { token } });
+          router.replace({ pathname:'/EmailVerify', params: { token } });
           return;
         }
-        router.push('/(tabs)');
+        router.replace('/(tabs)');
       }
       setEmail('');
       setPassword('');
@@ -99,7 +99,7 @@ export default function LoginView() {
         <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
           <Text style={styles.buttonText}>{t('signInLabel')}</Text>
         </TouchableOpacity>
-        <Text style={styles.link} onPress={() => router.push('/SignupView')}>{t('signupLink')}</Text>
+        <Text style={styles.link} onPress={() => router.replace('/SignupView')}>{t('signupLink')}</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
