@@ -1,15 +1,55 @@
-import { Stack } from "expo-router";
-import { LogBox } from "react-native";
+import { Stack, useRouter } from "expo-router";
+import { LogBox, AppState } from "react-native";
 import ReduxProvider from "../Redux/ReduxProvider";
 import { ModalProvider } from './ModalContext';
 import DeleteEventHeaderButton from './DeleteEventHeaderButton';
 import i18n from '../utils/i18n'; // Must come before App
-import { I18nextProvider } from 'react-i18next';
-import { useTranslation } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { clearProfile } from '../Redux/features/profileSlice';
+import { saveData, loadData } from '../utils/storage';
+
 LogBox.ignoreAllLogs(true);
 
 function RootLayoutInner() {
   const { t } = useTranslation();
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    // Check if the app was in the background for more than 24 hours
+    // and clear the profile if so
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        loadData('backgroundTime').then(backgroundTime => {
+          if (backgroundTime) {
+            const now = new Date().getTime();
+            const diff = now - parseInt(backgroundTime, 10);
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            if (hours >= 24) {
+              dispatch(clearProfile());
+              router.replace('/LoginView');
+            }
+          }
+        });
+      }
+
+      appState.current = nextAppState;
+      if (appState.current === 'background') {
+        saveData('backgroundTime', new Date().getTime().toString());
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return (
     <Stack
       screenOptions={{
