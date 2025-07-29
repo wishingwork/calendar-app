@@ -20,7 +20,7 @@ export default function LoginView() {
       setError(t('invalidEmailOrPassword'));
       return;
     }
-    if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+    if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{}|;:'",.<>/?`~]/.test(password)) {
       setError(t('invalidEmailOrPassword'));
       return;
     }

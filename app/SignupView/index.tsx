@@ -30,7 +30,7 @@ export default function SignupView() {
       setError(t('invalidEmailFormat'));
       return;
     }
-    if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+    if (password.length < 8 || !/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{}|;:'",.<>/?`~]/.test(password)) {
       setError(t('invalidPasswordFormat'));
       return;
     }

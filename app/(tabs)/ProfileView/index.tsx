@@ -73,7 +73,7 @@ export default function ProfileView() {
     } else if (currentPassword !== confirmPassword) {
       newErrors.password = t('profileError_passwordMismatch');
       valid = false;
-    } else if (currentPassword.length < 8 || !/[0-9]/.test(currentPassword) || !/[!@#$%^&*]/.test(currentPassword)) {
+    } else if (currentPassword.length < 8 || !/[0-9]/.test(currentPassword) || !/[!@#$%^&*()_+\-=\[\]{}|;:'",.<>/?`~]/.test(currentPassword)) {
       newErrors.password = t('profileError_passwordFormat');
       valid = false;
     }
