@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
   },
   input: {
     ...common.input,
+    fontSize: 16,
+    color: 'black', 
+    backgroundColor: 'white'
   },
   button: {
     ...common.button,
