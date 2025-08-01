@@ -54,9 +54,9 @@ export default function CalendarView() {
           { backgroundColor: getTemperatureColor(event.temperature) }
         ]}
       >
-        <Text style={{ color: '#333' }}>
+        <Text style={{ color: '#333', height: calendarMode === 'month' && 15 }}>
           {event.title}
-          {event.weather && (
+          {event.weather && calendarMode !== 'month'&& (
             <>
               {iconSource ? <Image source={iconSource} style={styles.icon} /> : null}
             </>
