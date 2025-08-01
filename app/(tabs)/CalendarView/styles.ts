@@ -47,6 +47,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
   },
+  headerButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 6,
+  },
+  headerText: {
+    color: colors.text,
+    fontSize: 16,
+  },  
 });
 
 export default styles;

@@ -1,25 +1,34 @@
-import { useEffect, useCallback, useState, useMemo } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useEffect, useCallback, useState } from "react";
+import { View, Text, Image, TouchableOpacity, Button } from "react-native";
 import { Calendar } from "react-native-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../Redux/store";
 import { setEvents } from "../../../Redux/features/eventsSlice";
 import { fetchEvents } from "../../../utils/fetchAPI";
 import { loadData } from '../../../utils/storage';
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { router } from 'expo-router';
 import { useCalendarMode } from '../../CalendarModeContext';
 import styles from './styles';
 import { WEATHER_CONDITIONS } from "../../../constants/weather";
 import { getTemperatureColor } from '../../../utils/colorUtils';
+import dayjs from 'dayjs';
 
 export default function CalendarView() {
-  const [selected, setSelected] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const [refreshing, setRefreshing] = useState(false);
-  const navigation = useNavigation();
-  const route = useRoute();
   const { calendarMode } = useCalendarMode();
+  const [date, setDate] = useState(dayjs().toDate());
+
+  const _onPrevDate = () => {
+    setDate(dayjs(date).add(-1, calendarMode).toDate());
+  };
+
+  const _onNextDate = () => {
+    setDate(dayjs(date).add(1, calendarMode).toDate());
+  };
+  const today = new Date()
+  const _onToday = () => {
+    setDate(today)
+  }  
 
   // Get events from Redux
   const eventsData = useSelector((state: RootState) => state.events.events);
@@ -49,6 +58,7 @@ export default function CalendarView() {
     return (
       <TouchableOpacity
         {...touchableOpacityProps}
+        key={event.id}
         style={[
           touchableOpacityProps?.style,
           { backgroundColor: getTemperatureColor(event.temperature) }
@@ -66,25 +76,14 @@ export default function CalendarView() {
     );
   };
 
-  // Optionally filter events/cards by selected date
-  const filteredEvents = selected
-    ? events.filter(
-        (ev) =>
-          ev.start.toISOString().slice(0, 10) === selected
-      )
-    : events;
-
   const fetchAndSetEvents = useCallback(async () => {
-	setRefreshing(true);
 	try {
 	  const token = await loadData('userToken');
 	  if (!token) return;
 	  const data = await fetchEvents(token);
 	  dispatch(setEvents(data));
 	} catch (e) {
-	  // handle error if needed
-	} finally {
-	  setRefreshing(false);
+	  console.error(e);
 	}
   }, [dispatch]);
 
@@ -94,16 +93,30 @@ export default function CalendarView() {
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10 }}>
+        <TouchableOpacity onPress={_onPrevDate} style={styles.headerButton}>
+          <Text style={styles.headerText}>&#60;</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={_onToday} style={styles.headerButton}>
+          <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{dayjs(date).format('MMM YYYY')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={_onNextDate} style={styles.headerButton}>
+          <Text style={styles.headerText}>&#62;</Text>
+        </TouchableOpacity>                
+      </View>
       <Calendar
         events={events}
         height={400}
         mode={calendarMode}
+        date={date}
         onPressEvent={(event) => router.push(`/EventDetailView/${event.id}`)}
         renderEvent={renderEvent}
         dayHeaderHighlightColor="#007BFF" // Highlight the current day's header with blue
         dayHeaderStyle={{
           overflow: 'hidden', // Ensure the background color respects the border radius
-        }}        
+        }}
+        swipeEnabled={false}
+        maxVisibleEventCount={2}
       />
     </View>
   );
