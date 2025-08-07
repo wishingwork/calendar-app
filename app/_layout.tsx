@@ -2,6 +2,7 @@ import { Stack, useRouter } from "expo-router";
 import { LogBox, AppState } from "react-native";
 import ReduxProvider from "../Redux/ReduxProvider";
 import { ModalProvider } from './ModalContext';
+import { AddressProvider } from './AddressContext';
 import DeleteEventHeaderButton from './DeleteEventHeaderButton';
 import i18n from '../utils/i18n'; // Must come before App
 import { I18nextProvider, useTranslation } from 'react-i18next';
@@ -80,6 +81,7 @@ function RootLayoutInner() {
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" options={{headerShown: true }} />
+      <Stack.Screen name="AddAddressView" />
       <Stack.Screen name="AddEventView" options={{ 
         title: t('addEventTitle'), headerShown: true, 
         headerBackButtonDisplayMode: 'minimal',        
@@ -114,7 +116,9 @@ export default function RootLayout() {
     <ReduxProvider>
       <I18nextProvider i18n={i18n}>
         <ModalProvider>
-          <RootLayoutInner />
+          <AddressProvider>
+            <RootLayoutInner />
+          </AddressProvider>
         </ModalProvider>
       </I18nextProvider>
     </ReduxProvider>

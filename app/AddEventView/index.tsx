@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -19,12 +19,15 @@ import DatetimePicker from "./DatetimePicker"; // <-- import the new component
 import styles from './styles';
 import { travelModeOptions } from "../../constants/travelMode";
 import { useTranslation } from 'react-i18next';
+import { useRouter } from "expo-router";
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useAddress } from "../AddressContext";
 
 export default function AddEventView() {
   const [title, setTitle] = useState("");
   const [eventDate, setEventDate] = useState(new Date());
   const [showTravelModePicker, setShowTravelModePicker] = useState(false);
-  const [address, setAddress] = useState("");
+  const { address, setAddress } = useAddress();
   const [travelMode, setTravelMode] = useState(1);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -35,6 +38,18 @@ export default function AddEventView() {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const router = useRouter();
+
+  const route = useRoute();
+
+  useFocusEffect(
+    useCallback(() => {
+      const myData = route.params?.address;
+      if (myData) {
+        console.log('Received updated param:', myData);
+      }
+    }, [route.params?.address])
+  );  
 
   const validateInput = (input: string) => {
     const forbiddenPatterns = /(;|--|DROP|SELECT|INSERT|DELETE|UPDATE|CREATE|ALTER|EXEC|UNION)/i;
@@ -121,13 +136,16 @@ export default function AddEventView() {
         />
 
         <Text style={styles.label}>{t('addEventAddressLabel')}</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={t('addEventAddressPlaceholder')}
-          value={address}
-          onChangeText={setAddress}
-          placeholderTextColor="#999"
-        />
+        <TouchableOpacity onPress={() => router.push('/AddAddressView')}>
+          <TextInput
+            style={styles.input}
+            placeholder={t('addEventAddressPlaceholder')}
+            value={address}
+            editable={false}
+            placeholderTextColor="#999"
+            onPress={() => router.push('/AddAddressView')}
+          />
+        </TouchableOpacity>
 
         <Text style={styles.label}>{t('addEventTravelModeLabel')}</Text>
         <TouchableOpacity

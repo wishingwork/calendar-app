@@ -24,3 +24,5 @@ export function CalendarModeProvider({ children }: { children: React.ReactNode }
 export function useCalendarMode() {
   return useContext(CalendarModeContext);
 }
+
+export default CalendarModeProvider;

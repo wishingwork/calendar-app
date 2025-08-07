@@ -188,3 +188,15 @@ export async function fetchEventById(id: string, token: string) {
   return data;
 }
 
+export async function fetchAddressOptions(address: string, token: string) {
+  const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";
+  const resultLanguage = language === 'zh' ? 'zh-TW' : language; // Use 'zh-TW' for Traditional Chinese
+  const url = `${apiServerIp}/weather/enAddressOptions?q=${encodeURIComponent(address)}&language=${resultLanguage}`;
+  const { data } = await doFetch({
+    url,
+    method: "GET",
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+  return data;
+}
+
