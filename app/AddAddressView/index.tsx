@@ -113,7 +113,7 @@ const leafletHTML = `
         {addressOptions.length > 0 && (
           <FlatList
             data={addressOptions}
-            keyExtractor={(item) => item.formatted}
+            keyExtractor={(item, index) => index}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleSelectAddress(item)} style={[styles.dropdownItem, selectedAddress?.formatted === item.formatted && styles.selectedDropdownItem]}>
                 <Text style={[selectedAddress?.formatted === item.formatted && styles.selectedDropdownItemText]}>{item.formatted}</Text>
