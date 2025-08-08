@@ -13,6 +13,7 @@ import styles from './styles';
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { useTranslation } from 'react-i18next';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -119,6 +120,7 @@ const renderCalendarCard = ({ item }) => {
 };
 
 export default function TimelineView() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const eventsData = useSelector((state: RootState) => state.events.events);
@@ -152,6 +154,14 @@ export default function TimelineView() {
   useEffect(() => {
     fetchAndSetEvents();
   }, [fetchAndSetEvents]);
+
+  if (filteredEventsData.length === 0) {
+    return (
+      <TouchableOpacity style={styles.noEventsContainer} onPress={() => router.push('/AddEventView')}>
+        <Text style={styles.noEventsText}>{t('noEvents')}</Text>
+      </TouchableOpacity>
+    );
+  }
 
   return (
     <FlatList

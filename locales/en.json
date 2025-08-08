@@ -114,5 +114,6 @@
     "noResults": "No results found. Please try another search.",
     "saveWithoutInsight": "Save (without weather insight)",
     "saveWithInsight": "Save the selected address",
-    "insightWarning": "Selecting a searched address option will provide coordinates for weather information."
+    "insightWarning": "Selecting a searched address option will provide coordinates for weather information.",
+    "noEvents": "No events yet. Tap to add one!"
 }

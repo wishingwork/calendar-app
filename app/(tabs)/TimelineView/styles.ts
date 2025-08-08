@@ -79,6 +79,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
   },
+  noEventsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.1)',
+  },
+  noEventsText: {
+    fontSize: 18,
+    color: colors.primary,
+  },
 });
 
 export default styles;
