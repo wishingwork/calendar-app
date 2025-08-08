@@ -81,7 +81,18 @@ function RootLayoutInner() {
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" options={{headerShown: true }} />
-      <Stack.Screen name="AddAddressView" />
+      <Stack.Screen name="AddAddressView" options={{ 
+        title: t('addAddress'), headerShown: true, 
+        headerBackButtonDisplayMode: 'minimal',        
+        headerStyle: {
+          backgroundColor: "#FAF8F4",
+          elevation: 0, // Android - removes shadow
+          shadowOpacity: 0, // iOS - just in case
+          borderBottomWidth: 0, // removes border            
+        },
+        headerShadowVisible : false,
+        headerTintColor: "#0077CC",  
+      }}  />
       <Stack.Screen name="AddEventView" options={{ 
         title: t('addEventTitle'), headerShown: true, 
         headerBackButtonDisplayMode: 'minimal',        

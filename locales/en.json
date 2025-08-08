@@ -106,5 +106,9 @@
     "verifyEmailFailed": "Verification failed. Please try again.",
     "verifyEmailUserUnavailable": "User information is not available.",
     "verifyEmailAlreadySent": "Verification email already sent. Please check your inbox.",
-    "verifyEmailResendFailed": "Failed to resend verification email."
+    "verifyEmailResendFailed": "Failed to resend verification email.",
+    "addAddress": "Add Address",
+    "searchAddress": "Search for an address",
+    "search": "Search",
+    "saveAddress": "Save Address"
 }

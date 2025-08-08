@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, TextInput, FlatList, Text, TouchableOpacity, Platform, KeyboardAvoidingView, ScrollView, ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useRouter } from 'expo-router';
 import styles from './styles';
 import { fetchAddressOptions } from '../../utils/fetchAPI';
 import { loadData } from '../../utils/storage';
 import { useAddress } from '../AddressContext';
+import { useTranslation } from 'react-i18next';
 
 interface AddressOption {
   formatted: string;
@@ -16,13 +17,16 @@ interface AddressOption {
 }
 
 export default function AddAddressView() {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [addressOptions, setAddressOptions] = useState<AddressOption[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<AddressOption | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { setAddress } = useAddress();
 
   const handleSearch = async () => {
+    setLoading(true);
     try {
       const token = await loadData('userToken');
       if (token) {
@@ -31,6 +35,8 @@ export default function AddAddressView() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,43 +87,53 @@ const leafletHTML = `
 `;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search for an address"
-          value={search}
-          onChangeText={setSearch}
-        />
-        <Button title="Search" onPress={handleSearch} />
-      </View>
-      {addressOptions.length > 0 && (
-        <FlatList
-          data={addressOptions}
-          keyExtractor={(item) => item.formatted}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSelectAddress(item)}>
-              <Text style={styles.dropdownItem}>{item.formatted}</Text>
-            </TouchableOpacity>
-          )}
-          style={styles.dropdown}
-        />
-      )}
-      {selectedAddress && (
-        Platform.OS !== 'web' ? (
-          <WebView
-            originWhitelist={['*']}
-            source={{ html: leafletHTML }}
-            style={styles.webview}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}         
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >     
+      <ScrollView contentContainerStyle={styles.inner}>   
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder={t('searchAddress')}
+            value={search}
+            onChangeText={setSearch}
           />
-        ) : (
-          <Text>Map only available on mobile (iOS/Android)</Text>
-        )
-      )}
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch} disabled={loading}>
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.searchButtonText}>{t('search')}</Text>}
+          </TouchableOpacity>
+        </View>
+        {addressOptions.length > 0 && (
+          <FlatList
+            data={addressOptions}
+            keyExtractor={(item) => item.formatted}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleSelectAddress(item)} style={[styles.dropdownItem, selectedAddress?.formatted === item.formatted && styles.selectedDropdownItem]}>
+                <Text style={[selectedAddress?.formatted === item.formatted && styles.selectedDropdownItemText]}>{item.formatted}</Text>
+              </TouchableOpacity>
+            )}
+            style={styles.dropdown}
+          />
+        )}
+        {selectedAddress && (
+          Platform.OS !== 'web' ? (
+            <WebView
+              originWhitelist={['*']}
+              source={{ html: leafletHTML }}
+              style={styles.webview}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+            />
+          ) : (
+            <Text>Map only available on mobile (iOS/Android)</Text>
+          )
+        )}
 
-      <Button title="Confirm" onPress={handleConfirm} disabled={!selectedAddress} />
-    </View>
+        <TouchableOpacity style={styles.saveButton} onPress={handleConfirm} disabled={!selectedAddress}>
+          <Text style={styles.saveButtonText}>{t('saveAddress')}</Text>
+        </TouchableOpacity>
+      </ScrollView> 
+    </KeyboardAvoidingView>
   );
 };

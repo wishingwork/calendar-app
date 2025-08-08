@@ -106,5 +106,9 @@
     "verifyEmailUserUnavailable": "無法取得用戶資訊。",
     "verifyEmailAlreadySent": "驗證郵件已發送，請檢查您的信箱。",
     "verifyEmailResendFailed": "重新發送驗證郵件失敗。",
-    "addEventFailedLabel": "事件地點無效！"
+    "addEventFailedLabel": "事件地點無效！",
+    "addAddress": "新增地址",
+    "searchAddress": "搜尋地址",
+    "search": "搜尋",
+    "saveAddress": "儲存地址"
 }
