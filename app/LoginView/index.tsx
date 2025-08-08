@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator } from 'react-native';
 import { router } from "expo-router";
 import { useDispatch } from 'react-redux';
 import { setProfile } from '../../Redux/features/profileSlice';
@@ -11,6 +11,7 @@ export default function LoginView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { width } = useWindowDimensions();
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ export default function LoginView() {
       setError(t('serverMisconfiguration'));
       return;
     }
+    setLoading(true);
     try {
       const { profile, token } = await loginAndFetchProfile(email, password, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP);
       if (profile) {
@@ -46,6 +48,7 @@ export default function LoginView() {
       setError(error.message || t('serverGeneralError'));
     } finally {
       setPassword('');
+      setLoading(false);
     }
   };
 
@@ -96,8 +99,12 @@ export default function LoginView() {
           secureTextEntry
         />
         {(error.includes(t('errorCode_email')) || error.includes(t('errorCode_server'))) && <Text style={styles.error}>{error}</Text>}
-        <TouchableOpacity style={styles.button} onPress={validateAndLogin}>
-          <Text style={styles.buttonText}>{t('signInLabel')}</Text>
+        <TouchableOpacity style={styles.button} onPress={validateAndLogin} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>{t('signInLabel')}</Text>
+          )}
         </TouchableOpacity>
         <Text style={styles.link} onPress={() => router.replace('/SignupView')}>{t('signupLink')}</Text>
       </ScrollView>

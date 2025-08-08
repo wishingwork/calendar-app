@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator } from 'react-native';
 import { router } from "expo-router";
 import { useDispatch } from 'react-redux';
 import { setProfile } from '../../Redux/features/profileSlice';
@@ -13,11 +13,13 @@ export default function SignupView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { width } = useWindowDimensions();
   const { t } = useTranslation();
 
   const validateAndSignup = async () => {
+    setLoading(true);
     if (!firstName.match(/^[a-zA-Z-]+$/)) {
       setError(t('invalidFirstOrLastName'));
       return;
@@ -63,6 +65,7 @@ export default function SignupView() {
       setError(error.message || t('serverGeneralError'));
     } finally {
       setPassword('');
+      setLoading(false);
     }
   };
 
@@ -115,8 +118,12 @@ export default function SignupView() {
             placeholderTextColor="#999"
           />
           {(error.includes(t('errorCode_invalid')) || error.includes(t('errorCode_server')) ) && <Text style={styles.error}>{error}</Text>}
-          <TouchableOpacity style={styles.button} onPress={validateAndSignup}>
-            <Text style={styles.buttonText}>{t('signUpLabel')}</Text>
+          <TouchableOpacity style={styles.button} onPress={validateAndSignup} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>{t('signUpLabel')}</Text>
+            )}
           </TouchableOpacity>
           <Text style={styles.link} onPress={() => router.replace('/LoginView')}>{t('loginLink')}</Text>
       </ScrollView>
