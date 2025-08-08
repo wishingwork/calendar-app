@@ -57,7 +57,7 @@ export default function AddEventView() {
   };
 
   const handleSaveEvent = async () => {
-    if (!validateInput(title) || !validateInput(address)) {
+    if (!validateInput(title) || (address && !validateInput(address.formatted))) {
       setErrors({ password: t('addEventSqlError') });
       return;
     }
@@ -77,7 +77,7 @@ export default function AddEventView() {
       const payload = {
         title,
         event_datetime: eventDate.toISOString(),
-        address,
+        address: address,
         travel_mode: travelMode || 1,
         start_datetime: startDatetime.toISOString(),
         end_datetime: endDatetime.toISOString(),
@@ -93,7 +93,7 @@ export default function AddEventView() {
       dispatch(setEvents(events));
       Alert.alert(t('addEventSavedTitle'), t('addEventSavedMsg', { title }));
       setTitle("");
-      setAddress("");
+      setAddress(null);
       setEventDate(new Date());
       setTravelMode(1);
       setStartDatetime(new Date());
@@ -140,7 +140,7 @@ export default function AddEventView() {
           <TextInput
             style={styles.input}
             placeholder={t('addEventAddressPlaceholder')}
-            value={address}
+            value={address?.formatted || ''}
             editable={false}
             placeholderTextColor="#999"
             onPress={() => router.push('/AddAddressView')}

@@ -50,7 +50,7 @@ export default function AddAddressView() {
 
   const handleConfirm = () => {
     if (selectedAddress) {
-      setAddress(selectedAddress.formatted);
+      setAddress(selectedAddress);
       router.back();
     }
   };

@@ -141,7 +141,7 @@ export async function resendVerificationEmail(email: string, userToken: string, 
 }
 
 export async function createEvent(
-  event: { title: string; event_datetime: string; address: string; travel_mode: number },
+  event: { title: string; event_datetime: string; address: { formatted: string; geometry: { lat: number; lng: number; } }; travel_mode: number },
   token: string
 ) {
   const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP || "localhost";

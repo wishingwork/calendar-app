@@ -1,17 +1,25 @@
 import React, { createContext, useContext, useState } from "react";
 
+interface AddressOption {
+  formatted: string;
+  geometry: {
+    lat: number;
+    lng: number;
+  }
+}
+
 interface AddressContextProps {
-  address: string;
-  setAddress: (address: string) => void;
+  address: AddressOption | null;
+  setAddress: (address: AddressOption | null) => void;
 }
 
 const AddressContext = createContext<AddressContextProps>({
-  address: "",
+  address: null,
   setAddress: () => {},
 });
 
 export function AddressProvider({ children }: { children: React.ReactNode }) {
-  const [address, setAddress] = useState<string>("");
+  const [address, setAddress] = useState<AddressOption | null>(null);
   return (
     <AddressContext.Provider value={{ address, setAddress }}>
       {children}
