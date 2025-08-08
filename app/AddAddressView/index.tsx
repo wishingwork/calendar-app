@@ -22,11 +22,13 @@ export default function AddAddressView() {
   const [addressOptions, setAddressOptions] = useState<AddressOption[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<AddressOption | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
   const router = useRouter();
   const { setAddress } = useAddress();
 
   const handleSearch = async () => {
     setLoading(true);
+    setSearched(false);
     try {
       const token = await loadData('userToken');
       if (token) {
@@ -37,6 +39,7 @@ export default function AddAddressView() {
       console.error(error);
     } finally {
       setLoading(false);
+      setSearched(true);
     }
   };
 
@@ -104,6 +107,9 @@ const leafletHTML = `
             {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.searchButtonText}>{t('search')}</Text>}
           </TouchableOpacity>
         </View>
+        {searched && !loading && addressOptions.length === 0 && (
+          <Text style={styles.noResults}>{t('noResults')}</Text>
+        )}
         {addressOptions.length > 0 && (
           <FlatList
             data={addressOptions}

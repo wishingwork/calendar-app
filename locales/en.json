@@ -110,5 +110,6 @@
     "addAddress": "Add Address",
     "searchAddress": "Search for an address",
     "search": "Search",
-    "saveAddress": "Save Address"
+    "saveAddress": "Save Address",
+    "noResults": "No results found. Please try another search."
 }

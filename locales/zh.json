@@ -110,5 +110,6 @@
     "addAddress": "新增地址",
     "searchAddress": "搜尋地址",
     "search": "搜尋",
-    "saveAddress": "儲存地址"
+    "saveAddress": "儲存地址",
+    "noResults": "沒有找到結果。請嘗試其他搜索。"
 }
