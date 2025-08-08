@@ -17,6 +17,9 @@ export const typography = StyleSheet.create({
     fontSize: 16,
     color: colors.textSecondary,
   },
+  input: {
+    fontFamily: 'SpaceMono-Regular',
+  },
   error: {
     color: colors.error,
     fontSize: 12,
