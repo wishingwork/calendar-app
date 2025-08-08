@@ -11,5 +11,5 @@ const coolwarmScale = chroma.scale(['#0571b0', '#3b4cc0', '#fafa6e', '#b40426', 
 export function getTemperatureColor(temperature) {
   // Clamp temperature within range
   const temp = Math.max(-20, Math.min(40, temperature));
-  return coolwarmScale(temp).hex();
+  return temperature === -999 ? '#ccc' : coolwarmScale(temp).hex();
 }

@@ -111,5 +111,8 @@
     "searchAddress": "Search for an address",
     "search": "Search",
     "saveAddress": "Save Address",
-    "noResults": "No results found. Please try another search."
+    "noResults": "No results found. Please try another search.",
+    "saveWithoutInsight": "Save (without weather insight)",
+    "saveWithInsight": "Save the selected address",
+    "insightWarning": "Selecting a searched address option will provide coordinates for weather information."
 }

@@ -111,5 +111,8 @@
     "searchAddress": "搜尋地址",
     "search": "搜尋",
     "saveAddress": "儲存地址",
-    "noResults": "沒有找到結果。請嘗試其他搜索。"
+    "noResults": "沒有找到結果。請嘗試其他搜索。",
+    "saveWithoutInsight": "儲存（無天氣資訊）",
+    "saveWithInsight": "儲存選取地址",
+    "insightWarning": "選擇搜尋到的地址選項，將提供座標以計算天氣資訊。"
 }

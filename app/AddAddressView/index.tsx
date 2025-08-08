@@ -51,8 +51,10 @@ export default function AddAddressView() {
   const handleConfirm = () => {
     if (selectedAddress) {
       setAddress(selectedAddress);
-      router.back();
+    } else if (search) {
+      setAddress({ formatted: search, geometry: { lat: 0, lng: 0 } });
     }
+    router.back();
   };
 
 const formatCoord = (coord?: number) =>
@@ -113,7 +115,7 @@ const leafletHTML = `
         {addressOptions.length > 0 && (
           <FlatList
             data={addressOptions}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleSelectAddress(item)} style={[styles.dropdownItem, selectedAddress?.formatted === item.formatted && styles.selectedDropdownItem]}>
                 <Text style={[selectedAddress?.formatted === item.formatted && styles.selectedDropdownItemText]}>{item.formatted}</Text>
@@ -135,9 +137,15 @@ const leafletHTML = `
             <Text>Map only available on mobile (iOS/Android)</Text>
           )
         )}
-
-        <TouchableOpacity style={styles.saveButton} onPress={handleConfirm} disabled={!selectedAddress}>
-          <Text style={styles.saveButtonText}>{t('saveAddress')}</Text>
+        {search && !selectedAddress && (
+          <Text style={styles.warning}>{t('insightWarning')}</Text>
+        )}
+        <TouchableOpacity style={[styles.saveButton, search || selectedAddress ? {} : { backgroundColor: '#ccc' }]} onPress={handleConfirm} disabled={!search && !selectedAddress}>
+          <Text style={styles.saveButtonText}>
+            {selectedAddress ? (t('saveWithInsight')) : (
+              search ? t('saveWithoutInsight') : t('saveAddress')
+              )}
+          </Text>
         </TouchableOpacity>
       </ScrollView> 
     </KeyboardAvoidingView>

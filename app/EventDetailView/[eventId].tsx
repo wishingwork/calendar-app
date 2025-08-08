@@ -115,7 +115,7 @@ export default function EventDetailView() {
               {weatherLabel ?? event.weather}
           </>
         ) : t('notAvailableLabel')}        
-        {event.temperature !== undefined && event.temperature !== null
+        {event.temperature !== undefined && event.temperature !== -999
           ? `, ${event.temperature}°${event.temp_unit || "C"}`
           : ""}
       </Text>
