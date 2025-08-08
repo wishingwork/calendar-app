@@ -47,6 +47,10 @@ export default function DatePicker({ value, onChange }: Props) {
           onChange={e => {
             const localValue = e.target.value;
             const [datePart, timePart] = localValue.split("T");
+            if (!datePart || !timePart) {
+              console.error("Invalid date-time format:", localValue);
+              return;
+            }
             const [year, month, day] = datePart.split("-").map(Number);
             const [hour, minute] = timePart.split(":").map(Number);
             const localDate = new Date(year, month - 1, day, hour, minute);
