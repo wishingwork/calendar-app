@@ -46,6 +46,9 @@ export default function AddAddressView() {
     }
   };
 
+const formatCoord = (coord?: number) =>
+  typeof coord === 'number' ? coord.toFixed(7) : '0.0000000';
+
 const leafletHTML = `
 <!DOCTYPE html>
 <html>
@@ -56,18 +59,21 @@ const leafletHTML = `
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
       #map { height: 100vh; margin: 0; padding: 0; }
+      html, body { margin: 0; padding: 0; }
     </style>
   </head>
   <body>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      const map = L.map('map').setView([${selectedAddress?.geometry.lat || null}, ${selectedAddress?.geometry.lng || null}], 16);
+      const lat = ${formatCoord(selectedAddress?.geometry.lat)};
+      const lng = ${formatCoord(selectedAddress?.geometry.lng)};
+      const map = L.map('map').setView([lat, lng], 16);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
-      L.marker([${selectedAddress?.geometry.lat || null}, ${selectedAddress?.geometry.lng || null}]).addTo(map)
-        .bindPopup(${selectedAddress?.formatted || null})
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup(${JSON.stringify(selectedAddress?.formatted || '')})
         .openPopup();
     </script>
   </body>
