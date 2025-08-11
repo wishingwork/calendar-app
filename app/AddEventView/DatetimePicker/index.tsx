@@ -22,6 +22,7 @@ export default function DatePicker({ value, onChange }: Props) {
       onChange: onChangeAndroid,
       mode: currentMode,
       is24Hour: true,
+      minuteInterval: 5,
     });
   };
 
@@ -116,6 +117,7 @@ export default function DatePicker({ value, onChange }: Props) {
                 if (selectedDate) onChange(selectedDate);
               }}
               style={{ marginBottom: 16 }}
+              minuteInterval={5}
             />
             <TouchableOpacity
               onPress={() => setShowPicker(false)}
