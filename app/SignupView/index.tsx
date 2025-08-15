@@ -140,7 +140,7 @@ export default function SignupView() {
             </TouchableOpacity>
             <Text style={{ marginLeft: 8 }}>
               {t('iHaveReadThe')}
-              <Text style={{ color: 'blue', textDecorationLine: 'underline' }} onPress={handleOpenPolicy}>
+              <Text style={{ color: 'blue', textDecorationLine: 'underline' }} onPress={Platform.OS === 'web' ? handleScrollToPolicyBottom : handleOpenPolicy}>
                 {t('privacyPolicy')}
               </Text>
             </Text>
