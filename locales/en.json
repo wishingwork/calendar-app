@@ -123,5 +123,7 @@
     "deleteAccountLabel": "Delete Account",
     "deleteAccountButton": "Delete Account",
     "accountDeleted": "Account deleted successfully.",
-    "deleteAccountError": "Failed to delete account. Please try again."
+    "deleteAccountError": "Failed to delete account. Please try again.",
+    "iHaveReadThe": "I have read the ",
+    "privacyPolicy": "privacy policy"
 }

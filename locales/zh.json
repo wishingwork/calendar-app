@@ -123,5 +123,7 @@
     "deleteAccountLabel": "刪除帳號",
     "deleteAccountButton": "刪除帳號",
     "accountDeleted": "帳號已成功刪除。",
-    "deleteAccountError": "刪除帳號失敗，請再試一次。"
+    "deleteAccountError": "刪除帳號失敗，請再試一次。",
+    "iHaveReadThe": "我已閱讀並同意",
+    "privacyPolicy": "隱私政策"    
 }
