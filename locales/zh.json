@@ -115,5 +115,13 @@
     "saveWithoutInsight": "儲存（無天氣資訊）",
     "saveWithInsight": "儲存選取地址",
     "insightWarning": "選擇搜尋到的地址選項，將提供座標以計算天氣資訊。",
-    "noEvents": "尚無活動。點擊以新增！"
+    "noEvents": "尚無活動。點擊以新增！",
+    "deleteAccountConfirmationTitle": "刪除帳號",
+    "deleteAccountConfirmationMessage": "您確定要刪除您的帳號嗎？此操作無法復原。",
+    "cancelButton": "取消",
+    "confirmButton": "確認",
+    "deleteAccountLabel": "刪除帳號",
+    "deleteAccountButton": "刪除帳號",
+    "accountDeleted": "帳號已成功刪除。",
+    "deleteAccountError": "刪除帳號失敗，請再試一次。"
 }

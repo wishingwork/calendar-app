@@ -115,5 +115,13 @@
     "saveWithoutInsight": "Save (without weather insight)",
     "saveWithInsight": "Save the selected address",
     "insightWarning": "Selecting a searched address option will provide coordinates for weather information.",
-    "noEvents": "No events yet. Tap to add one!"
+    "noEvents": "No events yet. Tap to add one!",
+    "deleteAccountConfirmationTitle": "Delete Account",
+    "deleteAccountConfirmationMessage": "Are you sure you want to delete your account? This action cannot be undone.",
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "deleteAccountLabel": "Delete Account",
+    "deleteAccountButton": "Delete Account",
+    "accountDeleted": "Account deleted successfully.",
+    "deleteAccountError": "Failed to delete account. Please try again."
 }

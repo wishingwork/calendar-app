@@ -6,10 +6,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../Redux/store';
 import { clearProfile } from '../../../Redux/features/profileSlice';
 import { router } from "expo-router";
-import { updateProfile, updatePassword, logout } from '../../../utils/fetchAPI';
+import { updateProfile, updatePassword, logout, deleteUser } from '../../../utils/fetchAPI';
 import styles from './styles';
 import { loadData, deleteData } from '../../../utils/storage';
 import LogoutModal from '../../Modals/LogoutModal';
+import DeleteUserModal from '../../Modals/DeleteUserModal';
 import { useTranslation } from 'react-i18next';
 import { fetchProfile } from '../../../utils/fetchAPI';
 
@@ -35,6 +36,7 @@ export default function ProfileView() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [profileExpanded, setProfileExpanded] = useState(true);
   const [passwordExpanded, setPasswordExpanded] = useState(false);
+  const [deleteExpanded, setDeleteExpanded] = useState(false);
   const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false); // for profile save
@@ -73,7 +75,7 @@ export default function ProfileView() {
     } else if (currentPassword !== confirmPassword) {
       newErrors.password = t('profileError_passwordMismatch');
       valid = false;
-    } else if (currentPassword.length < 8 || !/[0-9]/.test(currentPassword) || !/[!@#$%^&*()_+\-=\[\]{}|;:'",.<>/?`~]/.test(currentPassword)) {
+    } else if (currentPassword.length < 8 || !/[0-9]/.test(currentPassword) || !/[!@#$%^&*()_+\-\=\[\]\{}\|;:'",.<>\/?`~]/.test(currentPassword)) {
       newErrors.password = t('profileError_passwordFormat');
       valid = false;
     }
@@ -128,6 +130,35 @@ export default function ProfileView() {
         setSaving(false);
         setErrors({ password: t('profileError_server') });
       });
+  };
+
+  const confirmDeleteAccount = async () => {
+    const userTokenRaw = await loadData('userToken');
+    const userToken = userTokenRaw || '';
+    if (!userToken) return;
+    deleteUser(userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
+      .then(() => {
+        dispatch(clearProfile());
+        deleteData('userToken');
+        router.replace('/LoginView');
+        Alert.alert('Success', t('accountDeleted'));
+      })
+      .catch(() => {
+        Alert.alert('Error', t('deleteAccountError'));
+      });
+  };
+
+  const handleDeleteAccount = () => {
+    setModalContent(
+      <DeleteUserModal
+        onConfirm={() => {
+          setModalVisible(false);
+          confirmDeleteAccount();
+        }}
+        onCancel={() => setModalVisible(false)}
+      />
+    );
+    setModalVisible(true);
   };
 
   useEffect(() => {
@@ -266,6 +297,29 @@ export default function ProfileView() {
               <Text style={[styles.saveButtonText, updateSuccess && { color: "#fff" }]}>
                 {updateSuccess ? t('updatedLabel') : saving ? t('updatingLabel') : t('updateLabel')}
               </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <TouchableOpacity
+          style={styles.sectionHeader}
+          onPress={() => setDeleteExpanded((prev) => !prev)}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.sectionHeaderText}>{t('deleteAccountLabel')}</Text>
+          <Ionicons
+            name={deleteExpanded ? 'chevron-up' : 'chevron-down'}
+            size={22}
+            color="#333"
+            style={{ marginLeft: 8 }}
+          />
+        </TouchableOpacity>
+        {deleteExpanded && (
+          <View style={styles.sectionContent}>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: 'red' }]}
+              onPress={handleDeleteAccount}
+            >
+              <Text style={[styles.saveButtonText, { color: '#fff' }]}>{t('deleteAccountButton')}</Text>
             </TouchableOpacity>
           </View>
         )}

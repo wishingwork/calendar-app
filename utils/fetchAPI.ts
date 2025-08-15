@@ -123,6 +123,15 @@ export async function logout(userToken: string, apiServerIp: string) {
   });
 }
 
+export async function deleteUser(userToken: string, apiServerIp: string) {
+  const url = `${apiServerIp}/users`;
+  return doFetch({
+    url,
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${userToken}` },
+  });
+}
+
 export async function verifyEmailCode(code: string, userToken: string, apiServerIp: string) {
   return doFetch({
     url: `${apiServerIp}/auth/verifystatus?code=${code}`,
