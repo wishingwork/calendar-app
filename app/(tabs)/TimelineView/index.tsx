@@ -91,7 +91,9 @@ const renderCard = ({ item }: { item: EventItem }) => {
               )}
             </View>
             <Text style={styles.temperature}>
-              {item.temperature ? `${item.temperature}°C` : ""}
+              {item.temperature !== undefined && item.temperature !== -999
+                ? `, ${item.temperature}°C`
+                : ""}              
             </Text>
           </View>
         </View>
