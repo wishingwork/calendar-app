@@ -78,6 +78,7 @@
     "travelMode_walking": "Walking",
     "travelMode_flight": "Flight",
     "weather_sunny": "Sunny",
+    "weather_clear": "Clear",    
     "weather_cloudy": "Cloudy",
     "weather_rainy": "Rainy",
     "weather_stormy": "Stormy",

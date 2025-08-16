@@ -77,6 +77,7 @@
     "travelMode_walking": "步行",
     "travelMode_flight": "飛機",
     "weather_sunny": "晴天",
+    "weather_clear": "晴朗",    
     "weather_cloudy": "多雲",
     "weather_rainy": "雨天",
     "weather_stormy": "暴風雨",
