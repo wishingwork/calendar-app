@@ -116,7 +116,7 @@ export default function EventDetailView() {
           </>
         ) : t('notAvailableLabel')}        
         {event.temperature !== undefined && event.temperature !== -999
-          ? `, ${event.temperature}°${event.temp_unit || "C"}`
+          ? `  ${event.temperature}°${event.temp_unit || "C"}`
           : ""}
       </Text>
       </ScrollView>
