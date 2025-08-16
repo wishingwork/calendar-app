@@ -53,6 +53,12 @@ const styles = StyleSheet.create({
     ...typography.error,
     marginBottom: 8,
   },
+  versionText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });
 
 export default styles;

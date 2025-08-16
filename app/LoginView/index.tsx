@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator } from 'react-native';
+import Constants from 'expo-constants';
 import { router } from "expo-router";
 import { useDispatch } from 'react-redux';
 import { setProfile } from '../../Redux/features/profileSlice';
@@ -107,6 +108,7 @@ export default function LoginView() {
           )}
         </TouchableOpacity>
         <Text style={styles.link} onPress={() => router.replace('/SignupView')}>{t('signupLink')}</Text>
+        <Text style={styles.versionText}>App Version: {Constants.expoConfig.version}</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
