@@ -35,10 +35,14 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible, onClos
         <View style={styles.modalView}>
           <WebView
             originWhitelist={['*']}
-            source={
- policyHtml
-            }
+            source={policyHtml}
             onScroll={onScroll}
+            javaScriptEnabled
+            androidLayerType='hardware'
+            allowFileAccess
+            domStorageEnabled
+            mixedContentMode='always'
+            allowUniversalAccessFromFileURLs            
           />
           <TouchableOpacity style={styles.button} onPress={onClose}>
             <Text style={styles.buttonText}>Close</Text>
