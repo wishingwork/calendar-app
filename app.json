@@ -27,7 +27,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.wishingwork.calendarapp"
+      "package": "com.wishingwork.calendarapp",
+      "versionCode": 22
     },
     "web": {
       "bundler": "metro",
