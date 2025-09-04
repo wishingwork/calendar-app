@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "calendar-app",
+    "name": "Weather Calendar",
     "slug": "calendar-app",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
     "scheme": "calendarapp",
@@ -28,7 +28,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.wishingwork.calendarapp",
-      "versionCode": 22
+      "versionCode": 23
     },
     "web": {
       "bundler": "metro",
