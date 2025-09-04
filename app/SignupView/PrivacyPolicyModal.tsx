@@ -12,9 +12,9 @@ interface PrivacyPolicyModalProps {
 
 const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible, onClose, onScrollToBottom }) => {
   const { i18n } = useTranslation();
-  const policyZh = require('../../assets/PrivacyPolicy/PrivacyPolicies.zh.html');
-  const policyEn = require('../../assets/PrivacyPolicy/PrivacyPolicies.en.html');
-  const policyHtml = i18n.language === 'zh' ? policyZh : policyEn;
+  const policyUrlZh = 'https://www.meteosync.com/calendar/zh/privacypolicies';
+  const policyUrlEn = 'https://www.meteosync.com/calendar/en/privacypolicies';
+  const policyUri = i18n.language === 'zh' ? policyUrlZh : policyUrlEn;
 
   const onScroll = (event: any) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -35,14 +35,12 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible, onClos
         <View style={styles.modalView}>
           <WebView
             originWhitelist={['*']}
-            source={policyHtml}
+            source={{ uri: policyUri }}
             onScroll={onScroll}
             javaScriptEnabled
             androidLayerType='hardware'
-            allowFileAccess
             domStorageEnabled
-            mixedContentMode='always'
-            allowUniversalAccessFromFileURLs            
+            mixedContentMode='always'         
           />
           <TouchableOpacity style={styles.button} onPress={onClose}>
             <Text style={styles.buttonText}>Close</Text>
