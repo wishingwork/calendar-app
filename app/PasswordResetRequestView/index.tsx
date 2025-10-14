@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator } from 'react-native';
 import { router } from "expo-router";
+import { requestPasswordReset } from '../../utils/fetchAPI';
 import { useTranslation } from 'react-i18next';
 import styles from './styles';
 import { common } from '../../styles/common';
-import * as Localization from 'expo-localization'; // Optional if using Expo
-const language = Localization.getLocales()[0].languageTag.split('-')[0]; // Get the language code (e.g., 'en', 'zh')
 
 export default function PasswordResetRequestView() {
   const [email, setEmail] = useState('');
@@ -14,7 +13,7 @@ export default function PasswordResetRequestView() {
   const { width } = useWindowDimensions();
   const { t } = useTranslation();
 
-  const handlePasswordResetRequest = async () => {    
+  const handlePasswordResetRequest = async () => {
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setError(t('invalidEmailFormat'));
       return;
@@ -28,16 +27,8 @@ export default function PasswordResetRequestView() {
     setLoading(true);
     try {
       const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP;
-      const response = await fetch(`${apiServerIp}/auth/resetcode`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, language }),
-      });
+      const data = await requestPasswordReset(email, apiServerIp as string);
 
-      const data = await response.json();
-      console.log(61, data);
       if (data.status === 'success') {
         router.replace({ pathname: '/PasswordResetVerifyView', params: { email } });
       } else {

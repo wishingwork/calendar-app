@@ -4,8 +4,8 @@ import { common } from '../../styles/common';
 import { typography } from '../../styles/typography';
 import styles from './styles';
 import { router, useLocalSearchParams } from 'expo-router';
+import { verifyPasswordResetCode } from '../../utils/fetchAPI';
 import { useTranslation } from 'react-i18next';
-import { saveData } from '../../utils/storage';
 
 export default function PasswordResetVerifyView() {
   const { email } = useLocalSearchParams();
@@ -29,15 +29,8 @@ export default function PasswordResetVerifyView() {
         setLoading(false);
         return;
       }
-      const response = await fetch(`${apiServerIp}/auth/resetcodeverify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: userEmail, code }),
-      });
+      const data = await verifyPasswordResetCode(userEmail as string, code, apiServerIp as string);
 
-      const data = await response.json();
       if (data.data.success === true) {
         setSuccess(t('passwordResetVerifySuccess'));
         await saveData('userToken', data.data.token);

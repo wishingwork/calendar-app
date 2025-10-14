@@ -114,6 +114,24 @@ export async function updatePassword(
   });
 }
 
+export async function resetPassword(
+  newPassword: string,
+  confirmPassword: string,
+  userToken: string,
+  apiServerIp: string
+) {
+  const url = `${apiServerIp}/auth/me/password`;
+  return doFetch({
+    url,
+    method: 'PUT',
+    headers: { 'Authorization': `Bearer ${userToken}` },
+    body: {
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    },
+  });
+}
+
 export async function logout(userToken: string, apiServerIp: string) {
   const url = `${apiServerIp}/auth/logout`;
   return doFetch({
@@ -129,6 +147,24 @@ export async function deleteUser(userToken: string, apiServerIp: string) {
     url,
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${userToken}` },
+  });
+}
+
+export async function requestPasswordReset(email: string, apiServerIp: string) {
+  const url = `${apiServerIp}/auth/resetcode`;
+  return doFetch({
+    url,
+    method: 'POST',
+    body: { email, language },
+  });
+}
+
+export async function verifyPasswordResetCode(email: string, code: string, apiServerIp: string) {
+  const url = `${apiServerIp}/auth/resetcodeverify`;
+  return doFetch({
+    url,
+    method: 'POST',
+    body: { email, code },
   });
 }
 

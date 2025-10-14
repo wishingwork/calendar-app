@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { loadData } from '../../utils/storage';
-import { updatePassword } from '../../utils/fetchAPI';
+import { resetPassword } from '../../utils/fetchAPI';
 import { typography } from '../../styles/typography';
 
 export default function ResetPasswordView() {
@@ -48,7 +48,7 @@ export default function ResetPasswordView() {
       const userTokenRaw = await loadData('userToken');
       const userToken = userTokenRaw || '';
       if (userToken) {      
-        updatePassword(newPassword, confirmPassword, userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
+        resetPassword(newPassword, confirmPassword, userToken, apiServerIp as string)
           .then((data) => {
             setSaving(false);
             if (data.error) {
