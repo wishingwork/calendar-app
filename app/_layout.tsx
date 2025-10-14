@@ -25,20 +25,20 @@ function RootLayoutInner() {
   useEffect(() => {
     const checkUserSession = async () => {
       const userToken = await loadData('userToken');
-      if (userToken) {
-        try {
-          const profile = await fetchProfile(userToken, apiServerIp);
-          const events = await fetchEvents(userToken);
-          dispatch(setProfile(profile));
-          dispatch(setEvents(events));
-        } catch (error) {
-          console.error('Failed to fetch user data:', error);
-          await deleteData('userToken');
-          router.replace('/LoginView');
-        }
-      } else {
-        router.replace('/LoginView');
-      }
+      // if (userToken) {
+      //   try {
+      //     const profile = await fetchProfile(userToken, apiServerIp);
+      //     const events = await fetchEvents(userToken);
+      //     dispatch(setProfile(profile));
+      //     dispatch(setEvents(events));
+      //   } catch (error) {
+      //     console.error('Failed to fetch user data:', error);
+      //     await deleteData('userToken');
+      //     router.replace('/LoginView');
+      //   }
+      // } else {
+      //   router.replace('/LoginView');
+      // }
     };
 
     checkUserSession();
@@ -118,6 +118,7 @@ function RootLayoutInner() {
         headerTintColor: "#0077CC",  
         headerRight: () => <DeleteEventHeaderButton />,           
       }} />
+      <Stack.Screen name="PasswordReset" options={{ headerShown: false }} />
     </Stack>
   );
 }

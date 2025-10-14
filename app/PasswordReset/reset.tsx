@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, Image, useWindowDimensions } from 'react-native';
-import { router } from 'expo-router';
-import styles from './styles';
+import { useLocalSearchParams, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { loadData } from '../../utils/storage';
 import { resetPassword } from '../../utils/fetchAPI';
+import styles from './reset-styles';
 import { typography } from '../../styles/typography';
 
-export default function ResetPasswordView() {
+export default function ResetPasswordScreen() {
+  const { token } = useLocalSearchParams();
+  const userToken = Array.isArray(token) ? token[0] : token;
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -45,8 +46,6 @@ export default function ResetPasswordView() {
 
     setSaving(true);
     try {
-      const userTokenRaw = await loadData('userToken');
-      const userToken = userTokenRaw || '';
       if (userToken) {      
         resetPassword(newPassword, confirmPassword, userToken, apiServerIp as string)
           .then((data) => {
@@ -95,14 +94,14 @@ export default function ResetPasswordView() {
           <Text style={[styles.logo, { fontSize: 22, fontWeight: '700', letterSpacing: 1 }]}>
           {t('appTitle')}
           </Text>
-        </View>
+        </View>        
         <View style={{ alignItems: 'center', width: '100%', paddingHorizontal: 20 }}>
           <Text style={[typography.logo, { marginBottom: 18, fontSize: 24, fontWeight: '700' }]}>
           {t('resetPasswordTitle')}
           </Text>
           <Text style={[typography.subheader, { marginBottom: 10, fontSize: 16 }]}>
-          {t('resetPasswordInstruction')}
-          </Text>
+          {t('resetPasswordRuleInstruction')}
+          </Text>          
           <View style={styles.passwordInputs}>
             <TextInput
               style={styles.input}

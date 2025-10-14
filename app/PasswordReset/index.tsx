@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './styles';
 import { common } from '../../styles/common';
 
-export default function PasswordResetRequestView() {
+export default function PasswordResetRequestScreen() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function PasswordResetRequestView() {
       const data = await requestPasswordReset(email, apiServerIp as string);
 
       if (data.status === 'success') {
-        router.replace({ pathname: '/PasswordResetVerifyView', params: { email } });
+        router.push({ pathname: './verify', params: { email } });
       } else {
         setError(data.message || t('passwordResetRequestError'));
       }
@@ -48,17 +48,22 @@ export default function PasswordResetRequestView() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView contentContainerStyle={styles.inner}>
-        <Image
-          source={require('../../assets/images/logo.png')}
-          style={{
-            width: width * 0.25,
-            height: width * 0.25,
-            resizeMode: 'contain',
-            marginBottom: 16,
-            alignSelf: 'center',
-          }}
-        />
-        <Text style={styles.logo}>{t('resetPasswordTitle')}</Text>
+        <View style={{ alignItems: 'center', marginBottom: 32 }}>
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={{
+              width: width * 0.25,
+              height: width * 0.25,
+              resizeMode: 'contain',
+              marginBottom: 16,
+              alignSelf: 'center',
+            }}
+          />
+          <Text style={[styles.logo, { fontSize: 22, fontWeight: '700', letterSpacing: 1 }]}>
+          {t('appTitle')}
+          </Text>        
+        </View>
+        <Text style={styles.logo}>{t('resetPasswordRequestTitle')}</Text>
         <Text style={{...common.text, textAlign: 'center', marginBottom: 20}}>{t('resetPasswordInstruction')}</Text>
         <TextInput
           style={styles.input}

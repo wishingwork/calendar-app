@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Image, useWindowDimensions, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { common } from '../../styles/common';
 import { typography } from '../../styles/typography';
-import styles from './styles';
-import { router, useLocalSearchParams } from 'expo-router';
+import styles from './verify-styles';
+
+import { useLocalSearchParams, router } from 'expo-router';
 import { verifyPasswordResetCode } from '../../utils/fetchAPI';
 import { useTranslation } from 'react-i18next';
 
-export default function PasswordResetVerifyView() {
+export default function PasswordResetVerifyScreen() {
   const { email } = useLocalSearchParams();
   const userEmail = Array.isArray(email) ? email[0] : email;
   const apiServerIp = process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP;
@@ -33,9 +34,7 @@ export default function PasswordResetVerifyView() {
 
       if (data.data.success === true) {
         setSuccess(t('passwordResetVerifySuccess'));
-        await saveData('userToken', data.data.token);
-      
-        router.replace({ pathname: '/ResetPasswordView', params: { email: userEmail } });
+        router.push({ pathname: './reset', params: { email: userEmail, token: data.data.token } });
       } else {
         setError(t('passwordResetVerifyInvalidCode'));
       }
