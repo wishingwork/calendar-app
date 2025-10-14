@@ -37,7 +37,7 @@ export async function loginAndFetchProfile(email: string, password: string, apiS
   const { data: loginData  } = await doFetch({
     url: loginUrl,
     method: 'POST',
-    body: { email, password },
+    body: { email: email.toLowerCase(), password },
   });
   if (!loginData.token) {
     throw new Error('Invalid email or password');
@@ -64,7 +64,7 @@ export async function signupAndFetchProfile(
   const {message, data} = await doFetch({
     url: signupUrl,
     method: 'POST',
-    body: { first_name: firstName, last_name: lastName, email, password, language, device_os: Platform.OS }, // Assuming 'web' for device_os
+    body: { first_name: firstName, last_name: lastName, email: email.toLowerCase(), password, language, device_os: Platform.OS }, // Assuming 'web' for device_os
   });
   if (!data) {
     throw new Error(message || 'Invalid email or password');
@@ -155,7 +155,7 @@ export async function requestPasswordReset(email: string, apiServerIp: string) {
   return doFetch({
     url,
     method: 'POST',
-    body: { email, language },
+    body: { email: email.toLowerCase(), language },
   });
 }
 
@@ -164,7 +164,7 @@ export async function verifyPasswordResetCode(email: string, code: string, apiSe
   return doFetch({
     url,
     method: 'POST',
-    body: { email, code },
+    body: { email: email.toLowerCase(), code },
   });
 }
 
@@ -181,7 +181,7 @@ export async function resendVerificationEmail(email: string, userToken: string, 
     url: `${apiServerIp}/auth/verifyemail`,
     method: 'POST',
     headers: { 'Authorization': `Bearer ${userToken}` },
-    body: { email, language },
+    body: { email: email.toLowerCase(), language },
   });
 }
 
