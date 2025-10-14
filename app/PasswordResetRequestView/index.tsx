@@ -4,6 +4,8 @@ import { router } from "expo-router";
 import { useTranslation } from 'react-i18next';
 import styles from './styles';
 import { common } from '../../styles/common';
+import * as Localization from 'expo-localization'; // Optional if using Expo
+const language = Localization.getLocales()[0].languageTag.split('-')[0]; // Get the language code (e.g., 'en', 'zh')
 
 export default function PasswordResetRequestView() {
   const [email, setEmail] = useState('');
@@ -31,7 +33,7 @@ export default function PasswordResetRequestView() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, language }),
       });
 
       const data = await response.json();

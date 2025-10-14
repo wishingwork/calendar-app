@@ -118,6 +118,7 @@
     "passwordResetVerifySuccess": "Code verified!",
     "passwordResetVerifyInvalidCode": "Invalid verification code",
     "passwordResetVerifyFailed": "Verification failed. Please try again.",
+    "resetPasswordRuleInstruction": "Password must be at least 8 characters, include a number and a special character.",
     "newPasswordLabel": "New Password",
     "resetPasswordButton": "Reset Password",
     "passwordResetSuccessTitle": "Password Reset",

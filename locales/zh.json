@@ -117,6 +117,7 @@
     "passwordResetVerifySuccess": "代碼已驗證！",
     "passwordResetVerifyInvalidCode": "驗證碼無效",
     "passwordResetVerifyFailed": "驗證失敗，請再試一次。",
+    "resetPasswordRuleInstruction": "密碼必須至少8個字元，包含數字和特殊字元。",
     "newPasswordLabel": "新密碼",
     "resetPasswordButton": "重設密碼",
     "passwordResetSuccessTitle": "密碼重設",

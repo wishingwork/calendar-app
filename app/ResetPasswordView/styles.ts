@@ -115,6 +115,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  inner: {
+    padding: 16,    
+    paddingTop: 48,
+  },
+  logo: {
+    ...typography.logo,
+    marginBottom: 24,
+  },  
 });
 
 export default styles;

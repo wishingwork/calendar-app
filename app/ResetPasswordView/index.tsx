@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, Image, useWindowDimensions } from 'react-native';
+import { router } from 'expo-router';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { loadData } from '../../utils/storage';
+import { updatePassword } from '../../utils/fetchAPI';
+import { typography } from '../../styles/typography';
 
 export default function ResetPasswordView() {
-  const { email, code } = useLocalSearchParams();
-  const userEmail = Array.isArray(email) ? email[0] : email;
-  const resetCode = Array.isArray(code) ? code[0] : code;
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,6 +15,7 @@ export default function ResetPasswordView() {
   const [saving, setSaving] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const { t } = useTranslation();
+  const { width } = useWindowDimensions();
 
   const validatePassword = () => {
     let valid = true;
@@ -48,27 +48,24 @@ export default function ResetPasswordView() {
       const userTokenRaw = await loadData('userToken');
       const userToken = userTokenRaw || '';
       if (userToken) {      
-        const response = await fetch(`${apiServerIp}/auth/me/password`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userToken}`
-          },
-          body: JSON.stringify({ new_password: newPassword, confirm_password: newPassword }),      
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          setNewPassword('');
-          setConfirmPassword('');
-          setErrors({});
-          setUpdateSuccess(true);
-          Alert.alert(t('passwordResetSuccessTitle'), t('passwordResetSuccessMessage'));
-          router.replace('/LoginView');
-        } else {
-          setErrors({ password: t('passwordResetFailed') });
-        }
+        updatePassword(newPassword, confirmPassword, userToken, process.env.EXPO_PUBLIC_MISSION_API_SERVER_IP || process.env.EXPO_PUBLIC_API_SERVER_IP as string)
+          .then((data) => {
+            setSaving(false);
+            if (data.error) {
+              setErrors({ password: t('profileError_passwordUpdate') });
+            } else {
+              setNewPassword('');
+              setConfirmPassword('');
+              setErrors({});
+              setUpdateSuccess(true); // show success
+              setTimeout(() => setUpdateSuccess(false), 2000); // revert after 2s
+              Alert.alert(t('passwordResetSuccessTitle'), t('passwordResetSuccessMessage'));
+              setTimeout(() => router.replace('/LoginView'), 1000);;
+            }
+          })
+          .catch(() => {
+            setErrors({ password: t('passwordResetFailed') });
+          });
       }      
     } catch (error) {
       setErrors({ password: t('passwordResetFailed') });
@@ -78,10 +75,34 @@ export default function ResetPasswordView() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.sectionContent}>
-          <Text style={styles.sectionHeaderText}>{t('resetPasswordTitle')}</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >     
+      <ScrollView contentContainerStyle={styles.inner}>
+        <View style={{ alignItems: 'center', marginBottom: 32 }}>
+          <Image
+          source={require('../../assets/images/logo.png')}
+          style={{
+            width: width * 0.22,
+            height: width * 0.22,
+            resizeMode: 'contain',
+            marginBottom: 12,
+            alignSelf: 'center',
+          }}
+          />
+          <Text style={[styles.logo, { fontSize: 22, fontWeight: '700', letterSpacing: 1 }]}>
+          {t('appTitle')}
+          </Text>
+        </View>
+        <View style={{ alignItems: 'center', width: '100%', paddingHorizontal: 20 }}>
+          <Text style={[typography.logo, { marginBottom: 18, fontSize: 24, fontWeight: '700' }]}>
+          {t('resetPasswordTitle')}
+          </Text>
+          <Text style={[typography.subheader, { marginBottom: 10, fontSize: 16 }]}>
+          {t('resetPasswordInstruction')}
+          </Text>
           <View style={styles.passwordInputs}>
             <TextInput
               style={styles.input}
@@ -116,6 +137,6 @@ export default function ResetPasswordView() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView>    
   );
 }

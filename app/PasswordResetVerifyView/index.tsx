@@ -38,12 +38,11 @@ export default function PasswordResetVerifyView() {
       });
 
       const data = await response.json();
-
-      if (data.status === 'success') {
+      if (data.data.success === true) {
         setSuccess(t('passwordResetVerifySuccess'));
         await saveData('userToken', data.data.token);
       
-        router.replace({ pathname: '/ResetPasswordView', params: { email: userEmail, code } });
+        router.replace({ pathname: '/ResetPasswordView', params: { email: userEmail } });
       } else {
         setError(t('passwordResetVerifyInvalidCode'));
       }
