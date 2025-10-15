@@ -30,7 +30,7 @@ export default function PasswordResetRequestScreen() {
       const data = await requestPasswordReset(email, apiServerIp as string);
 
       if (data.status === 'success') {
-        router.push({ pathname: './verify', params: { email } });
+        router.push({ pathname: '/PasswordReset/verify', params: { email } });
       } else {
         setError(data.message || t('passwordResetRequestError'));
       }

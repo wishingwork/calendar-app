@@ -34,7 +34,7 @@ export default function PasswordResetVerifyScreen() {
 
       if (data.data.success === true) {
         setSuccess(t('passwordResetVerifySuccess'));
-        router.push({ pathname: './reset', params: { email: userEmail, token: data.data.token } });
+        router.push({ pathname: '/PasswordReset/reset', params: { email: userEmail, token: data.data.token } });
       } else {
         setError(t('passwordResetVerifyInvalidCode'));
       }
