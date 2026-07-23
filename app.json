@@ -48,7 +48,18 @@
       ],
       "expo-font",
       "expo-web-browser",
-      ["expo-localization"]
+      [
+        "expo-localization"
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

@@ -6,8 +6,8 @@
     "start": "expo start",
     "start-beta": "env-cmd -f .env.beta expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
@@ -25,6 +25,7 @@
     "env-cmd": "^10.1.0",
     "expo": "^54.0.0",
     "expo-blur": "~14.1.5",
+    "expo-build-properties": "~1.0.10",
     "expo-constants": "~17.1.7",
     "expo-font": "~13.3.2",
     "expo-haptics": "~14.1.4",
