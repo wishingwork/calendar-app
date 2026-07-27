@@ -60,7 +60,9 @@
           }
         }
       ],
-      "./plugins/withFollyFix"
+      "./plugins/withFollyFix",
+      "@react-native-community/datetimepicker",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
