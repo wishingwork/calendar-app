@@ -143,5 +143,8 @@
     "accountDeleted": "Account deleted successfully.",
     "deleteAccountError": "Failed to delete account. Please try again.",
     "iHaveReadThe": "I have read the ",
-    "privacyPolicy": "privacy policy"
+    "privacyPolicy": "privacy policy",
+    "signupContactMessage": "To sign up for a new account, please contact us at:",
+    "passwordResetContactMessage": "To reset your password, please contact us at:",
+    "defaultContactMessage": "Please contact us at:"
 }

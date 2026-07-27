@@ -143,5 +143,8 @@
     "accountDeleted": "帳號已成功刪除。",
     "deleteAccountError": "刪除帳號失敗，請再試一次。",
     "iHaveReadThe": "我已閱讀並同意",
-    "privacyPolicy": "隱私政策"    
+    "privacyPolicy": "隱私政策",
+    "signupContactMessage": "要註冊新帳號，請聯絡：",
+    "passwordResetContactMessage": "要重設您的密碼，請聯絡：",
+    "defaultContactMessage": "請聯絡："
 }

@@ -107,8 +107,8 @@ export default function LoginView() {
             <Text style={styles.buttonText}>{t('signInLabel')}</Text>
           )}
         </TouchableOpacity>
-        <Text style={styles.link} onPress={() => router.replace('/SignupView')}>{t('signupLink')}</Text>
-        <Text style={styles.link} onPress={() => router.replace('/PasswordReset')}>{t('forgotPasswordLink')}</Text>
+        <Text style={styles.link} onPress={() => router.replace({ pathname: '/ContactView' as any, params: { type: 'signup' } })}>{t('signupLink')}</Text>
+        <Text style={styles.link} onPress={() => router.replace({ pathname: '/ContactView' as any, params: { type: 'reset' } })}>{t('forgotPasswordLink')}</Text>
         <Text style={styles.versionText}>App Version: {Constants.expoConfig.version}</Text>
       </ScrollView>
     </KeyboardAvoidingView>
