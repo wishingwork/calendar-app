@@ -59,7 +59,8 @@
             "targetSdkVersion": 36
           }
         }
-      ]
+      ],
+      "./plugins/withFollyFix"
     ],
     "experiments": {
       "typedRoutes": true
